@@ -25,43 +25,38 @@ public class LoginGraphicController extends absGraphicController {
     private loginController loginController;
 
     @Override
-    public void initialize(){
+    public void initialize() {
         super.initialize();
 
         loginController = new loginController();
-        accediButton.setOnMouseClicked(mouseEvent -> {
-            if (usernameTextField.getText().isBlank() == false && enterPasswordField.getText().isBlank() == false){
-                msgLbl.setText("Tentato Login");
-            }else {
-                msgLbl.setText("Inserire username e password");
-            }
-        });
+        accediButton.setOnAction(this::userLogin);
     }
+
     public void userLogin(ActionEvent event) {
-        try{
-            LoginCredentialBean credentialsBean = new LoginCredentialBean(
-            usernameTextField.getText(), enterPasswordField.getText());
+        if (usernameTextField.getText().isBlank() || enterPasswordField.getText().isBlank()) {
+            msgLbl.setText("Inserire username e password");
+        } else {
+            try {
+                // Prepara le credenziali di login
+                LoginCredentialBean credentialsBean = new LoginCredentialBean(usernameTextField.getText(), enterPasswordField.getText());
 
-            loginController.login(credentialsBean);
+                // Tentativo di login
+                loginController.login(credentialsBean);
 
-            goToPage(HOME);
-        }
-        catch (InvalidFormatException e){
-            logger.log(Level.INFO, e.getMessage());
-            msgLbl.setText("Empty Fields");
-        }
-        catch (DAOException e){
-            logger.log(Level.INFO, e.getMessage());
-            msgLbl.setText("Wrong credentials");
-        }
-        catch (SQLException e){
-            logger.log(Level.INFO, e.getMessage());
-            msgLbl.setText("Database not working");
-        }
-        catch (SessionUserException e){
-            logger.log(Level.INFO, e.getMessage());
-            msgLbl.setText("User already logged in");
-            goToPage(HOME);
+                // Se nessuna eccezione è stata lanciata, il login è riuscito
+                msgLbl.setText("Login riuscito");
+                // Vai alla pagina HOME o mostra un messaggio di successo
+                //goToPage(HOME);
+            } catch (InvalidFormatException e) {
+                msgLbl.setText("Formato non valido");
+            } catch (DAOException | SQLException e) {
+                msgLbl.setText("Credenziali errate o problema di connessione al database");
+            } catch (SessionUserException e) {
+                msgLbl.setText("Utente già loggato");
+                // Vai alla pagina HOME o gestisci come preferisci
+            }
         }
     }
+
 }
+
