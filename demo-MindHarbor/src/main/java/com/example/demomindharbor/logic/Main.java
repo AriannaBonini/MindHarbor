@@ -10,14 +10,15 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        String firstPage = "Login.fxml";
+        String firstPage = "/com/example/demomindharbor/Login.fxml";
         Parent root = FXMLLoader.load(getClass().getResource(firstPage));
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root);
         scene.setFill(Color.TRANSPARENT);
 
         NavigatorSingleton n = NavigatorSingleton.getInstance(primaryStage);
