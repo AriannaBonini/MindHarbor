@@ -55,11 +55,13 @@ public class UserDAO {
 
         // Verifica se il risultato è vuoto
         if(!rs.first()) {
+
             return null;
         }
 
         // riposizionamento del cursore
         rs.first();
+
 
         user = getUser(rs);
 
@@ -77,7 +79,7 @@ public class UserDAO {
 
         conn = ConnectionFactory.getConnection();
 
-        String sql = "SELECT * FROM User WHERE Username = ? AND Password = ?;";
+        String sql = "SELECT * FROM User WHERE " + USERNAME + " = ? AND " + PSW + " = ?;";
         // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         stmt.setString(1, username);

@@ -39,6 +39,14 @@ public class LoginGraphicController extends absGraphicController {
             try {
                 // Prepara le credenziali di login
                 LoginCredentialBean credentialsBean = new LoginCredentialBean(usernameTextField.getText(), enterPasswordField.getText());
+                /*
+                 * inizio debug
+                 */
+                System.out.println("username:" + usernameTextField.getText());
+                System.out.println("password:" + enterPasswordField.getText());
+                /*
+                 * fine debug
+                 */
 
                 // Tentativo di login
                 loginController.login(credentialsBean);
