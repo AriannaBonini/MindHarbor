@@ -1,5 +1,6 @@
 package com.example.demomindharbor.logic;
 
+import com.example.demomindharbor.logic.session.ConnectionFactory;
 import com.example.demomindharbor.logic.utilities.NavigatorSingleton;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,8 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.Objects;
 
 public class Main extends Application {
@@ -19,7 +20,6 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource(firstPage));
         Scene scene = new Scene(root);
 
-
         NavigatorSingleton n = NavigatorSingleton.getInstance(primaryStage);
 
         n.getStg().setTitle("MindHarbor");
@@ -29,6 +29,20 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        /*
+
+        il seguente codice serve per provare la connessione al DB
+
+        try {
+            Connection conn = ConnectionFactory.getConnection();
+            if (conn != null) {
+                System.out.println("Connessione al database stabilita con successo!");
+            } else {
+                System.out.println("Connessione al database fallita.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
         launch();
     }
 }

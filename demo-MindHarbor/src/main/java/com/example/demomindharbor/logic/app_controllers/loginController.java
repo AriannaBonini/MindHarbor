@@ -14,7 +14,6 @@ public class loginController extends absController {
         User user = new UserDAO().findUser(
                 credentialsBean.getUsername(),
                 credentialsBean.getPassword());
-
         storeSessionUser(user.getUsername(), user.getName(), user.getSurname(), user.getUserType());
     }
 }

@@ -42,15 +42,17 @@ public class LoginGraphicController extends absGraphicController {
 
                 // Tentativo di login
                 loginController.login(credentialsBean);
-
                 // Se nessuna eccezione è stata lanciata, il login è riuscito
                 msgLbl.setText("Login riuscito");
                 // Vai alla pagina HOME o mostra un messaggio di successo
                 //goToPage(HOME);
             } catch (InvalidFormatException e) {
                 msgLbl.setText("Formato non valido");
-            } catch (DAOException | SQLException e) {
-                msgLbl.setText("Credenziali errate o problema di connessione al database");
+            } catch (DAOException e){
+                msgLbl.setText("Credenziali errate");
+            }
+            catch (SQLException e) {
+                msgLbl.setText("Problema di connessione al database");
             } catch (SessionUserException e) {
                 msgLbl.setText("Utente già loggato");
                 // Vai alla pagina HOME o gestisci come preferisci

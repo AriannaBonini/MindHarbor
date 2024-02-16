@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class UserDAO {
     protected static final String USERNAME = "Username";
 
-    protected static final String NAME = "Name";
+    protected static final String NAME = "Nome";
 
     protected static final String SURNAME = "Surname";
 
@@ -77,7 +77,7 @@ public class UserDAO {
 
         conn = ConnectionFactory.getConnection();
 
-        String sql = "SELECT * FROM User WHERE " + USERNAME + " = ? AND " + PSW + " = ?;";
+        String sql = "SELECT * FROM User WHERE Username = ? AND Password = ?;";
         // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         stmt.setString(1, username);
@@ -108,8 +108,8 @@ public class UserDAO {
 
         conn = ConnectionFactory.getConnection();
 
-        String sql = "INSERT INTO User (" + USERNAME + ", " + NAME +", " + SURNAME +", " + ", " + PSW + ", " + RUOLO + ")"
-                + " VALUES(?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO User (Username, Nome, Surname, Password, Ruolo) VALUES(?, ?, ?, ?, ?)";
+
         // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         stmt.setString(1, username);
