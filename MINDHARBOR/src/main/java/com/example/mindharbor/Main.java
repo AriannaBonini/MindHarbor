@@ -1,5 +1,7 @@
 package com.example.mindharbor;
 
+import com.example.mindharbor.app_controllers.LoginController;
+import com.example.mindharbor.graphic_controllers.LoginGraphicController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,6 +24,11 @@ public class Main extends Application{
 
 
         primaryStage.show();
+
+        LoginController loginController = new LoginController();
+        LoginGraphicController graphicController = new LoginGraphicController();
+
+        loginController.addObserver(graphicController);
     }
 
     public static void main(String[] args) {

@@ -37,7 +37,7 @@ public class ConnectionFactory {
 
             connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
         } catch (IOException | SQLException e) {
-            logger.error("Failed to establish a database connection", e);
+            logger.error("Tentativo di connessione al database fallito", e);
         }
     }
 

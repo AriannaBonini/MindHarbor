@@ -1,7 +1,9 @@
 package com.example.mindharbor.graphic_controllers;
 
+import com.example.mindharbor.Enum.UserType;
 import com.example.mindharbor.beans.LoginCredentialBean;
 import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.patterns.Observer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -11,7 +13,7 @@ import com.example.mindharbor.app_controllers.LoginController;
 
 import java.sql.SQLException;
 
-public class LoginGraphicController {
+public class LoginGraphicController  implements Observer {
 
     @FXML
     private Label msgLbl;
@@ -61,5 +63,16 @@ public class LoginGraphicController {
             System.out.println("Errore di connessione: " + e.getMessage());
         }
 
+    }
+
+    @Override
+    public void updateUserStatus(UserType userType) {
+        if (userType==UserType.PAZIENTE) {
+            // Cambia la vista per il paziente
+            System.out.println("Sono un paziente");
+        } else if (userType==UserType.PSICOLOGO) {
+            // Cambia la vista per lo psicologo
+            System.out.println("Sono uno psicologo");
+        }
     }
 }
