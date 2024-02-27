@@ -8,11 +8,14 @@ import com.example.mindharbor.model.Utente;
 import java.sql.SQLException;
 
 public class LoginController {
+
     public static void login(LoginCredentialBean credenziali) throws DAOException, SQLException {
         Utente utente= new UtenteDao().TrovaUtente(credenziali.getUsername(),credenziali.getPassword());
-
         if (utente!= null) {
             //autenticazione avvenuta con successo
+            if("PAZIENTE".equals(utente.getUserType())){
+                // sono un utente
+            }
         }else {
             //autenticazione fallita
         }

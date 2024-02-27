@@ -2,7 +2,7 @@ module com.example.mindharbor {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
-
+    requires org.slf4j;
 
     opens com.example.mindharbor to javafx.fxml;
     opens com.example.mindharbor.graphic_controllers to javafx.fxml;

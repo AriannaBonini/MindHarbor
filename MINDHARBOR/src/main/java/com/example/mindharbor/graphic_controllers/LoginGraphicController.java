@@ -12,6 +12,7 @@ import com.example.mindharbor.app_controllers.LoginController;
 import java.sql.SQLException;
 
 public class LoginGraphicController {
+
     @FXML
     private Label msgLbl;
     @FXML
@@ -51,6 +52,7 @@ public class LoginGraphicController {
             LoginController.login(credenziali);
             //home page
             msgLbl.setText("Login effettuato");
+
         } catch (DAOException e){
             msgLbl.setText("Credenziali errate");
         }

@@ -2,7 +2,7 @@ package com.example.mindharbor.dao;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.Enum.UserType;
 import com.example.mindharbor.exceptions.DAOException;
-import com.example.mindharbor.session.DatabaseConnection;
+import com.example.mindharbor.session.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,9 +27,7 @@ public class UtenteDao {
         PreparedStatement stmt = null;
         Connection conn = null;
         Utente utente = null;
-
-        conn = DatabaseConnection.getConnection();
-
+        conn = ConnectionFactory.getConnection();
 
         String sql = "SELECT * FROM Utente WHERE Username = ? AND Password = ?;";
         // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
@@ -41,7 +39,6 @@ public class UtenteDao {
 
         if(!rs.first()) {
             throw new DAOException("Utente non trovato");
-
         }
 
         // Repositioning of the cursor
