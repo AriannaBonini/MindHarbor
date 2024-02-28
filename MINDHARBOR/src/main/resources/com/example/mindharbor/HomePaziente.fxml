@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane fx:controller="com.example.mindharbor.graphic_controllers.HomeGraphicController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane prefHeight="400.0" prefWidth="600.0" />
+      <ImageView fx:id="sfondo" fitHeight="410.0" fitWidth="613.0" layoutX="-5.0" layoutY="-3.0" smooth="false">
+         <image>
+            <Image url="@Img/HomePaziente.png" />
+         </image>
+      </ImageView>
+      <Text fx:id="lista_appuntamenti" fill="WHITE" layoutX="344.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LISTA APPUNTAMENTI" textAlignment="CENTER" wrappingWidth="136.7573642730713">
+         <font>
+            <Font name="Hiragino Sans W1" size="13.0" />
+         </font>
+      </Text>
+      <Circle fill="WHITE" layoutX="42.0" layoutY="30.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
+      <ImageView fx:id="image_home" fitHeight="19.0" fitWidth="20.0" layoutX="32.0" layoutY="20.0">
+         <image>
+            <Image url="@Img/icona_home.png" />
+         </image>
+      </ImageView>
+      <Text fx:id="Terapia" disable="true" fill="WHITE" layoutX="412.0" layoutY="90.0" opacity="0.45" strokeType="OUTSIDE" strokeWidth="0.0" text="TERAPIA" textAlignment="CENTER" wrappingWidth="84.03696632385254">
+         <font>
+            <Font name="Hiragino Sans W1" size="13.0" />
+         </font>
+      </Text>
+      <Text fx:id="test" disable="true" fill="WHITE" layoutX="144.0" layoutY="232.0" opacity="0.45" strokeType="OUTSIDE" strokeWidth="0.0" text="TEST" textAlignment="CENTER" wrappingWidth="136.7573642730713">
+         <font>
+            <Font name="Hiragino Sans W1" size="13.0" />
+         </font>
+      </Text>
+      <Text fx:id="prenota_appuntamento" fill="WHITE" layoutX="68.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PRENOTA APPUNTAMENTO" textAlignment="CENTER" wrappingWidth="136.7573642730713">
+         <font>
+            <Font name="Hiragino Sans W1" size="13.0" />
+         </font>
+      </Text>
+      <Text fx:id="home_buttom" fill="WHITE" layoutX="19.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HOME" textAlignment="CENTER" wrappingWidth="136.7573642730713">
+         <font>
+            <Font name="Hiragino Sans W1" size="13.0" />
+         </font>
+      </Text>
+      <Label fx:id="label_nome_paziente" layoutX="404.0" layoutY="23.0" prefHeight="13.0" prefWidth="131.0" textFill="WHITE">
+         <font>
+            <Font name="Hiragino Sans W1" size="12.0" />
+         </font>
+      </Label>
+      <Circle fill="WHITE" layoutX="557.0" layoutY="30.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
+      <ImageView fitHeight="24.0" fitWidth="22.0" layoutX="546.0" layoutY="18.0">
+         <image>
+            <Image url="@Img/iconca_profilo.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
