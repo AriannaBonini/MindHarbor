@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane fx:controller="com.example.mindharbor.graphic_controllers.HomeGraphicController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:controller="com.example.mindharbor.graphic_controllers.HomePazienteGraphicController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane prefHeight="400.0" prefWidth="600.0" />
       <ImageView fx:id="sfondo" fitHeight="410.0" fitWidth="613.0" layoutX="-5.0" layoutY="-3.0" smooth="false">
@@ -57,7 +57,7 @@
       <Circle fill="WHITE" layoutX="557.0" layoutY="30.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
       <ImageView fitHeight="24.0" fitWidth="22.0" layoutX="546.0" layoutY="18.0">
          <image>
-            <Image url="@Img/iconca_profilo.png" />
+            <Image url="@Img/icona_profilo.png" />
          </image>
       </ImageView>
    </children>

@@ -72,7 +72,6 @@ public class LoginGraphicController  implements Observer {
     public void updateUserStatus(UserType userType) {
         try {
             if (userType == UserType.PAZIENTE) {
-
                 // carico l'interfaccia grafica della home del paziente
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/HomePaziente.fxml"));
                 Parent root = loader.load();
@@ -84,8 +83,15 @@ public class LoginGraphicController  implements Observer {
                 stage.show();
 
             } else if (userType == UserType.PSICOLOGO) {
-                // Cambia la vista per lo psicologo
-                System.out.println("Sono uno psicologo");
+                // carico l'interfaccia grafica della home dello psicologo
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/HomePsicologo.fxml"));
+                Parent root = loader.load();
+
+                // ora imposto la scena
+                Stage stage = new Stage();
+                stage.setTitle("Home Page Psicologo");
+                stage.setScene(new Scene(root));
+                stage.show();
             }
         }catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);

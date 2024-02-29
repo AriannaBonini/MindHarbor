@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mind_harbor.Controller.LoginGraphicController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mindharbor.graphic_controllers.HomePsicologoGraphicController">
    <children>
       <Pane prefHeight="400.0" prefWidth="600.0" />
       <ImageView fx:id="sfondo" fitHeight="410.0" fitWidth="613.0" layoutX="-5.0" layoutY="-3.0" smooth="false">
@@ -51,7 +51,7 @@
       <Circle fill="WHITE" layoutX="557.0" layoutY="30.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
       <ImageView fitHeight="24.0" fitWidth="22.0" layoutX="546.0" layoutY="18.0">
          <image>
-            <Image url="Img/iconca_profilo.png" />
+            <Image url="@Img/icona_profilo.png" />
          </image>
       </ImageView>
    </children>
