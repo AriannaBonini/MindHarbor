@@ -12,133 +12,187 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `MindHarborDB` ;
+-- -----------------------------------------------------
+-- Schema mindharbordb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mindharbordb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mindharbordb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `mydb` ;
 
 -- -----------------------------------------------------
 -- Table `mydb`.`Utente`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Utente` (
-    `Username` VARCHAR(45) NOT NULL,
-    `Password` INT NOT NULL,
-    `Nome` VARCHAR(45) NOT NULL,
-    `Cognome` VARCHAR(45) NOT NULL,
-    `Categoria` ENUM('Paziente', 'Psicologo') NOT NULL,
-    PRIMARY KEY (`Username`))
-    ENGINE = InnoDB;
+  `Username` VARCHAR(45) NOT NULL,
+  `Password` INT NOT NULL,
+  `Nome` VARCHAR(45) NOT NULL,
+  `Cognome` VARCHAR(45) NOT NULL,
+  `Categoria` ENUM('Paziente', 'Psicologo') NOT NULL,
+  PRIMARY KEY (`Username`))
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `mydb`.`Psicologo`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Psicologo` (
-    `CostoOrario` INT NOT NULL,
-    `Nome_Studio` VARCHAR(45) NOT NULL,
-    `Psicologo_Username` VARCHAR(45) NOT NULL,
-    INDEX `fk_Psicologo_Utente1_idx` (`Psicologo_Username` ASC) VISIBLE,
-    PRIMARY KEY (`Psicologo_Username`),
-    CONSTRAINT `fk_Psicologo_Utente1`
+  `CostoOrario` INT NOT NULL,
+  `Nome_Studio` VARCHAR(45) NOT NULL,
+  `Psicologo_Username` VARCHAR(45) NOT NULL,
+  INDEX `fk_Psicologo_Utente1_idx` (`Psicologo_Username` ASC) VISIBLE,
+  PRIMARY KEY (`Psicologo_Username`),
+  CONSTRAINT `fk_Psicologo_Utente1`
     FOREIGN KEY (`Psicologo_Username`)
     REFERENCES `mydb`.`Utente` (`Username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `mydb`.`Paziente`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Paziente` (
-    `Età` INT NOT NULL,
-    `CodiceFiscale` VARCHAR(45) NOT NULL,
-    `Diagnosi` VARCHAR(45) NULL,
-    `Paziente_Username` VARCHAR(45) NOT NULL,
-    PRIMARY KEY (`Paziente_Username`),
-    INDEX `fk_Paziente_Utente1_idx` (`Paziente_Username` ASC) VISIBLE,
-    CONSTRAINT `fk_Paziente_Utente1`
+  `Età` INT NOT NULL,
+  `CodiceFiscale` VARCHAR(45) NOT NULL,
+  `Diagnosi` VARCHAR(45) NULL,
+  `Paziente_Username` VARCHAR(45) NOT NULL,
+  `Psicologo_Username` VARCHAR(45) NULL,
+  PRIMARY KEY (`Paziente_Username`),
+  INDEX `fk_Paziente_Utente1_idx` (`Paziente_Username` ASC) VISIBLE,
+  INDEX `fk_Paziente_Psicologo1_idx` (`Psicologo_Username` ASC) VISIBLE,
+  CONSTRAINT `fk_Paziente_Utente1`
     FOREIGN KEY (`Paziente_Username`)
     REFERENCES `mydb`.`Utente` (`Username`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`Lista Test`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Lista Test` (
-    `Nome` VARCHAR(45) NOT NULL,
-    PRIMARY KEY (`Nome`))
-    ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mydb`.`DomandeTest`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`DomandeTest` (
-    `Domanda` VARCHAR(200) NOT NULL,
-    `Nome` VARCHAR(45) NOT NULL,
-    PRIMARY KEY (`Domanda`, `Nome`),
-    INDEX `fk_DomandeTest_Lista Test1_idx` (`Nome` ASC) VISIBLE,
-    CONSTRAINT `fk_DomandeTest_Lista Test1`
-    FOREIGN KEY (`Nome`)
-    REFERENCES `mydb`.`Lista Test` (`Nome`)
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Paziente_Psicologo1`
+    FOREIGN KEY (`Psicologo_Username`)
+    REFERENCES `mydb`.`Psicologo` (`Psicologo_Username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `mydb`.`Test Psicologico`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Test Psicologico` (
-    `DataOdierna` VARCHAR(10) NOT NULL,
-    `Risultato` INT NULL DEFAULT 0,
-    `Psicologo` VARCHAR(45) NOT NULL,
-    `Paziente` VARCHAR(45) NOT NULL,
-    `Test` VARCHAR(45) NOT NULL,
-    PRIMARY KEY (`DataOdierna`, `Psicologo`, `Paziente`),
-    INDEX `fk_Test Psicologico_Psicologo1_idx` (`Psicologo` ASC) VISIBLE,
-    INDEX `fk_Test Psicologico_Paziente1_idx` (`Paziente` ASC) VISIBLE,
-    INDEX `fk_Test Psicologico_Lista Test1_idx` (`Test` ASC) VISIBLE,
-    CONSTRAINT `fk_Test Psicologico_Psicologo1`
-    FOREIGN KEY (`Psicologo`)
+  `Data` VARCHAR(10) NOT NULL,
+  `Risultato` INT NULL DEFAULT 0,
+  `Username_Psicologo` VARCHAR(45) NOT NULL,
+  `Username_Paziente` VARCHAR(45) NOT NULL,
+  `NomeTest` VARCHAR(45) NOT NULL,
+  `ID_Test` INT NOT NULL AUTO_INCREMENT,
+  INDEX `fk_Test Psicologico_Psicologo1_idx` (`Username_Psicologo` ASC) VISIBLE,
+  INDEX `fk_Test Psicologico_Paziente1_idx` (`Username_Paziente` ASC) VISIBLE,
+  PRIMARY KEY (`ID_Test`),
+  CONSTRAINT `fk_Test Psicologico_Psicologo1`
+    FOREIGN KEY (`Username_Psicologo`)
     REFERENCES `mydb`.`Psicologo` (`Psicologo_Username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT `fk_Test Psicologico_Paziente1`
-    FOREIGN KEY (`Paziente`)
+  CONSTRAINT `fk_Test Psicologico_Paziente1`
+    FOREIGN KEY (`Username_Paziente`)
     REFERENCES `mydb`.`Paziente` (`Paziente_Username`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-    CONSTRAINT `fk_Test Psicologico_Lista Test1`
-    FOREIGN KEY (`Test`)
-    REFERENCES `mydb`.`Lista Test` (`Nome`)
-    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `mydb`.`Terapia`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Terapia` (
-    `Psicologo_Psicologo_Username` VARCHAR(45) NOT NULL,
-    `Paziente_Paziente_Username` VARCHAR(45) NOT NULL,
-    `Terapia` VARCHAR(300) NOT NULL,
-    `DataOdierna` VARCHAR(10) NULL,
-    PRIMARY KEY (`Psicologo_Psicologo_Username`, `Paziente_Paziente_Username`),
-    INDEX `fk_table1_Paziente1_idx` (`Paziente_Paziente_Username` ASC) VISIBLE,
-    CONSTRAINT `fk_table1_Psicologo1`
-    FOREIGN KEY (`Psicologo_Psicologo_Username`)
+  `Username_Psicologo` VARCHAR(45) NOT NULL,
+  `Username_Paziente` VARCHAR(45) NOT NULL,
+  `Descrizione` VARCHAR(300) NOT NULL,
+  `Data` VARCHAR(10) NOT NULL,
+  `ID_Terapia` INT NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`ID_Terapia`),
+  INDEX `fk_table1_Paziente1_idx` (`Username_Paziente` ASC) VISIBLE,
+  CONSTRAINT `fk_table1_Psicologo1`
+    FOREIGN KEY (`Username_Psicologo`)
     REFERENCES `mydb`.`Psicologo` (`Psicologo_Username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT `fk_table1_Paziente1`
-    FOREIGN KEY (`Paziente_Paziente_Username`)
+  CONSTRAINT `fk_table1_Paziente1`
+    FOREIGN KEY (`Username_Paziente`)
     REFERENCES `mydb`.`Paziente` (`Paziente_Username`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-    ENGINE = InnoDB;
+ENGINE = InnoDB;
+
+USE `mindharbordb` ;
+
+-- -----------------------------------------------------
+-- Table `mindharbordb`.`utente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mindharbordb`.`utente` (
+  `Username` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
+  `Password` CHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
+  `Nome` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
+  `Cognome` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
+  `Ruolo` ENUM('Paziente', 'Psicologo') CHARACTER SET 'utf8mb3' NOT NULL,
+  PRIMARY KEY (`Username`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mindharbordb`.`paziente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mindharbordb`.`paziente` (
+  `Username` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
+  `Età` INT NOT NULL,
+  `CodiceFiscale` VARCHAR(16) CHARACTER SET 'utf8mb3' NOT NULL,
+  PRIMARY KEY (`CodiceFiscale`),
+  INDEX `Paziente_Username_index` (`Username` ASC) VISIBLE,
+  CONSTRAINT `UtentePaziente`
+    FOREIGN KEY (`Username`)
+    REFERENCES `mindharbordb`.`utente` (`Username`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mindharbordb`.`psicologo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mindharbordb`.`psicologo` (
+  `Username` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
+  `CostoOrario` INT NOT NULL,
+  `NomeStudio` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
+  PRIMARY KEY (`Username`),
+  CONSTRAINT `Psicologo_Utente_Username_fk`
+    FOREIGN KEY (`Username`)
+    REFERENCES `mindharbordb`.`utente` (`Username`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mindharbordb`.`Appuntamento`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mindharbordb`.`Appuntamento` (
+  `ID_Appuntamento` INT NOT NULL AUTO_INCREMENT,
+  `Data` VARCHAR(10) NOT NULL,
+  `Ora` VARCHAR(5) NOT NULL,
+  `Username_Paziente` VARCHAR(45) NOT NULL,
+  `Username_Psicologo` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`ID_Appuntamento`),
+  INDEX `fk_Appuntamento_Paziente1_idx` (`Username_Paziente` ASC) VISIBLE,
+  INDEX `fk_Appuntamento_Psicologo1_idx` (`Username_Psicologo` ASC) VISIBLE,
+  CONSTRAINT `fk_Appuntamento_Paziente1`
+    FOREIGN KEY (`Username_Paziente`)
+    REFERENCES `mydb`.`Paziente` (`Paziente_Username`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Appuntamento_Psicologo1`
+    FOREIGN KEY (`Username_Psicologo`)
+    REFERENCES `mydb`.`Psicologo` (`Psicologo_Username`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

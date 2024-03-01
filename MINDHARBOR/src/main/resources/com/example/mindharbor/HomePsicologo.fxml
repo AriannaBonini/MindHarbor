@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mindharbor.graphic_controllers.HomePsicologoGraphicController">
    <children>
@@ -17,32 +16,16 @@
             <Image url="@Img/HomePaziente.png" />
          </image>
       </ImageView>
-      <Text fx:id="prescrivi_terapia" fill="WHITE" layoutX="376.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PRESCRIVI TERAPIA" textAlignment="CENTER" wrappingWidth="101.56656837463379">
-         <font>
-            <Font name="Hiragino Sans W1" size="13.0" />
-         </font>
-      </Text>
+      <Label fx:id="PrescriviTerapia" layoutX="397.0" layoutY="208.0" text="PRESCRIVI &#10;TERAPIA" textAlignment="CENTER" textFill="WHITE" />
       <Circle fill="WHITE" layoutX="42.0" layoutY="30.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
       <ImageView fx:id="image_home" fitHeight="19.0" fitWidth="20.0" layoutX="32.0" layoutY="20.0">
          <image>
             <Image url="@Img/icona_home.png" />
          </image>
       </ImageView>
-      <Text fx:id="richiesta_prenotazione" disable="true" fill="WHITE" layoutX="415.0" layoutY="91.0" opacity="0.35" strokeType="OUTSIDE" strokeWidth="0.0" text="RICHIESTA PRENOTAZIONE" textAlignment="CENTER" wrappingWidth="105.91230201721191">
-         <font>
-            <Font name="Hiragino Sans W1" size="13.0" />
-         </font>
-      </Text>
-      <Text fx:id="visualizza_appuntamenti" fill="WHITE" layoutX="61.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="VISUALIZZA APPUNTAMENTI" textAlignment="CENTER" wrappingWidth="136.7573642730713">
-         <font>
-            <Font name="Hiragino Sans W1" size="13.0" />
-         </font>
-      </Text>
-      <Text fx:id="home_buttom" fill="WHITE" layoutX="19.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HOME" textAlignment="CENTER" wrappingWidth="136.7573642730713">
-         <font>
-            <Font name="Hiragino Sans W1" size="13.0" />
-         </font>
-      </Text>
+      <Label fx:id="RichiestaPrenotazione" disable="true" layoutX="424.0" layoutY="77.0" text="RICHIESTA &#10;PRENOTAZIONE" textAlignment="CENTER" textFill="WHITE" />
+      <Label fx:id="VisualizzaAppuntamenti" layoutX="85.0" layoutY="132.0" text="VISUALIZZA &#10;APPUNTAMENTI" textAlignment="CENTER" textFill="WHITE" />
+      <Label fx:id="Home" layoutX="70.0" layoutY="22.0" text="HOME" textFill="WHITE" />
       <Label fx:id="label_nome_psicologo" layoutX="404.0" layoutY="23.0" prefHeight="13.0" prefWidth="131.0" textFill="WHITE">
          <font>
             <Font name="Hiragino Sans W1" size="12.0" />
