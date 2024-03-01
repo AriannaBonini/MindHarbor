@@ -3,6 +3,7 @@ package com.example.mindharbor.graphic_controllers;
 import com.example.mindharbor.Enum.UserType;
 import com.example.mindharbor.beans.LoginCredentialBean;
 import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.exceptions.SessionUserException;
 import com.example.mindharbor.patterns.Observer;
 import com.example.mindharbor.session.ConnectionFactory;
 import javafx.event.ActionEvent;
@@ -55,15 +56,21 @@ public class LoginGraphicController  implements Observer {
         }
         try {
             LoginCredentialBean credenziali = new LoginCredentialBean(username, password);
-            LoginController.login(credenziali);
+            loginController.login(credenziali);
             Stage loginstage = (Stage) accediButton.getScene().getWindow();
             loginstage.close();
 
         } catch (DAOException e){
+            logger.info("Credenziali errate per l'utente" + username, e);
             msgLbl.setText("Credenziali errate");
         }
         catch (SQLException e) {
+            logger.info("Problemi di connessione al database", e);
             msgLbl.setText("Problema di connessione al database");
+        }
+        catch(SessionUserException e) {
+            logger.info(username + "già loggato", e);
+            msgLbl.setText("Utente già loggato");
         }
 
     }

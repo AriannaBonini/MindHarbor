@@ -27,7 +27,7 @@ USE `mydb` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Utente` (
   `Username` VARCHAR(45) NOT NULL,
-  `Password` INT NOT NULL,
+  `Password` VARCHAR(45) NOT NULL,
   `Nome` VARCHAR(45) NOT NULL,
   `Cognome` VARCHAR(45) NOT NULL,
   `Categoria` ENUM('Paziente', 'Psicologo') NOT NULL,
@@ -126,48 +126,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Terapia` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-USE `mindharbordb` ;
-
--- -----------------------------------------------------
--- Table `mindharbordb`.`utente`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mindharbordb`.`utente` (
-  `Username` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
-  `Password` CHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
-  `Nome` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
-  `Cognome` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
-  `Ruolo` ENUM('Paziente', 'Psicologo') CHARACTER SET 'utf8mb3' NOT NULL,
-  PRIMARY KEY (`Username`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mindharbordb`.`paziente`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mindharbordb`.`paziente` (
-  `Username` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
-  `Età` INT NOT NULL,
-  `CodiceFiscale` VARCHAR(16) CHARACTER SET 'utf8mb3' NOT NULL,
-  PRIMARY KEY (`CodiceFiscale`),
-  INDEX `Paziente_Username_index` (`Username` ASC) VISIBLE,
-  CONSTRAINT `UtentePaziente`
-    FOREIGN KEY (`Username`)
-    REFERENCES `mindharbordb`.`utente` (`Username`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `mindharbordb`.`psicologo`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mindharbordb`.`psicologo` (
-  `Username` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
-  `CostoOrario` INT NOT NULL,
-  `NomeStudio` VARCHAR(45) CHARACTER SET 'utf8mb3' NOT NULL,
-  PRIMARY KEY (`Username`),
-  CONSTRAINT `Psicologo_Utente_Username_fk`
-    FOREIGN KEY (`Username`)
-    REFERENCES `mindharbordb`.`utente` (`Username`))
-ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
