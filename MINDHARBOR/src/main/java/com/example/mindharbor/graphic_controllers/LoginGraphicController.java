@@ -89,6 +89,7 @@ public class LoginGraphicController  implements Observer {
                 stage.setScene(new Scene(root));
                 stage.show();
 
+
             } else if (userType == UserType.PSICOLOGO) {
                 // carico l'interfaccia grafica della home dello psicologo
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/HomePsicologo.fxml"));

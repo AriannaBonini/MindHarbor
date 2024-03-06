@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
@@ -16,7 +18,30 @@
             <Image url="@Img/HomePaziente.png" />
          </image>
       </ImageView>
-      <Label fx:id="ListaAppuntamenti" layoutX="358.0" layoutY="220.0" text="LISTA APPUNTAMENTI" textFill="WHITE" />
+      <HBox layoutX="268.0" layoutY="12.0" prefHeight="42.0" prefWidth="317.0" spacing="33.0">
+         <children>
+            <Label fx:id="LabelNomePaziente" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="302.0" text="Claudia Rossi" textFill="WHITE">
+               <font>
+                  <Font name="Hiragino Sans W1" size="12.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+            <ImageView fitHeight="24.0" fitWidth="24.0">
+               <image>
+                  <Image url="@Img/IconaProfilo.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="-26.0" top="-3.0" />
+               </HBox.margin>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="4.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+      <Label fx:id="ListaAppuntamenti" layoutX="358.0" layoutY="220.0" text="LISTA APPUNTAMENTI" textFill="WHITE"  onMouseClicked="#onVisualAppuntamentiClick" />
       <Label fx:id="Home" layoutX="69.0" layoutY="21.0" text="HOME" textFill="WHITE" />
       <Circle fill="WHITE" layoutX="42.0" layoutY="30.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
       <ImageView fx:id="image_home" fitHeight="19.0" fitWidth="20.0" layoutX="32.0" layoutY="20.0">
@@ -26,17 +51,6 @@
       </ImageView>
       <Label fx:id="Terapia" disable="true" layoutX="431.0" layoutY="76.0" text="TERAPIA" textFill="WHITE" />
       <Label fx:id="Test" disable="true" layoutX="199.0" layoutY="218.0" text="TEST" textFill="WHITE" />
-      <Label fx:id="PrenotaAppuntamento" layoutX="85.0" layoutY="122.0" prefHeight="54.0" prefWidth="101.0" text="PRENOTA &#10;APPUNTAMENTO" textAlignment="CENTER" textFill="WHITE" />
-      <Label fx:id="LabelNomePaziente" layoutX="404.0" layoutY="23.0" prefHeight="13.0" prefWidth="131.0" textFill="WHITE">
-         <font>
-            <Font name="Hiragino Sans W1" size="12.0" />
-         </font>
-      </Label>
-      <Circle fill="WHITE" layoutX="557.0" layoutY="30.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
-      <ImageView fitHeight="24.0" fitWidth="22.0" layoutX="546.0" layoutY="18.0">
-         <image>
-            <Image url="@Img/icona_profilo.png" />
-         </image>
-      </ImageView>
+      <Label fx:id="PrenotaAppuntamento" layoutX="85.0" layoutY="122.0" onMouseClicked="#clickPrenotaAppuntamento" prefHeight="54.0" prefWidth="101.0" text="PRENOTA &#10;APPUNTAMENTO" textAlignment="CENTER" textFill="WHITE" />
    </children>
 </AnchorPane>
