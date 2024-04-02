@@ -7,6 +7,7 @@ import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.session.SessionManager;
+import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,19 +57,12 @@ public class HomePsicologoGraphicController {
 
         try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/ListaAppuntamenti2.fxml"));
-            //loader.setController(new AppuntamentiPsicologoGraphicController());
-            Parent root = null;
-            root = loader.load();
-
-            // ora imposto la scena
-            Stage stage = new Stage();
-            stage.setTitle("Lista Appuntamenti");
-            stage.setScene(new Scene(root));
-            stage.show();
+            NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+            navigator.gotoPage("/com/example/mindharbor/ListaAppuntamenti2.fxml");
 
             Stage HomePsicologo = (Stage) VisualizzaAppuntamenti.getScene().getWindow();
             HomePsicologo.close();
+
 
         } catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
@@ -76,3 +70,4 @@ public class HomePsicologoGraphicController {
 
     }
 }
+

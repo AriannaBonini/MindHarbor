@@ -6,6 +6,7 @@ import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.exceptions.SessionUserException;
 import com.example.mindharbor.patterns.Observer;
 import com.example.mindharbor.session.ConnectionFactory;
+import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -80,26 +81,17 @@ public class LoginGraphicController  implements Observer {
         try {
             if (userType == UserType.PAZIENTE) {
                 // carico l'interfaccia grafica della home del paziente
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/HomePaziente.fxml"));
-                Parent root = loader.load();
 
-                // ora imposto la scena
-                Stage stage = new Stage();
-                stage.setTitle("Home Page Paziente");
-                stage.setScene(new Scene(root));
-                stage.show();
+                NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+                navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
+
 
 
             } else if (userType == UserType.PSICOLOGO) {
                 // carico l'interfaccia grafica della home dello psicologo
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/HomePsicologo.fxml"));
-                Parent root = loader.load();
 
-                // ora imposto la scena
-                Stage stage = new Stage();
-                stage.setTitle("Home Page Psicologo");
-                stage.setScene(new Scene(root));
-                stage.show();
+                NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+                navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
             }
         }catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);

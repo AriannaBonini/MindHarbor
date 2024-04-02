@@ -90,7 +90,7 @@
                               <Insets bottom="10.0" left="4.0" right="10.0" top="10.0" />
                            </padding>
                         </HBox>
-                        <Label fx:id="Home" layoutX="54.0" layoutY="19.0" text="HOME" textFill="WHITE" />
+                        <Label fx:id="Home" layoutX="54.0" layoutY="19.0" text="HOME" textFill="WHITE" onMouseClicked="#goToHome"/>
                         <Circle fill="WHITE" layoutX="27.0" layoutY="28.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
                         <ImageView fx:id="image_home" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0">
                            <image>

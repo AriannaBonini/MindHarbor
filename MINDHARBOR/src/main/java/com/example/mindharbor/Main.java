@@ -2,6 +2,7 @@ package com.example.mindharbor;
 
 import com.example.mindharbor.app_controllers.LoginController;
 import com.example.mindharbor.graphic_controllers.LoginGraphicController;
+import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,15 +15,9 @@ public class Main extends Application{
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/Login.fxml"));
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
 
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Mind Harbor");
-        primaryStage.setResizable(false);
-
-        primaryStage.show();
+        NavigatorSingleton navigator = NavigatorSingleton.getInstance(primaryStage);
+        navigator.gotoPage("/com/example/mindharbor/Login.fxml");
 
         LoginController loginController = new LoginController();
         LoginGraphicController graphicController = new LoginGraphicController();

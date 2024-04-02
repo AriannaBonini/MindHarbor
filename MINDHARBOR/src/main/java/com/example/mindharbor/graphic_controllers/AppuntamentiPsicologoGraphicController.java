@@ -4,15 +4,22 @@ import com.example.mindharbor.app_controllers.AppuntamentiPsicologoController;
 import com.example.mindharbor.app_controllers.HomePsicologoController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.utilities.NavigatorSingleton;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -25,7 +32,7 @@ public class AppuntamentiPsicologoGraphicController {
     private Label ScorriAppuntamenti2;
 
     @FXML
-    private VBox BoxAppuntamenti ;
+    private VBox BoxAppuntamenti;
 
     @FXML
     private Label DataAppuntamento;
@@ -72,6 +79,9 @@ public class AppuntamentiPsicologoGraphicController {
     @FXML
     private Text ListaVuotaPassati;
 
+    @FXML
+    private Label Home;
+
     private String nome;
     private String cognome;
 
@@ -85,10 +95,10 @@ public class AppuntamentiPsicologoGraphicController {
 
         HomeInfoUtenteBean infoUtenteBean = appuntamentiController.getAppPsiInfo();
 
-        nome=infoUtenteBean.getNome();
-        cognome=infoUtenteBean.getCognome();
+        nome = infoUtenteBean.getNome();
+        cognome = infoUtenteBean.getCognome();
 
-        LabelNomePsicologo.setText(nome +" " +cognome);
+        LabelNomePsicologo.setText(nome + " " + cognome);
 
 
         try {
@@ -122,13 +132,13 @@ public class AppuntamentiPsicologoGraphicController {
 
         BoxAppuntamenti.setSpacing(10);
 
-        for(AppuntamentiBean app: appuntamenti) {
+        for (AppuntamentiBean app : appuntamenti) {
             VBox VBox = new VBox();
 
-            Label DataAppuntamento= new Label("DATA:" + " "+ app.getData());
-            Label OraAppuntamento= new Label("ORA:" + " "+ app.getOra());
-            Label NomePsicologo= new Label("PSICOLOGO:" + " "+ app.getNomePsicologo() + " "+ app.getCognomePsicologo());
-            Label NomePaziente= new Label("PAZIENTE:" + " "+ app.getNomePaziente()+ " " + app.getCognomePaziente());
+            Label DataAppuntamento = new Label("DATA:" + " " + app.getData());
+            Label OraAppuntamento = new Label("ORA:" + " " + app.getOra());
+            Label NomePsicologo = new Label("PSICOLOGO:" + " " + app.getNomePsicologo() + " " + app.getCognomePsicologo());
+            Label NomePaziente = new Label("PAZIENTE:" + " " + app.getNomePaziente() + " " + app.getCognomePaziente());
 
             DataAppuntamento.setTextFill(Color.WHITE);
             OraAppuntamento.setTextFill(Color.WHITE);
@@ -138,6 +148,20 @@ public class AppuntamentiPsicologoGraphicController {
             VBox.getChildren().addAll(DataAppuntamento, OraAppuntamento, NomePsicologo, NomePaziente);
 
             BoxAppuntamenti.getChildren().add(VBox);
+        }
+    }
+
+    @FXML
+    public void goToHome() {
+        try {
+            NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+            navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
+
+            Stage Appuntamenti = (Stage) Home.getScene().getWindow();
+            Appuntamenti.close();
+
+        }catch(IOException e) {
+            logger.error("Impossibile caricare l'interfaccia", e);
         }
     }
 }

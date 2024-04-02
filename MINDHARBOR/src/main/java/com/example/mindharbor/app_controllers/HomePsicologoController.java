@@ -13,12 +13,4 @@ public class HomePsicologoController {
 
     }
 
-    /*public HomeInfoUtenteBean getHomepageInfo() {
-        SessionManager sessionManager = SessionManager.getInstance();
-
-        return new HomeInfoUtenteBean(
-                sessionManager.getCurrentUser().getNome(),
-                sessionManager.getCurrentUser().getCognome()
-        );
-    }*/
 }

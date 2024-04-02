@@ -52,10 +52,10 @@ public class HomePazienteGraphicController {
     }
 
     public void onVisualAppuntamentiClick() {
-        try {
+       /* try {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/ListaAppuntamenti2.fxml"));
-            loader.setController(new AppuntamentiPazienteController());
+            //loader.setController(new AppuntamentiPazienteController());
             Parent root = null;
             root = loader.load();
 
@@ -71,33 +71,15 @@ public class HomePazienteGraphicController {
 
         } catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
-        }
+        } */
 
-    }
+ }
 
 
 
 
     public void clickPrenotaAppuntamento() {
 
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
