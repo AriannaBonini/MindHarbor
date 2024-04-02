@@ -131,7 +131,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `mindharbordb`.`Appuntamento`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mindharbordb`.`Appuntamento` (
+CREATE TABLE IF NOT EXISTS `mydb`.`Appuntamento` (
   `ID_Appuntamento` INT NOT NULL AUTO_INCREMENT,
   `Data` VARCHAR(10) NOT NULL,
   `Ora` VARCHAR(5) NOT NULL,

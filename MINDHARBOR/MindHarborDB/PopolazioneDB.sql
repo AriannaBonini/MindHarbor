@@ -24,6 +24,12 @@ insert into Psicologo values(50,'Derivazione Costante','BelPaolino');
 insert into Psicologo values(120,'Il REGNO dei sogni','IlPrincipe');
 insert into Psicologo values(38,'Marsolandia','Mars');
 
+--APPUNTAMENTI PSICOLOGO
+
+--ciccio
+insert into appuntamento values('011ax','23/07/2024','15:30','Giacomino','Ciccio');
+insert into appuntamento values('012ax','23/07/2024','15:30','Luigi@67','Ciccio');
+
 
 
 

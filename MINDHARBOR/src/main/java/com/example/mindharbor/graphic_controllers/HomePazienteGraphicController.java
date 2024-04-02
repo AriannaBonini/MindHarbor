@@ -1,7 +1,9 @@
 package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.HomePazienteController;
-import com.example.mindharbor.app_controllers.ListaAppuntamentiPazienteController;
+import com.example.mindharbor.app_controllers.HomePsicologoController;
+import com.example.mindharbor.app_controllers.AppuntamentiPazienteController;
+import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.model.Utente;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,22 +34,28 @@ public class HomePazienteGraphicController {
     @FXML
     private Label LabelNomePaziente;
 
-    private HomePazienteController homePazienteController;
+    private String nome;
+    private String cognome;
 
     private static final Logger logger = LoggerFactory.getLogger(HomePazienteGraphicController.class);
 
     public void initialize() {
-        homePazienteController= new HomePazienteController();
-        Utente utenteCorrente = SessionManager.getInstance().getCurrentUser();
+        HomePazienteController homeController = new HomePazienteController();
 
-        LabelNomePaziente.setText(utenteCorrente.getNome() +" " + utenteCorrente.getCognome());
+        HomeInfoUtenteBean infoUtenteBean = homeController.getHomepageInfo();
+
+        nome=infoUtenteBean.getNome();
+        cognome=infoUtenteBean.getCognome();
+
+        LabelNomePaziente.setText(nome +" " +cognome);
+
     }
 
     public void onVisualAppuntamentiClick() {
         try {
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/ListaAppuntamenti.fxml"));
-            loader.setController(new ListaAppuntamentiPazienteController());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/ListaAppuntamenti2.fxml"));
+            loader.setController(new AppuntamentiPazienteController());
             Parent root = null;
             root = loader.load();
 

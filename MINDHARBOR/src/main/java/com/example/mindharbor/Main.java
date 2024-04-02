@@ -22,7 +22,6 @@ public class Main extends Application{
         primaryStage.setTitle("Mind Harbor");
         primaryStage.setResizable(false);
 
-
         primaryStage.show();
 
         LoginController loginController = new LoginController();

@@ -1,8 +1,10 @@
 package com.example.mindharbor.graphic_controllers;
 
+import com.example.mindharbor.app_controllers.AppuntamentiPsicologoController;
 import com.example.mindharbor.app_controllers.HomePazienteController;
 import com.example.mindharbor.app_controllers.HomePsicologoController;
-import com.example.mindharbor.app_controllers.ListaAppuntamentiPsicologoController;
+import com.example.mindharbor.beans.AppuntamentiBean;
+import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.session.SessionManager;
 import javafx.event.ActionEvent;
@@ -16,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 public class HomePsicologoGraphicController {
     @FXML
@@ -30,22 +34,30 @@ public class HomePsicologoGraphicController {
     @FXML
     private Label LabelNomePsicologo;
 
-    private HomePsicologoController homePsicologoController;
-
     private static final Logger logger = LoggerFactory.getLogger(HomePsicologoGraphicController.class);
 
-    public void initialize() {
-        homePsicologoController= new HomePsicologoController();
-        Utente utenteCorrente = SessionManager.getInstance().getCurrentUser();
+    private String nome;
+    private String cognome;
 
-        LabelNomePsicologo.setText(utenteCorrente.getNome() +" " + utenteCorrente.getCognome());
+    public void initialize() {
+
+        HomePsicologoController homeController = new HomePsicologoController();
+
+        HomeInfoUtenteBean infoUtenteBean = homeController.getHomepageInfo();
+
+        nome=infoUtenteBean.getNome();
+        cognome=infoUtenteBean.getCognome();
+
+        LabelNomePsicologo.setText(nome +" " +cognome);
     }
 
     @FXML
     public void onVisualAppuntamentiClick() {
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/ListaAppuntamenti.fxml"));
-            loader.setController(new ListaAppuntamentiPsicologoController());
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/ListaAppuntamenti2.fxml"));
+            //loader.setController(new AppuntamentiPsicologoGraphicController());
             Parent root = null;
             root = loader.load();
 
@@ -58,15 +70,9 @@ public class HomePsicologoGraphicController {
             Stage HomePsicologo = (Stage) VisualizzaAppuntamenti.getScene().getWindow();
             HomePsicologo.close();
 
-
         } catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
         }
 
     }
-
-
-
-
-
 }
