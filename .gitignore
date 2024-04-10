@@ -6,6 +6,8 @@
 # Datasource local storage ignored files
 /.idea/dataSources/
 /dataSources.local.xml
-# Other iles to ignore
+#Other ignored files
 /.idea
-/src/main/resources/config.properties
+/MINDHARBOR/src/main/resources/config.properties
+
+
