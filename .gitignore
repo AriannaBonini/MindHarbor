@@ -8,6 +8,6 @@
 /dataSources.local.xml
 #Other ignored files
 /.idea
-/MINDHARBOR/src/main/resources/config.properties
+/src/main/resources/config.properties
 
 
