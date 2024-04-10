@@ -1,0 +1,15 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/.idea/dataSources/
+/dataSources.local.xml
+#Other ignored files
+/.idea
+/MINDHARBOR/src/main/resources/config.properties
+/MINDHARBOR/derby.log
+/MINDHARBOR/mvnw
+/MINDHARBOR/mvnw.cmd
+
