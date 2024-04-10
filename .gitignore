@@ -9,7 +9,4 @@
 #Other ignored files
 /.idea
 /MINDHARBOR/src/main/resources/config.properties
-/MINDHARBOR/derby.log
-/MINDHARBOR/mvnw
-/MINDHARBOR/mvnw.cmd
 
