@@ -9,5 +9,7 @@
 #Other ignored files
 /.idea
 /src/main/resources/config.properties
-#aiutami
+/.DS_Store
+/src/.DS_Store
+/src/main/.DS_Store
 
