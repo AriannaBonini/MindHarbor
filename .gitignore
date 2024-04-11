@@ -1,12 +1,14 @@
 # Default ignored files
 /shelf/
-/workspace.xml
+/.idea/workspace.xml
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files
-/.idea/dataSources/
+/dataSources/
 /dataSources.local.xml
-#Other ignored files
+# Custom files to ignore
 /.idea
-/MINDHARBOR/src/main/resources/config.properties
-
+/src/main/resources/config.properties
+/.DS_Store
+/src/.DS_Store
+/src/main/.DS_Store
