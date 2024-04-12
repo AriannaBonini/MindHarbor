@@ -34,13 +34,7 @@ import java.util.List;
 public class ListaPazientiGraphicController {
 
     @FXML
-    private Label ScorriListasu;
-
-    @FXML
-    private Label ScorriListagiu;
-
-    @FXML
-    private VBox BoxListaPazienti;
+    private HBox HBoxPaziente;
 
     @FXML
     private Label NomePaziente;
@@ -49,10 +43,7 @@ public class ListaPazientiGraphicController {
     private Label CognomePaziente;
 
     @FXML
-    private ImageView ImmagineProfiloUomo;
-
-    @FXML
-    private ImageView ImmagineProfiloDonna;
+    private ImageView ImmaginePaziente;
 
     @FXML
     private Label LabelNomePsicologo;
@@ -63,19 +54,14 @@ public class ListaPazientiGraphicController {
     @FXML
     private Text ListaVuota;
 
-    private String nome;
-    private String cognome;
-
     @FXML
     private VBox BoxPaziente;
 
     @FXML
     private ListView<Node> ListViewPazienti;
 
-
-
-
-
+    private String nome;
+    private String cognome;
 
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
 
@@ -102,8 +88,6 @@ public class ListaPazientiGraphicController {
         }catch (SQLException e) {
             logger.info("Non non ci sono appuntamenti", e);
             ListaVuota.setText("Non esistono appuntamenti");
-            ScorriListagiu.setDisable(true);
-            ScorriListasu.setDisable(true);
         }
     }
 
@@ -111,43 +95,38 @@ public class ListaPazientiGraphicController {
     public void CreaVBoxListaPazienti( List<PazientiBean> listaPazienti) {
         ListViewPazienti.getItems().clear();
 
-        BoxListaPazienti.setSpacing(20);
-
-        ObservableList<VBox> pazienteInfo = FXCollections.observableArrayList();
-        ObservableList<ImageView> pazienteIcona = FXCollections.observableArrayList();
+        ObservableList<Node> items = FXCollections.observableArrayList();
 
         for (PazientiBean paz : listaPazienti) {
 
-            VBox BoxLabel = new VBox();
+            VBox BoxPaziente= new VBox();
+            HBox HBoxPaziente= new HBox();
+            ImageView ImmaginePaziente= new ImageView();
+            Image image;
 
-            Label NomePaziente = new Label("NOME:" + " " + paz.getNome());
-            Label CognomePaziente = new Label("COGNOME:" + " " + paz.getCognome());
+            Label NomePaziente = new Label("\n     NOME:" + " " + paz.getNome());
+            Label CognomePaziente = new Label("     COGNOME:" + " " + paz.getCognome());
 
             NomePaziente.setTextFill(Color.WHITE);
             CognomePaziente.setTextFill(Color.WHITE);
 
-            BoxLabel.getChildren().addAll(NomePaziente, CognomePaziente);
-            pazienteInfo.add(BoxLabel);
+            BoxPaziente.getChildren().addAll(NomePaziente,CognomePaziente);
 
             if (paz.getGenere().equals("M")) {
-                ImmagineProfiloUomo.setVisible(true);
-                pazienteIcona.add(ImmagineProfiloUomo);
+                image= new Image(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaMaschio.png"));
+                ImmaginePaziente.setImage(image);
 
             } else {
-                ImmagineProfiloDonna.setVisible(true);
-                pazienteIcona.add(ImmagineProfiloDonna);
+                image= new Image(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaFemmina.png"));
+                ImmaginePaziente.setImage(image);
             }
 
+            HBoxPaziente.getChildren().addAll(ImmaginePaziente,BoxPaziente);
+            items.add(HBoxPaziente);
+
         }
 
-        ObservableList<Node> items = FXCollections.observableArrayList();
-        for (int i = 0; i < pazienteInfo.size(); i++) {
-            HBox pazienteBox = new HBox();
-            pazienteBox.getChildren().addAll(pazienteIcona.get(i), pazienteInfo.get(i));
-            items.add(pazienteBox);
-        }
-
-        ListViewPazienti.setFixedCellSize(70);
+        ListViewPazienti.setFixedCellSize(100);
         ListViewPazienti.getItems().addAll(items);
     }
 
@@ -160,6 +139,25 @@ public class ListaPazientiGraphicController {
             ListaPazienti.close();
 
         }catch(IOException e) {
+            logger.error("Impossibile caricare l'interfaccia", e);
+        }
+
+    }
+
+    public void NodoSelezionato() {
+        try {
+            Node image = ListViewPazienti.getSelectionModel().getSelectedItem();
+
+            if(image==null) {
+                return;
+            }
+
+            Stage ListaPazienti = (Stage) image.getScene().getWindow();
+            ListaPazienti.close();
+
+            NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+            navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
+        } catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
         }
 

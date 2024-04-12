@@ -38,7 +38,7 @@ public class SessionManager {
             try{
                 for (Utente u: utenteLoggato) {
                     if (u.getUsername().equals(utente.getUsername())){
-                        throw new SessionUserException("User was already logged in");
+                        throw new SessionUserException("Utente già loggato");
                     }
                 }
                 utenteLoggato.add(utente);
@@ -48,10 +48,10 @@ public class SessionManager {
             }
         }
 
-        /*public synchronized void logout(){
-            loggedUsers.remove(currentUser);
-            currentUser = null;
-        }*/
+        public synchronized void logout(){
+            utenteLoggato.remove(utenteCorrente);
+            utenteCorrente = null;
+        }
 
         public synchronized Utente changeCurrentUser(String username){
             for (Utente u: utenteLoggato) {
@@ -62,6 +62,16 @@ public class SessionManager {
             }
             return null;
         }
+
+    public boolean isSessionOpen() {
+        if (utenteCorrente != null) {
+            System.out.println("Sessione aperta");
+            return true;
+        }else {
+            System.out.println("Sessione chiusa");
+            return false;
+        }
+    }
 }
 
 

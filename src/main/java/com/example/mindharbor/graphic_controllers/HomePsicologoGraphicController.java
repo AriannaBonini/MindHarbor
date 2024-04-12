@@ -1,28 +1,22 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.AppuntamentiPsicologoController;
-import com.example.mindharbor.app_controllers.HomePazienteController;
 import com.example.mindharbor.app_controllers.HomePsicologoController;
-import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
-import com.example.mindharbor.model.Utente;
-import com.example.mindharbor.session.SessionManager;
+import com.example.mindharbor.exceptions.SessionUserException;
 import com.example.mindharbor.utilities.NavigatorSingleton;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 public class HomePsicologoGraphicController {
+
+    @FXML
+    private Label logout;
+
     @FXML
     private Label PrescriviTerapia;
 
@@ -46,10 +40,10 @@ public class HomePsicologoGraphicController {
 
         HomeInfoUtenteBean infoUtenteBean = homeController.getHomepageInfo();
 
-        nome=infoUtenteBean.getNome();
-        cognome=infoUtenteBean.getCognome();
+        nome = infoUtenteBean.getNome();
+        cognome = infoUtenteBean.getCognome();
 
-        LabelNomePsicologo.setText(nome +" " +cognome);
+        LabelNomePsicologo.setText(nome + " " + cognome);
     }
 
     @FXML
@@ -57,7 +51,7 @@ public class HomePsicologoGraphicController {
 
         try {
 
-            NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+            NavigatorSingleton navigator = NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/ListaAppuntamenti2.fxml");
 
             Stage HomePsicologo = (Stage) VisualizzaAppuntamenti.getScene().getWindow();
@@ -72,10 +66,10 @@ public class HomePsicologoGraphicController {
 
     public void onPrescriviTerapiaClick() {
 
-        NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+        NavigatorSingleton navigator = NavigatorSingleton.getInstance();
 
         try {
-            navigator.gotoPage("/com/example/mindharbor/ProvaListaPazienti.fxml");
+            navigator.gotoPage("/com/example/mindharbor/ListaPazienti.fxml");
 
             Stage HomePsicologo = (Stage) PrescriviTerapia.getScene().getWindow();
             HomePsicologo.close();
@@ -84,5 +78,25 @@ public class HomePsicologoGraphicController {
             logger.error("Impossibile caricare l'interfaccia", e);
         }
     }
-}
 
+    public void Logout() {
+
+        NavigatorSingleton navigator = NavigatorSingleton.getInstance();
+
+        try {
+
+            new HomePsicologoController().logout();
+
+            Stage HomePsicologo= (Stage) logout.getScene().getWindow();
+            HomePsicologo.close();
+
+            navigator.gotoPage("/com/example/mindharbor/Login.fxml");
+
+        } catch (SessionUserException e) {
+            logger.error("Errore", e);
+
+        } catch (IOException e ) {
+            logger.error("Impossibile caricare l'interfaccia", e);
+        }
+    }
+}

@@ -19,42 +19,42 @@
             <Image url="@Img/Sfondo.png" />
          </image>
       </ImageView>
-      <ListView fx:id="ListViewPazienti" fixedCellSize="50.0" layoutX="40.0" layoutY="74.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="246.0" prefWidth="543.0" style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-background-insets: 0; -fx-padding: 10px; -fx-selection-bar: #48635a; -fx-selection-bar-border: white;">
+      <ListView fx:id="ListViewPazienti" fixedCellSize="50.0" layoutX="40.0" layoutY="74.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="246.0" prefWidth="543.0" onMouseClicked="#NodoSelezionato" style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-background-insets: 0; -fx-padding: 10px; -fx-selection-bar: #48635a; -fx-selection-bar-border: white;">
          <padding>
-            <Insets top="10.0" />
+            <Insets right="5.0" top="10.0" />
          </padding></ListView>
-      <VBox fx:id="BoxListaPazienti" layoutX="146.0" layoutY="95.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="197.0" prefWidth="362.0" spacing="20.0">
+      <HBox fx:id="HBoxPaziente" layoutX="114.0" layoutY="95.0" prefHeight="174.0" prefWidth="348.0" spacing="18.0">
          <children>
-            <ImageView fx:id="ImmagineProfiloDonna" fitHeight="52.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true" visible="false">
-               <image>
-                  <Image url="@Img/IconaFemmina.png" />
-               </image>
-               <VBox.margin>
-                  <Insets bottom="-7.0" left="-79.0" top="-47.0" />
-               </VBox.margin>
+            <ImageView fx:id="ImmaginePaziente" fitHeight="52.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets left="17.0" right="5.0" top="33.0" />
+               </HBox.margin>
             </ImageView>
-            <ImageView fx:id="ImmagineProfiloUomo" fitHeight="52.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true" visible="false">
-               <VBox.margin>
-                  <Insets bottom="6.0" left="-80.0" top="-66.0" />
-               </VBox.margin>
-               <image>
-                  <Image url="@Img/IconaMaschio.png" />
-               </image>
-            </ImageView>
-            <VBox fx:id="BoxPaziente" alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="194.0" spacing="7.0">
+            <VBox fx:id="BoxPaziente" alignment="CENTER_LEFT" prefHeight="127.0" prefWidth="234.0" spacing="3.0">
                <children>
-                  <Label fx:id="NomePaziente" prefHeight="18.0" prefWidth="202.0" textFill="WHITE" />
-                  <Label fx:id="CognomePaziente" prefHeight="18.0" prefWidth="234.0" textFill="WHITE" />
+                  <Label fx:id="NomePaziente" prefHeight="18.0" prefWidth="239.0" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets left="35.0" top="-21.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="CognomePaziente" prefHeight="18.0" prefWidth="234.0" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets left="35.0" top="11.0" />
+                     </VBox.margin>
+                  </Label>
                </children>
-               <VBox.margin>
-                  <Insets left="-1.0" top="-76.0" />
-               </VBox.margin>
+               <HBox.margin>
+                  <Insets top="31.0" />
+               </HBox.margin>
             </VBox>
          </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
          <padding>
-            <Insets left="140.0" top="85.0" />
+            <Insets left="4.0" right="4.0" top="7.0" />
          </padding>
-      </VBox>
+      </HBox>
       <Label fx:id="ListaPazienti" layoutX="219.0" layoutY="14.0" prefHeight="18.0" prefWidth="216.0" text="    LISTA PAZIENTI" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />

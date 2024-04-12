@@ -23,7 +23,7 @@ public class AppuntamentoDAO {
     protected static final String USERNAME = "Username";
 
 
-    public List<Appuntamento> trovaAppuntamento(String username) throws SQLException {
+    public List<Appuntamento> trovaAppuntamento(String username, String selectedTabName) throws SQLException {
 
         List<Appuntamento> appuntamentoList = new ArrayList<>();
 
@@ -32,14 +32,26 @@ public class AppuntamentoDAO {
 
         conn = ConnectionFactory.getConnection();
 
-        String sql ="SELECT Data, Ora, Ps.Nome, Ps.Cognome, Pa.Nome, Pa.Cognome, Username_Paziente, Username_Psicologo " +
-                "FROM Appuntamento " +
-                "JOIN Utente AS Pa ON Pa.Username=Username_Paziente " +
-                "JOIN Utente AS Ps ON Ps.Username=Username_Psicologo " +
-                "WHERE Username_Psicologo= ?";
-                // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
-        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setString(1, username);
+        if (selectedTabName=="IN PROGRAMMA") {
+
+            String sql = "SELECT Data, Ora, Ps.Nome, Ps.Cognome, Pa.Nome, Pa.Cognome, Username_Paziente, Username_Psicologo " +
+                    "FROM Appuntamento " +
+                    "JOIN Utente AS Pa ON Pa.Username=Username_Paziente " +
+                    "JOIN Utente AS Ps ON Ps.Username=Username_Psicologo " +
+                    "WHERE Username_Psicologo= ? AND Data>=NOW()";
+            // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt.setString(1, username);
+        } else {
+            String sql = "SELECT Data, Ora, Ps.Nome, Ps.Cognome, Pa.Nome, Pa.Cognome, Username_Paziente, Username_Psicologo " +
+                    "FROM Appuntamento " +
+                    "JOIN Utente AS Pa ON Pa.Username=Username_Paziente " +
+                    "JOIN Utente AS Ps ON Ps.Username=Username_Psicologo " +
+                    "WHERE Username_Psicologo= ? AND Data<NOW()";
+            // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt.setString(1, username);
+        }
 
         ResultSet rs = stmt.executeQuery();
 

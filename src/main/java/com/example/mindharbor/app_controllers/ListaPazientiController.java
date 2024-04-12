@@ -27,7 +27,10 @@ public class ListaPazientiController {
             PazientiBean pazientiBean = new PazientiBean(
                     paz.getNome(),
                     paz.getCognome(),
-                    paz.getGenere());
+                    paz.getGenere(),
+                    "",
+                    ""
+            );
 
             pazientiBeanList.add(pazientiBean);
         }

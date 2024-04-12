@@ -5,12 +5,16 @@ import com.example.mindharbor.app_controllers.HomePsicologoController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -26,61 +30,41 @@ import java.util.List;
 public class AppuntamentiPsicologoGraphicController {
 
     @FXML
-    private Tab AppuntamentiAttivi;
-
+    private Tab AppuntamentiInProgramma;
     @FXML
-    private Label ScorriAppuntamenti2;
-
+    private VBox BoxAppuntamentiInProgramma;
     @FXML
-    private VBox BoxAppuntamenti;
-
+    private Label DataAppuntamentoInProgramma;
     @FXML
-    private Label DataAppuntamento;
-
+    private Label OraAppuntamentoInProgramma;
     @FXML
-    private Label OraAppuntamento;
-
+    private Label NomePsicologoInProgramma;
     @FXML
-    private Label NomePsicologo;
-
+    private Label NomePazienteInProgramma;
     @FXML
-    private Label NomePaziente;
-
+    private Label LabelNomePsicologoTab1;
     @FXML
-    private Label ScorriAppuntamenti1;
-
-    @FXML
-    private Label LabelNomePsicologo;
-
-    @FXML
-    private Text ListaVuota;
-
-    @FXML
-    private Label ScorriAppuntamentiPassati2;
-
+    private Text ListaVuotaInProgramma;
     @FXML
     private Label DataAppuntamentoPassati;
-
     @FXML
     private Label OraAppuntamentoPassati;
-
     @FXML
     private Label NomePsicologoPassati;
-
     @FXML
     private Label NomePazientePassati;
-
     @FXML
-    private Label ScorriAppuntamentiPassati1;
-
-    @FXML
-    private Label LabelNomePsicologo1;
-
+    private Label LabelNomePsicologoTab2;
     @FXML
     private Text ListaVuotaPassati;
-
     @FXML
-    private Label Home;
+    private ListView<Node> ListViewInProgramma;
+    @FXML
+    private ListView<Node> ListViewPassati;
+    @FXML
+    private Label HomeTab1;
+    @FXML
+    private Label HomeTab2;
 
     private String nome;
     private String cognome;
@@ -98,39 +82,47 @@ public class AppuntamentiPsicologoGraphicController {
         nome = infoUtenteBean.getNome();
         cognome = infoUtenteBean.getCognome();
 
-        LabelNomePsicologo.setText(nome + " " + cognome);
+        LabelNomePsicologoTab1.setText(nome + " " + cognome);
+
+        LabelNomePsicologoTab2.setText(nome + " " + cognome);
 
 
         try {
-            tabSelezionato("IN PROGRAMMA");
+            tab1Selezionato();
         } catch (SQLException e) {
             logger.info("Problemi di connessione al database", e);
         }
 
     }
 
-    private void tabSelezionato(String selectedTabName) throws SQLException {
-        try {
-            if (selectedTabName.equals("IN PROGRAMMA")) {
-                List<AppuntamentiBean> appuntamenti = AppuntamentiPsicologoController.getAppuntamenti(selectedTabName);
-                CreaVBoxAppuntamenti(appuntamenti);
-
-            } else if (selectedTabName.equals("PASSATI")) {
-                List<AppuntamentiBean> appuntamenti = AppuntamentiPsicologoController.getAppuntamenti(selectedTabName);
-            }
-
-        } catch (SQLException e) {
-            logger.info("Non non ci sono appuntamenti", e);
-            ListaVuota.setText("Non esistono appuntamenti");
-
-        }
-
+    @FXML
+    private void tab1Selezionato() throws SQLException {
+        ricercaAppuntamenti("IN PROGRAMMA",ListaVuotaInProgramma,ListViewInProgramma);
     }
 
-    private void CreaVBoxAppuntamenti(List<AppuntamentiBean> appuntamenti) {
-        BoxAppuntamenti.getChildren().clear();
+    @FXML
+    private void tab2Selezionato() throws SQLException {
+        ricercaAppuntamenti("PASSATI",ListaVuotaPassati,ListViewPassati);
+    }
 
-        BoxAppuntamenti.setSpacing(10);
+
+    private void ricercaAppuntamenti(String selectedTabName, Text text, ListView<Node> listView) throws SQLException{
+        try {
+            List<AppuntamentiBean> appuntamenti = AppuntamentiPsicologoController.getAppuntamenti(selectedTabName);
+            if (appuntamenti.isEmpty()) {
+                text.setText("Non ci sono appuntamenti");
+            }else {
+                CreaVBoxAppuntamenti(appuntamenti, listView);
+            }
+        }catch (SQLException e) {
+            logger.info("Non non ci sono appuntamenti", e);
+        }
+    }
+
+    private void CreaVBoxAppuntamenti(List<AppuntamentiBean> appuntamenti, ListView<Node> listView) {
+        listView.getItems().clear();
+
+        ObservableList<Node> items = FXCollections.observableArrayList();
 
         for (AppuntamentiBean app : appuntamenti) {
             VBox VBox = new VBox();
@@ -146,18 +138,30 @@ public class AppuntamentiPsicologoGraphicController {
             NomePaziente.setTextFill(Color.WHITE);
 
             VBox.getChildren().addAll(DataAppuntamento, OraAppuntamento, NomePsicologo, NomePaziente);
-
-            BoxAppuntamenti.getChildren().add(VBox);
+            items.add(VBox);
         }
+
+        listView.setFixedCellSize(100);
+        listView.getItems().addAll(items);
     }
 
     @FXML
-    public void goToHome() {
+    public void goToHomeFromTab1() {
+        goToHome(HomeTab1);
+    }
+
+    @FXML
+    public void goToHomeFromTab2() {
+        goToHome(HomeTab2);
+    }
+
+    @FXML
+    public void goToHome(Label label) {
         try {
             NavigatorSingleton navigator= NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
 
-            Stage Appuntamenti = (Stage) Home.getScene().getWindow();
+            Stage Appuntamenti = (Stage) label.getScene().getWindow();
             Appuntamenti.close();
 
         }catch(IOException e) {

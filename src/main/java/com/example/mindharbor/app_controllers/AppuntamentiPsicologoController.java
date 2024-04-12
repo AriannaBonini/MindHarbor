@@ -23,7 +23,7 @@ public class AppuntamentiPsicologoController {
     }
     public static List<AppuntamentiBean> getAppuntamenti(String selectedTabName) throws SQLException {
         List<Appuntamento> appuntamentoList = new AppuntamentoDAO().trovaAppuntamento(
-                SessionManager.getInstance().getCurrentUser().getUsername()
+                SessionManager.getInstance().getCurrentUser().getUsername(), selectedTabName
         );
 
         List<AppuntamentiBean> appuntamentiBeanList = new ArrayList<>();
