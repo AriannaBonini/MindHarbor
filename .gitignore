@@ -3,14 +3,16 @@
 /.idea/workspace.xml
 # Editor-based HTTP Client requests
 /httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
 # Custom files to ignore
-/.idea
 /src/main/resources/config.properties
 /.DS_Store
 /src/.DS_Store
 /src/main/.DS_Store
 # Target folder -> build files
 /target
+# .idea files
+# Ignora tutto nella cartella .idea...
+/.idea/
+# ...ma traccia i file di configurazione delle data source
+!.idea/dataSources.xml
+!.idea/dataSources.local.xml
