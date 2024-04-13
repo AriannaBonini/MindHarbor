@@ -4,6 +4,10 @@ import com.example.mindharbor.model.Appuntamento;
 import java.util.List;
 
 public class OutputHandler {
+    private OutputHandler(){
+        // costruttore private per fare in modo che nessuno possa istanziare questa classe
+        // (Considerando che è una classe appartenente alle utilities)
+    }
     public static void print(String message) {
         System.out.println(message);
     }
@@ -11,26 +15,31 @@ public class OutputHandler {
     public static void printf(String format, Object... args) {
         System.out.printf(format, args);
     }
-
     public static void print_asciiart(){
-        String asciiart_mind =
-                "               /$$                 /$$                      \n" +
-                        "              |__/                | $$                      \n" +
-                        " /$$$$$$/$$$$  /$$ /$$$$$$$   /$$$$$$$                      \n" +
-                        "| $$_  $$_  $$| $$| $$__  $$ /$$__  $$                      \n" +
-                        "| $$ \\ $$ \\ $$| $$| $$  \\ $$| $$  | $$                      \n" +
-                        "| $$ | $$ | $$| $$| $$  | $$| $$  | $$                      \n" +
-                        "| $$ | $$ | $$| $$| $$  | $$|  $$$$$$$                      \n" +
-                        "|__/ |__/ |__/|__/|__/  |__/ \\_______/                      \n";
-        String asciiart_harbor =
-                " /$$                           /$$                          \n" +
-                        "| $$                          | $$                          \n" +
-                        "| $$$$$$$   /$$$$$$   /$$$$$$ | $$$$$$$   /$$$$$$   /$$$$$$ \n" +
-                        "| $$__  $$ |____  $$ /$$__  $$| $$__  $$ /$$__  $$ /$$__  $$\n" +
-                        "| $$  \\ $$  /$$$$$$$| $$  \\__/| $$  \\ $$| $$  \\ $$| $$  \\__/\n" +
-                        "| $$  | $$ /$$__  $$| $$      | $$  | $$| $$  | $$| $$      \n" +
-                        "| $$  | $$|  $$$$$$$| $$      | $$$$$$$/|  $$$$$$/| $$      \n" +
-                        "|__/  |__/ \\_______/|__/      |_______/  \\______/ |__/      ";
+    String asciiart_mind = """
+               /$$                 /$$                      
+              |__/                | $$                      
+ /$$$$$$/$$$$  /$$ /$$$$$$$   /$$$$$$$                      
+| $$_  $$_  $$| $$| $$__  $$ /$$__  $$                      
+| $$ \\ $$ \\ $$| $$| $$  \\ $$| $$  | $$                      
+| $$ | $$ | $$| $$| $$  | $$| $$  | $$                      
+| $$ | $$ | $$| $$| $$  | $$|  $$$$$$$                      
+|__/ |__/ |__/|__/|__/  |__/ \\_______/                      
+""";
+
+
+    String asciiart_harbor = """
+     /$$                           /$$                          
+    | $$                          | $$                          
+    | $$$$$$$   /$$$$$$   /$$$$$$ | $$$$$$$   /$$$$$$   /$$$$$$ 
+    | $$__  $$ |____  $$ /$$__  $$| $$__  $$ /$$__  $$ /$$__  $$
+    | $$  \\ $$  /$$$$$$$| $$  \\__/| $$  \\ $$| $$  \\ $$| $$  \\__/
+    | $$  | $$ /$$__  $$| $$      | $$  | $$| $$  | $$| $$      
+    | $$  | $$|  $$$$$$$| $$      | $$$$$$$/|  $$$$$$/| $$      
+    |__/  |__/ \\_______/|__/      |_______/  \\______/ |__/      
+    """;
+
+
 
         OutputHandler.print(ANSI_CODE.ANSI_GREEN + asciiart_mind);
         OutputHandler.print(ANSI_CODE.ANSI_BRIGHT_GREEN + asciiart_harbor + ANSI_CODE.ANSI_RESET);
