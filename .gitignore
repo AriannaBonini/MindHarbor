@@ -16,4 +16,5 @@
 # ...ma traccia i file di configurazione delle data source
 !.idea/dataSources.xml
 !.idea/dataSources.local.xml
+!.idea/MindHarbor.iml
 
