@@ -5,17 +5,19 @@ public class PazientiBean {
     private String nome;
     private String cognome;
     private String genere;
-    private String età;
+    private Integer età;
     private String diagnosi;
+    private String username;
 
     public  PazientiBean() { }
 
-    public PazientiBean(String nome, String cognome,String genere,String età,String diagnosi) {
+    public PazientiBean(String nome, String cognome,String genere,Integer età,String diagnosi,String username) {
         this.nome = nome;
         this.cognome = cognome;
         this.genere= genere;
         this.età=età;
         this.diagnosi=diagnosi;
+        this.username=username;
     }
 
     // Metodi getter e setter per il nome e il cognome
@@ -43,11 +45,11 @@ public class PazientiBean {
         this.genere = genere;
     }
 
-    public String getEtà() {
+    public Integer getEtà() {
         return età;
     }
 
-    public void setEtà(String età) {
+    public void setEtà(Integer età) {
         this.età = età;
     }
 
@@ -57,6 +59,14 @@ public class PazientiBean {
 
     public void setDiagnosi(String diagnosi) {
         this.diagnosi = diagnosi;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
 

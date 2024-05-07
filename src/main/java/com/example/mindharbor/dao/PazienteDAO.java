@@ -19,6 +19,11 @@ public class PazienteDAO {
 
     protected static final String GENERE= "Genere";
 
+    protected static final String ETA= "Età";
+
+    protected static final String DIAGNOSI= "Diagnosi";
+
+    protected static final String USERNAME= "Username";
 
 
     public List<Paziente> trovaPaziente(String username) throws SQLException {
@@ -30,7 +35,7 @@ public class PazienteDAO {
 
         conn = ConnectionFactory.getConnection();
 
-        String sql ="SELECT U.Nome, U.Cognome, U.Genere " +
+        String sql ="SELECT U.Nome, U.Cognome, U.Genere, U.Username " +
                 "FROM Paziente Pa " +
                 "JOIN Utente AS U ON U.Username=Pa.Paziente_Username " +
                 "WHERE Username_Psicologo= ?;";
@@ -44,7 +49,10 @@ public class PazienteDAO {
 
             Paziente paziente = new Paziente( rs.getString(1),
                     rs.getString(2),
-                    rs.getString(3));
+                    rs.getString(3),
+                    rs.getString(4),
+                    0,
+                    "");
 
             pazienteList.add(paziente);
         }
@@ -54,5 +62,42 @@ public class PazienteDAO {
         stmt.close();
 
         return pazienteList;
+    }
+
+    public Paziente getInfoSchedaPersonale(String username) throws SQLException{
+        Paziente paziente=null;
+
+        PreparedStatement stmt = null;
+        Connection conn = null;
+
+        conn = ConnectionFactory.getConnection();
+
+        String sql ="SELECT U.Nome, U.Cognome, Pa.Età, Pa.Diagnosi, U.Genere " +
+                "FROM Paziente Pa " +
+                "JOIN Utente AS U ON U.Username=Pa.Paziente_Username " +
+                "WHERE Paziente_Username= ?;";
+        // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        stmt.setString(1, username);
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+
+                paziente = new Paziente( rs.getString(1),
+                    rs.getString(2),
+                        rs.getString(5),
+                    "",
+                    rs.getInt(3),
+                    rs.getString(4));
+
+
+        }
+
+        // Closing ResultSet and freeing resources
+        rs.close();
+        stmt.close();
+
+        return paziente;
     }
 }

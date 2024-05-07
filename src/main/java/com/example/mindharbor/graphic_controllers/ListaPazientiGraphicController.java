@@ -24,9 +24,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -124,6 +121,8 @@ public class ListaPazientiGraphicController {
             HBoxPaziente.getChildren().addAll(ImmaginePaziente,BoxPaziente);
             items.add(HBoxPaziente);
 
+            HBoxPaziente.setUserData(paz);
+
         }
 
         ListViewPazienti.setFixedCellSize(100);
@@ -146,17 +145,26 @@ public class ListaPazientiGraphicController {
 
     public void NodoSelezionato() {
         try {
-            Node image = ListViewPazienti.getSelectionModel().getSelectedItem();
+            Node nodo = ListViewPazienti.getSelectionModel().getSelectedItem();
 
-            if(image==null) {
+
+            if(nodo==null) {
                 return;
             }
+            PazientiBean paziente =(PazientiBean) nodo.getUserData();
+            String username=paziente.getUsername();
 
-            Stage ListaPazienti = (Stage) image.getScene().getWindow();
+
+            Stage ListaPazienti = (Stage) ListViewPazienti.getScene().getWindow();
             ListaPazienti.close();
 
             NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+            navigator.setParametro(username);
+
             navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
+
+
+
         } catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
         }

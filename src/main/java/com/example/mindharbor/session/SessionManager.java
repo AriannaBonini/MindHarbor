@@ -65,10 +65,8 @@ public class SessionManager {
 
     public boolean isSessionOpen() {
         if (utenteCorrente != null) {
-            System.out.println("Sessione aperta");
             return true;
         }else {
-            System.out.println("Sessione chiusa");
             return false;
         }
     }

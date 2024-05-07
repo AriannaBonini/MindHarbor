@@ -28,8 +28,9 @@ public class ListaPazientiController {
                     paz.getNome(),
                     paz.getCognome(),
                     paz.getGenere(),
+                    0,
                     "",
-                    ""
+                    paz.getUsername()
             );
 
             pazientiBeanList.add(pazientiBean);

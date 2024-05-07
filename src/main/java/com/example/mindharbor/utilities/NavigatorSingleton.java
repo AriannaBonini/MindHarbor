@@ -2,6 +2,7 @@ package com.example.mindharbor.utilities;
 
 import com.example.mindharbor.Main;
 import com.example.mindharbor.graphic_controllers.AppuntamentiPsicologoGraphicController;
+import com.example.mindharbor.graphic_controllers.SchedaPersonalePazienteGraphicController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,6 +17,8 @@ public class NavigatorSingleton {
     private static NavigatorSingleton instance = null;
 
     protected Stage stg;
+
+    private String parametro;
 
     public Stage getStg() {
         return this.stg;
@@ -40,10 +43,24 @@ public class NavigatorSingleton {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
         Parent root = loader.load();
 
+
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
         stage.setTitle("Mind Harbor");
         stage.setResizable(false);
         stage.show();
     }
+
+    public void setParametro(String parametro) {
+        this.parametro = parametro;
+    }
+
+    public String getParametro() {
+        return parametro;
+    }
+
+    public void eliminaParametro() {
+        this.parametro = null;
+    }
+
 }
