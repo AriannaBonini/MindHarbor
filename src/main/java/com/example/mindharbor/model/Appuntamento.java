@@ -80,5 +80,6 @@ public class Appuntamento {
 
         public void setCognomePaziente(String cognomePaziente) {this.cognomePaziente = cognomePaziente;}
 
+
 }
 

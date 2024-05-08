@@ -74,4 +74,9 @@ public class AppuntamentiBean {
         public String getCognomePaziente() {return cognomePaziente;}
 
         public void setCognomePaziente(String cognomePaziente) { this.cognomePaziente = cognomePaziente;}
+
+        @Override
+        public String toString(){
+            return "Nome: "+ nomePaziente  + ", Cognome: " + cognomePaziente;
+        }
 }

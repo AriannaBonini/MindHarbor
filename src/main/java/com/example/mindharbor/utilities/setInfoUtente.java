@@ -12,5 +12,4 @@ public class setInfoUtente {
                 sessionManager.getCurrentUser().getCognome()
         );
     }
-
 }

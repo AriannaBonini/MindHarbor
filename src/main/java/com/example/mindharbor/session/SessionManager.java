@@ -48,10 +48,10 @@ public class SessionManager {
             }
         }
 
-        /*public synchronized void logout(){
-            loggedUsers.remove(currentUser);
-            currentUser = null;
-        }*/
+        public synchronized void logout(){
+            utenteLoggato.remove(utenteCorrente);
+            utenteCorrente = null;
+        }
 
         public synchronized Utente changeCurrentUser(String username){
             for (Utente u: utenteLoggato) {

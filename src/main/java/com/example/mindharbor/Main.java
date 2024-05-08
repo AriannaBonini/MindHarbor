@@ -1,8 +1,9 @@
 package com.example.mindharbor;
-
-import com.example.mindharbor.CLI.CLI_LoginController;
+import com.example.mindharbor.CLI.Controller.CLILoginController;
+import com.example.mindharbor.CLI.Navigator.CLINavigator;
 import com.example.mindharbor.app_controllers.LoginController;
 import com.example.mindharbor.graphic_controllers.LoginGraphicController;
+import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -24,10 +25,17 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+
         /*
-            Test: LoginCLI
+            Test: CLI
          */
-        new CLI_LoginController().esegui();
+        SessionManager sessionManager = SessionManager.getInstance();
+        CLINavigator cliNavigator = new CLINavigator(sessionManager);
+        cliNavigator.showLogin();
+        /*
+            Fine Test: CLI
+         */
+
         launch();
     }
 }

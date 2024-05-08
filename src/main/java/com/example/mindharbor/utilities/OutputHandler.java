@@ -1,5 +1,6 @@
 package com.example.mindharbor.utilities;
 
+import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.model.Appuntamento;
 import java.util.List;
 
@@ -82,15 +83,42 @@ public class OutputHandler {
         }
     }
     public static void printAppointments(List<Appuntamento> apps){
+        // Questa è la versione senza bean, con l'appuntamento sotto forma di model
         for(int i = 0; i < apps.size(); i++){
-            OutputHandler.printf((i+1) + " -> " + "ID: " + apps.get(i).getIdAppuntamento() + ", " + "Data: " + apps.get(i).getData() +
-                    ", " + "Ora: " + apps.get(i).getOra() + ", " + "Username Paziente: " + apps.get(i).getUsernamePaziente() +
-                    ", " + "Username Psicologo: " + apps.get(i).getUsernamePsicologo() + ", " + "Nome Paziente: " +
-                    apps.get(i).getNomePaziente() + ", " + "Cognome Paziente: " + apps.get(i).getCognomePaziente() +
-                    ", " + "Nome Psicologo: " + apps.get(i).getNomePsicologo() + ", " + "Cognome Psicologo: " +
+            OutputHandler.printf((i+1) + " -> " + "Data: " + apps.get(i).getData() +
+                    ", " + "Ora: " + apps.get(i).getOra() + ", " + "Paziente: " +
+                    apps.get(i).getNomePaziente() + " " + apps.get(i).getCognomePaziente() +
+                    ", " + "Psicologo: " + apps.get(i).getNomePsicologo() + " " +
                     apps.get(i).getCognomePsicologo());
             OutputHandler.print("");
         }
+    }
+
+    public static void printAppointmentsBean(List<AppuntamentiBean> apps){
+        // Questa è la versione che utilizza come parametro una lista di beans appointments
+
+        for (int i = 0; i < apps.size(); i++){
+            OutputHandler.printf((i+1) + " -> " + "Data: " + apps.get(i).getData() + ", " + "Ora: " + apps.get(i).getOra() + ", " + "Paziente: " +
+                    apps.get(i).getNomePaziente() + " " + apps.get(i).getCognomePaziente() +
+                    ", " + "Psicologo: " + apps.get(i).getNomePsicologo() + " " +
+                    apps.get(i).getCognomePsicologo());
+            OutputHandler.print("");
+        }
+    }
+    public static void printSpecificAppointment(Appuntamento appuntamento) {
+        // Questa è la versione che utilizza come parametro una model appointment
+
+        // Implementa la logica per stampare i dettagli di un singolo appuntamento
+
+        OutputHandler.print("Dettagli appuntamento:");
+        OutputHandler.print(appuntamento.toString()); // Assicurati che Appuntamento abbia un override di toString() adeguato
+    }
+    public static void printSpecificAppointmentBean(AppuntamentiBean appuntamento, int x) {
+        // Questa è la versione che utilizza come parametro una AppuntamentiBean
+
+        // Implementa la logica per stampare i dettagli di un singolo appuntamento
+        OutputHandler.printf(x + " -> " );
+        OutputHandler.print(appuntamento.toString()); // Assicurati che Appuntamento abbia un override di toString() adeguato
     }
 }
 
