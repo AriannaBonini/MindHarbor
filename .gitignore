@@ -3,13 +3,20 @@
 /.idea/workspace.xml
 # Editor-based HTTP Client requests
 /httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
 # Custom files to ignore
-/.idea
 /src/main/resources/config.properties
 /.DS_Store
 /src/.DS_Store
 /src/main/.DS_Store
+<<<<<<< HEAD
+=======
+# Target folder -> build files
+# .idea files
+# Ignora tutto nella cartella .idea...
+/.idea/
+# ...ma traccia i file di configurazione delle data source
+!.idea/dataSources.xml
+!.idea/dataSources.local.xml
+!.idea/MindHarbor.iml
+>>>>>>> d8d70a2e7a142bf173d0e114d479076bc27f723b
 
