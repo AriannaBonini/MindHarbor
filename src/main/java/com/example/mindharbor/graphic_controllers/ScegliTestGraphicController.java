@@ -1,7 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.ScegliTestController;
-import com.example.mindharbor.app_controllers.SchedaPersonalePazienteController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -133,6 +132,7 @@ public class ScegliTestGraphicController {
     }
 
     public void getTest() {
+
 
 
     }
