@@ -100,4 +100,41 @@ public class PazienteDAO {
 
         return paziente;
     }
+
+    public Paziente getInfoPaziente(String username) throws SQLException {
+        Paziente paziente=null;
+
+        PreparedStatement stmt = null;
+        Connection conn = null;
+
+        conn = ConnectionFactory.getConnection();
+
+        String sql ="SELECT U.Nome, U.Cognome, Pa.Età, U.Genere " +
+                "FROM Paziente Pa " +
+                "JOIN Utente AS U ON U.Username=Pa.Paziente_Username " +
+                "WHERE Paziente_Username= ?;";
+        // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        stmt.setString(1, username);
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+
+            paziente = new Paziente( rs.getString(1),
+                    rs.getString(2),
+                    rs.getString(4),
+                    "",
+                    rs.getInt(3),
+                    "");
+
+        }
+
+        // Closing ResultSet and freeing resources
+        rs.close();
+        stmt.close();
+
+        return paziente;
+    }
+
 }

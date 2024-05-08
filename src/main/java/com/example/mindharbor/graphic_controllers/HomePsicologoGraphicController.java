@@ -50,12 +50,12 @@ public class HomePsicologoGraphicController {
     public void onVisualAppuntamentiClick() {
 
         try {
+            Stage HomePsicologo = (Stage) VisualizzaAppuntamenti.getScene().getWindow();
+            HomePsicologo.close();
 
             NavigatorSingleton navigator = NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/ListaAppuntamenti2.fxml");
 
-            Stage HomePsicologo = (Stage) VisualizzaAppuntamenti.getScene().getWindow();
-            HomePsicologo.close();
 
 
         } catch (IOException e) {
@@ -69,10 +69,11 @@ public class HomePsicologoGraphicController {
         NavigatorSingleton navigator = NavigatorSingleton.getInstance();
 
         try {
-            navigator.gotoPage("/com/example/mindharbor/ListaPazienti.fxml");
-
             Stage HomePsicologo = (Stage) PrescriviTerapia.getScene().getWindow();
             HomePsicologo.close();
+
+            navigator.gotoPage("/com/example/mindharbor/ListaPazienti.fxml");
+
 
         } catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);

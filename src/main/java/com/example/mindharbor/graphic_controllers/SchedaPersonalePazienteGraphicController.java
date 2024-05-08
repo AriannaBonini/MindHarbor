@@ -36,6 +36,8 @@ public class SchedaPersonalePazienteGraphicController {
     private ImageView ImmaginePaziente;
     @FXML
     private Label LabelNomePsicologo;
+    @FXML
+    private ImageView TornaIndietro;
 
     private String nome;
     private String cognome;
@@ -102,11 +104,12 @@ public class SchedaPersonalePazienteGraphicController {
 
     public void goToHome() {
         try {
+            Stage SchedaPersonale = (Stage) Home.getScene().getWindow();
+            SchedaPersonale.close();
+
             NavigatorSingleton navigator= NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
 
-            Stage SchedaPersonale = (Stage) Home.getScene().getWindow();
-            SchedaPersonale.close();
 
         }catch(IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
@@ -117,11 +120,30 @@ public class SchedaPersonalePazienteGraphicController {
 
     public void TornaIndietro() {
         try {
+            Stage SchedaPersonale = (Stage) TornaIndietro.getScene().getWindow();
+            SchedaPersonale.close();
+
             NavigatorSingleton navigator= NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/ListaPazienti.fxml");
 
+
+        }catch(IOException e) {
+            logger.error("Impossibile caricare l'interfaccia", e);
+        }
+
+    }
+
+    public void ScegliTest() {
+        try {
             Stage SchedaPersonale = (Stage) Home.getScene().getWindow();
             SchedaPersonale.close();
+
+            NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+            navigator.setParametro(username);
+
+
+            navigator.gotoPage("/com/example/mindharbor/ScegliTest.fxml");
+
 
         }catch(IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);

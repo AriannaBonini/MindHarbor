@@ -158,11 +158,12 @@ public class AppuntamentiPsicologoGraphicController {
     @FXML
     public void goToHome(Label label) {
         try {
-            NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-            navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
-
             Stage Appuntamenti = (Stage) label.getScene().getWindow();
             Appuntamenti.close();
+
+
+            NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+            navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
 
         }catch(IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);

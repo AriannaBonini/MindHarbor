@@ -26,14 +26,14 @@
             <Insets top="2.0" />
          </padding>
       </Label>
-      <HBox layoutX="44.0" layoutY="96.0" prefHeight="119.0" prefWidth="524.0" spacing="24.0">
+      <HBox layoutX="44.0" layoutY="96.0" prefHeight="119.0" prefWidth="524.0" spacing="26.0">
          <children>
             <ImageView fx:id="ImmaginePaziente" fitHeight="47.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@Img/IconaFemmina.png" />
                </image>
                <HBox.margin>
-                  <Insets left="64.0" top="-25.0" />
+                  <Insets left="103.0" top="-25.0" />
                </HBox.margin>
             </ImageView>
             <VBox prefHeight="71.0" prefWidth="100.0" spacing="1.0">
@@ -83,8 +83,8 @@
             <Insets bottom="10.0" left="4.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
-      <Label fx:id="Home" layoutX="48.0" layoutY="19.0"  text="HOME" textFill="WHITE" />
-      <ImageView fx:id="image_home" fitHeight="19.0" fitWidth="20.0" layoutX="19.0" layoutY="18.0">
+      <Label fx:id="Home" layoutX="48.0" layoutY="19.0" onMouseClicked="#goToHome" text="HOME" textFill="WHITE" />
+      <ImageView fx:id="TornaIndietro" fitHeight="19.0" fitWidth="20.0" layoutX="19.0" layoutY="18.0" onMouseClicked="#TornaIndietro">
          <image>
             <Image url="@Img/TornaIndietro.png" />
          </image>

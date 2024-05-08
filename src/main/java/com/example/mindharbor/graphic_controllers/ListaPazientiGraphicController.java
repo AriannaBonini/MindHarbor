@@ -131,11 +131,12 @@ public class ListaPazientiGraphicController {
 
     public void goToHome() {
         try {
+            Stage ListaPazienti = (Stage) Home.getScene().getWindow();
+            ListaPazienti.close();
+
             NavigatorSingleton navigator= NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
 
-            Stage ListaPazienti = (Stage) Home.getScene().getWindow();
-            ListaPazienti.close();
 
         }catch(IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
