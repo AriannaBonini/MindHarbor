@@ -3,6 +3,7 @@ package com.example.mindharbor.graphic_controllers;
 import com.example.mindharbor.app_controllers.ScegliTestController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.mockapi.BoundaryMockAPI;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -14,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.SQLException;
+import java.util.List;
 
 public class ScegliTestGraphicController {
 
@@ -124,7 +127,6 @@ public class ScegliTestGraphicController {
             navigator.setParametro(username);
             navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
 
-
         }catch(IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
         }
@@ -132,9 +134,20 @@ public class ScegliTestGraphicController {
     }
 
     public void getTest() {
+         List<String> listaTestPsicologici=ScegliTestController.getListaTest();
 
-
-
+        if (listaTestPsicologici != null) {
+            CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4}; // Array di CheckBox
+            int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length); // Numero di CheckBox da popolare
+            for (int i = 0; i < numCheckBoxes; i++) {
+                checkBoxes[i].setText(listaTestPsicologici.get(i)); // Imposta il testo del CheckBox con il nome del test corrispondente
+                checkBoxes[i].setVisible(true); // Rendi il CheckBox visibile
+            }
+            // Nascondi i CheckBox rimanenti se ce ne sono più di quattro
+            for (int i = numCheckBoxes; i < checkBoxes.length; i++) {
+                checkBoxes[i].setVisible(false);
+            }
+        }
     }
 
 }
