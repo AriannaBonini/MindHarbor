@@ -12,7 +12,6 @@ public class MockBancaTestPsicologiciAPI {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/plain")
-
     }
      */
 }
