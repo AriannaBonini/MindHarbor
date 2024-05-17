@@ -34,6 +34,7 @@ public class ConnectionFactory {
             String jdbcPassword = properties.getProperty("jdbcPassword");
 
             connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
+
         } catch (IOException | SQLException e) {
             logger.error("Tentativo di connessione al database fallito", e);
         }

@@ -10,6 +10,7 @@
 /src/main/.DS_Store
 <<<<<<< HEAD
 =======
+/target
 # Target folder -> build files
 # .idea files
 # Ignora tutto nella cartella .idea...
