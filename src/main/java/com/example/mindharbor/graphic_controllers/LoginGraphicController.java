@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class LoginGraphicController  implements Observer {
+public class LoginGraphicController implements Observer{
 
     @FXML
     private Label msgLbl;
@@ -85,8 +85,6 @@ public class LoginGraphicController  implements Observer {
                 NavigatorSingleton navigator= NavigatorSingleton.getInstance();
                 navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
-
-
             } else if (userType == UserType.PSICOLOGO) {
                 // carico l'interfaccia grafica della home dello psicologo
 
@@ -97,4 +95,8 @@ public class LoginGraphicController  implements Observer {
             logger.error("Impossibile caricare l'interfaccia", e);
         }
     }
+
+    @Override
+    public void notifyNewTest() {}
+
 }

@@ -1,10 +1,12 @@
 package com.example.mindharbor.graphic_controllers;
 
+import com.example.mindharbor.Enum.UserType;
 import com.example.mindharbor.app_controllers.HomePazienteController;
 import com.example.mindharbor.app_controllers.HomePsicologoController;
 import com.example.mindharbor.app_controllers.AppuntamentiPazienteController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.model.Utente;
+import com.example.mindharbor.patterns.Observer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,7 +20,7 @@ import com.example.mindharbor.session.SessionManager;
 
 import java.io.IOException;
 
-public class HomePazienteGraphicController {
+public class HomePazienteGraphicController implements Observer {
     @FXML
     private Label ListaAppuntamenti;
 
@@ -80,6 +82,17 @@ public class HomePazienteGraphicController {
 
     public void clickPrenotaAppuntamento() {
 
+    }
+
+    @Override
+    public void updateUserStatus(UserType userType) {
+
+    }
+
+
+    @Override
+    public void notifyNewTest() {
+        System.out.println("Nuovo test assegnato");
     }
 
 }

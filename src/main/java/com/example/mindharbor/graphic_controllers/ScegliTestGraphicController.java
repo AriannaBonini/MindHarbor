@@ -4,19 +4,26 @@ import com.example.mindharbor.app_controllers.ScegliTestController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.mockapi.BoundaryMockAPI;
+import com.example.mindharbor.patterns.Observer;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.Array;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScegliTestGraphicController {
@@ -48,11 +55,12 @@ public class ScegliTestGraphicController {
     private String cognome;
     private String username;
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
+    private List<String> listaTestPsicologici;
 
+    ScegliTestController scegliTest= new ScegliTestController();
 
 
     public void initialize() {
-        ScegliTestController scegliTest= new ScegliTestController();
 
         HomeInfoUtenteBean infoUtenteBean = scegliTest.getPagePsiInfo();
 
@@ -134,7 +142,7 @@ public class ScegliTestGraphicController {
     }
 
     public void getTest() {
-         List<String> listaTestPsicologici=ScegliTestController.getListaTest();
+         listaTestPsicologici=ScegliTestController.getListaTest();
 
         if (listaTestPsicologici != null) {
             CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4}; // Array di CheckBox
@@ -150,4 +158,36 @@ public class ScegliTestGraphicController {
         }
     }
 
+    public void AssegnaTest(MouseEvent mouseEvent) {
+        CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4};
+        int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length);
+        int count=0;
+
+        for(int i=0; i<numCheckBoxes;i++) {
+            if(checkBoxes[i].isSelected()) {
+                count++;
+            }
+        }
+        if (count!=1) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Messaggio d'errore");
+            alert.setHeaderText("Attenzione");
+            alert.setContentText("Selezionare uno ed un solo test");
+
+            alert.getDialogPane().setPrefWidth(250);
+            alert.getDialogPane().setPrefHeight(70);
+            alert.getDialogPane().setGraphic(null);
+
+            alert.show();
+
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+                alert.close();
+            }));
+
+            timeline.play();
+        } else {
+            scegliTest.NotificaTest();
+
+        }
+    }
 }
