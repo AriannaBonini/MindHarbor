@@ -20,9 +20,4 @@ public class ClassObserver {
             observer.updateUserStatus(userType);
         }
     }
-    public void notifyObserversTest() {
-        for (Observer observer : observers) {
-            observer.notifyNewTest();
-        }
-    }
 }

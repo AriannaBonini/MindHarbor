@@ -5,6 +5,7 @@ import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.mockapi.BoundaryMockAPI;
 import com.example.mindharbor.patterns.Observer;
+import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wiremock.org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.sql.Array;
@@ -162,22 +164,17 @@ public class ScegliTestGraphicController {
         CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4};
         int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length);
         int count=0;
+        String nomeTest=null;
 
         for(int i=0; i<numCheckBoxes;i++) {
             if(checkBoxes[i].isSelected()) {
                 count++;
+                nomeTest= checkBoxes[i].getText();
+
             }
         }
         if (count!=1) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Messaggio d'errore");
-            alert.setHeaderText("Attenzione");
-            alert.setContentText("Selezionare uno ed un solo test");
-
-            alert.getDialogPane().setPrefWidth(250);
-            alert.getDialogPane().setPrefHeight(70);
-            alert.getDialogPane().setGraphic(null);
-
+            Alert alert= new AlertMessage().Errore("Selezionare uno ed un solo test");
             alert.show();
 
             Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
@@ -186,8 +183,20 @@ public class ScegliTestGraphicController {
 
             timeline.play();
         } else {
-            scegliTest.NotificaTest();
+            try {
+                scegliTest.NotificaTest(username, nomeTest);
+            } catch (SQLException e) {
+                logger.info("Errore assegnazione Test");
+            }
 
+            Alert alert= new AlertMessage().Informazione("Test assegnato con successo");
+            alert.show();
+
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+                alert.close();
+            }));
+
+            timeline.play();
         }
     }
 }

@@ -137,4 +137,30 @@ public class PazienteDAO {
         return paziente;
     }
 
+    public String TrovaPsicologo(String username) throws SQLException {
+        String usernamePsicologo=null;
+
+        PreparedStatement stmt = null;
+        Connection conn = null;
+
+        conn = ConnectionFactory.getConnection();
+
+        String sql ="SELECT Username_Psicologo " +
+                "FROM Paziente " +
+                "WHERE Paziente_Username= ?;";
+        // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        stmt.setString(1, username);
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            usernamePsicologo=rs.getString(1);
+
+        }
+
+        return usernamePsicologo;
+
+    }
+
 }

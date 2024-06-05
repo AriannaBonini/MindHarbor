@@ -6,8 +6,6 @@ public interface Observer {
 
     void updateUserStatus(UserType userType);
 
-    void notifyNewTest();
-
 }
 
 

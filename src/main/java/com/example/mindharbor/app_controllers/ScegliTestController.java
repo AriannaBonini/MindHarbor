@@ -4,9 +4,11 @@ import com.example.mindharbor.Enum.UserType;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.dao.PazienteDAO;
+import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.graphic_controllers.HomePazienteGraphicController;
 import com.example.mindharbor.mockapi.BoundaryMockAPI;
 import com.example.mindharbor.model.Paziente;
+import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.patterns.ClassObserver;
 import com.example.mindharbor.patterns.Observer;
 import com.example.mindharbor.utilities.setInfoUtente;
@@ -45,10 +47,8 @@ public class ScegliTestController {
     }
 
 
-    public void NotificaTest() {
-        HomePazienteGraphicController homePaziente= new HomePazienteGraphicController();
-
-        observer.addObserver(homePaziente);
-        observer.notifyObserversTest();
+    public void NotificaTest(String usernamePaziente, String nomeTest) throws SQLException {
+        PazienteDAO pazienteDao= new PazienteDAO();
+        new TestPsicologicoDAO().assegnaTest(usernamePaziente,pazienteDao.TrovaPsicologo(usernamePaziente), nomeTest );
     }
 }

@@ -4,6 +4,7 @@ import com.example.mindharbor.Enum.UserType;
 import com.example.mindharbor.beans.LoginCredentialBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.exceptions.SessionUserException;
+import com.example.mindharbor.patterns.ClassObserver;
 import com.example.mindharbor.patterns.Observer;
 import com.example.mindharbor.session.ConnectionFactory;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -38,16 +39,23 @@ public class LoginGraphicController implements Observer{
 
     private static final Logger logger = LoggerFactory.getLogger(LoginGraphicController.class);
 
+    private String username;
+
+    private ClassObserver observer= new ClassObserver();
+
 
     public void initialize() {
        loginController= new LoginController();
        //possiamo aggiungere la registrazione
+        observer.addObserver(this);
         msgLbl.setText("Benvenuto");
     }
 
+
+
     @FXML
     public void onLoginClick(ActionEvent event) throws DAOException, SQLException {
-        String username = usernameTextField.getText();
+        username = usernameTextField.getText();
         String password = enterPasswordField.getText();
 
         // Controllo se i campi sono vuoti
@@ -58,8 +66,8 @@ public class LoginGraphicController implements Observer{
         try {
             LoginCredentialBean credenziali = new LoginCredentialBean(username, password);
             loginController.login(credenziali);
-            Stage loginstage = (Stage) accediButton.getScene().getWindow();
-            loginstage.close();
+
+
 
         } catch (DAOException e){
             logger.info("Credenziali errate per l'utente" + username, e);
@@ -78,25 +86,29 @@ public class LoginGraphicController implements Observer{
 
     @Override
     public void updateUserStatus(UserType userType) {
+
+        NavigatorSingleton navigator= NavigatorSingleton.getInstance();
         try {
             if (userType == UserType.PAZIENTE) {
                 // carico l'interfaccia grafica della home del paziente
 
-                NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+                Stage loginstage = (Stage) accediButton.getScene().getWindow();
+                loginstage.close();
+                navigator.setParametro(username);
+
                 navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
             } else if (userType == UserType.PSICOLOGO) {
                 // carico l'interfaccia grafica della home dello psicologo
 
-                NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+                Stage loginstage = (Stage) accediButton.getScene().getWindow();
+                loginstage.close();
+
                 navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
             }
         }catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
         }
     }
-
-    @Override
-    public void notifyNewTest() {}
 
 }
