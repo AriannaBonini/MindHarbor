@@ -20,7 +20,7 @@ public class CLIPrescriviTerapiaView {
     }
 
     public void displayAppointmentsBean(List<AppuntamentiBean> appuntamenti) {
-        // Questa è la versione senza bean, che usa come parametro una lista di Appuntamento
+        // Questa è la versione con bean, che usa come parametro una lista di bean di Appuntamento
 
         int count = 1;
         OutputHandler.print("Appuntamenti trovati:");
