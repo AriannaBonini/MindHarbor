@@ -19,10 +19,6 @@ public class Main extends Application{
         NavigatorSingleton navigator = NavigatorSingleton.getInstance(primaryStage);
         navigator.gotoPage("/com/example/mindharbor/Login.fxml");
 
-        LoginController loginController = new LoginController();
-        LoginGraphicController graphicController = new LoginGraphicController();
-
-        loginController.addObserver(graphicController);
     }
 
     public static void main(String[] args) {

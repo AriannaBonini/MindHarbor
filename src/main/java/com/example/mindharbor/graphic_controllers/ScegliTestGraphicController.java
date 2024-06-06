@@ -4,19 +4,28 @@ import com.example.mindharbor.app_controllers.ScegliTestController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.mockapi.BoundaryMockAPI;
+import com.example.mindharbor.patterns.Observer;
+import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wiremock.org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
 import java.sql.Array;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScegliTestGraphicController {
@@ -48,11 +57,12 @@ public class ScegliTestGraphicController {
     private String cognome;
     private String username;
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
+    private List<String> listaTestPsicologici;
 
+    ScegliTestController scegliTest= new ScegliTestController();
 
 
     public void initialize() {
-        ScegliTestController scegliTest= new ScegliTestController();
 
         HomeInfoUtenteBean infoUtenteBean = scegliTest.getPagePsiInfo();
 
@@ -134,7 +144,7 @@ public class ScegliTestGraphicController {
     }
 
     public void getTest() {
-         List<String> listaTestPsicologici=ScegliTestController.getListaTest();
+         listaTestPsicologici=ScegliTestController.getListaTest();
 
         if (listaTestPsicologici != null) {
             CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4}; // Array di CheckBox
@@ -150,4 +160,43 @@ public class ScegliTestGraphicController {
         }
     }
 
+    public void AssegnaTest(MouseEvent mouseEvent) {
+        CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4};
+        int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length);
+        int count=0;
+        String nomeTest=null;
+
+        for(int i=0; i<numCheckBoxes;i++) {
+            if(checkBoxes[i].isSelected()) {
+                count++;
+                nomeTest= checkBoxes[i].getText();
+
+            }
+        }
+        if (count!=1) {
+            Alert alert= new AlertMessage().Errore("Selezionare uno ed un solo test");
+            alert.show();
+
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+                alert.close();
+            }));
+
+            timeline.play();
+        } else {
+            try {
+                scegliTest.NotificaTest(username, nomeTest);
+            } catch (SQLException e) {
+                logger.info("Errore assegnazione Test");
+            }
+
+            Alert alert= new AlertMessage().Informazione("Test assegnato con successo");
+            alert.show();
+
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+                alert.close();
+            }));
+
+            timeline.play();
+        }
+    }
 }

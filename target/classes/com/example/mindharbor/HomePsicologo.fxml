@@ -25,7 +25,7 @@
             <Image url="@Img/icona_home.png" />
          </image>
       </ImageView>
-      <Label fx:id="RichiestaPrenotazione" disable="true" layoutX="424.0" layoutY="77.0" text="RICHIESTA &#10;PRENOTAZIONE" textAlignment="CENTER" textFill="WHITE" />
+      <Label fx:id="RichiestaPrenotazione" layoutX="424.0" layoutY="77.0" text="RICHIESTA &#10;PRENOTAZIONE" textAlignment="CENTER" textFill="WHITE" />
       <Label fx:id="VisualizzaAppuntamenti" layoutX="85.0" layoutY="132.0" onMouseClicked="#onVisualAppuntamentiClick" text="VISUALIZZA &#10;APPUNTAMENTI" textAlignment="CENTER" textFill="WHITE" />
       <Label fx:id="Home" layoutX="70.0" layoutY="22.0" text="HOME" textFill="WHITE" />
       <HBox layoutX="278.0" layoutY="22.0" prefHeight="42.0" prefWidth="317.0" spacing="33.0">

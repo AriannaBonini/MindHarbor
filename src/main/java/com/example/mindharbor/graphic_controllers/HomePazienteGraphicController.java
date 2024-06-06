@@ -1,10 +1,14 @@
 package com.example.mindharbor.graphic_controllers;
 
+import com.example.mindharbor.Enum.UserType;
 import com.example.mindharbor.app_controllers.HomePazienteController;
 import com.example.mindharbor.app_controllers.HomePsicologoController;
 import com.example.mindharbor.app_controllers.AppuntamentiPazienteController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.model.Utente;
+import com.example.mindharbor.patterns.Observer;
+import com.example.mindharbor.utilities.NavigatorSingleton;
+import com.github.tomakehurst.wiremock.common.Notifier;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,6 +21,7 @@ import org.w3c.dom.Text;
 import com.example.mindharbor.session.SessionManager;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class HomePazienteGraphicController {
     @FXML
@@ -34,52 +39,66 @@ public class HomePazienteGraphicController {
     @FXML
     private Label LabelNomePaziente;
 
+    @FXML
+    private Label NotificaTest;
+
     private String nome;
     private String cognome;
+    private String username;
 
+    HomePazienteController homeController;
     private static final Logger logger = LoggerFactory.getLogger(HomePazienteGraphicController.class);
 
-    public void initialize() {
-        HomePazienteController homeController = new HomePazienteController();
+    public void initialize() throws SQLException {
+        homeController = new HomePazienteController();
 
         HomeInfoUtenteBean infoUtenteBean = homeController.getHomepageInfo();
 
-        nome=infoUtenteBean.getNome();
-        cognome=infoUtenteBean.getCognome();
+        nome = infoUtenteBean.getNome();
+        cognome = infoUtenteBean.getCognome();
 
-        LabelNomePaziente.setText(nome +" " +cognome);
+        LabelNomePaziente.setText(nome + " " + cognome);
 
+        NavigatorSingleton navigator=NavigatorSingleton.getInstance();
+        username=navigator.getParametro();
+
+        navigator.eliminaParametro();
+
+        Notifica(username);
     }
 
     public void onVisualAppuntamentiClick() {
-       /* try {
+        try {
+            Stage HomePaziente = (Stage) ListaAppuntamenti.getScene().getWindow();
+            HomePaziente.close();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/mindharbor/ListaAppuntamenti2.fxml"));
-            //loader.setController(new AppuntamentiPazienteController());
-            Parent root = null;
-            root = loader.load();
-
-            // ora imposto la scena
-            Stage stage = new Stage();
-            stage.setTitle("Lista Appuntamenti");
-            stage.setScene(new Scene(root));
-            stage.show();
-
-            Stage HomePsicologo = (Stage) ListaAppuntamenti.getScene().getWindow();
-            HomePsicologo.close();
-
+            NavigatorSingleton navigator = NavigatorSingleton.getInstance();
+            navigator.gotoPage("/com/example/mindharbor/ListaAppuntamentiPaziente.fxml");
 
         } catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
-        } */
+        }
 
- }
-
-
+    }
 
 
     public void clickPrenotaAppuntamento() {
 
+    }
+
+
+    public void Notifica(String username) {
+        try {
+            int count= homeController.cercaNuoviTest(username);
+            if (count!=0) {
+                NotificaTest.setText(String.valueOf(count));
+            } else{
+                NotificaTest.setDisable(true);
+            }
+
+        } catch (SQLException e) {
+            logger.info("Errore nella ricerca dei test ", e);
+        }
     }
 
 }

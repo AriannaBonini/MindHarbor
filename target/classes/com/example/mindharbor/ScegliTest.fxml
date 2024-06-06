@@ -90,7 +90,7 @@
          </image>
       </ImageView>
       <Label layoutX="86.0" layoutY="19.0" prefHeight="18.0" prefWidth="116.0" text="/ PRESCRIVI TERAPIA" textFill="WHITE" />
-      <Label fx:id="AssegnaTest" alignment="CENTER" layoutX="199.0" layoutY="286.0" prefHeight="18.0" prefWidth="216.0" text="ASSEGNA TEST" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="AssegnaTest" alignment="CENTER" layoutX="199.0" layoutY="286.0" prefHeight="18.0" prefWidth="216.0" text="ASSEGNA TEST" textAlignment="CENTER" textFill="WHITE" onMouseClicked="#AssegnaTest">
          <font>
             <Font size="18.0" />
          </font>
