@@ -27,6 +27,23 @@ public class InputHandler {
         }
     }
 
+    public int getIntInput(int min, int max) {
+        while (true) {
+            OutputHandler.print("Seleziona un'opzione (" + min + "-" + max + "): ");
+            if (scanner.hasNextInt()) {
+                int choice = scanner.nextInt();
+                if (choice >= min && choice <= max) {
+                    return choice;
+                } else {
+                    OutputHandler.print("Errore: inserisci un numero tra " + min + " e " + max + ".");
+                }
+            } else {
+                OutputHandler.print("Errore: inserisci un numero valido.");
+                scanner.next(); // Consuma l'input non valido
+            }
+        }
+    }
+
 
     // Implementa altri metodi di input se necessario
 }

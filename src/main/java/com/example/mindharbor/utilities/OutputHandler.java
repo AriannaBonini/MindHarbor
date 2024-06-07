@@ -1,6 +1,7 @@
 package com.example.mindharbor.utilities;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
+import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.model.Appuntamento;
 import java.util.List;
 
@@ -113,12 +114,12 @@ public class OutputHandler {
         OutputHandler.print("Dettagli appuntamento:");
         OutputHandler.print(appuntamento.toString()); // Assicurati che Appuntamento abbia un override di toString() adeguato
     }
-    public static void printSpecificAppointmentBean(AppuntamentiBean appuntamento, int x) {
+    public static void printSpecificPatientBean(PazientiBean pazientiBean, int x) {
         // Questa è la versione che utilizza come parametro una AppuntamentiBean
 
         // Implementa la logica per stampare i dettagli di un singolo appuntamento
         OutputHandler.printf(x + " -> " );
-        OutputHandler.print(appuntamento.toString()); // Assicurati che Appuntamento abbia un override di toString() adeguato
+        OutputHandler.print(pazientiBean.toString());
     }
 }
 

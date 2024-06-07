@@ -3,9 +3,11 @@ package com.example.mindharbor.CLI.Controller;
 import com.example.mindharbor.CLI.Navigator.CLINavigator;
 import com.example.mindharbor.CLI.View.CLIPrescriviTerapiaView;
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.dao.AppuntamentoDAO;
-import com.example.mindharbor.model.Appuntamento;
+import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.dao.PazienteDAO;
+import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.session.SessionManager;
+import com.example.mindharbor.utilities.InputHandler;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,57 +16,68 @@ import java.util.List;
 public class CLIPrescriviTerapiaController {
     private SessionManager sessionManager;
     private CLIPrescriviTerapiaView view;
-    private AppuntamentoDAO appuntamentoDAO; // Utile per usare AppuntamentoDAO
+    private PazienteDAO pazienteDAO;
     private CLINavigator cliNavigator;
+    private InputHandler inputHandler;
 
     public CLIPrescriviTerapiaController(SessionManager sessionManager, CLINavigator cliNavigator) {
         this.sessionManager = sessionManager;
         this.view = new CLIPrescriviTerapiaView();
-        this.appuntamentoDAO = new AppuntamentoDAO();
+        this.pazienteDAO = new PazienteDAO();
         this.cliNavigator = cliNavigator;
+        this.inputHandler = new InputHandler();
     }
 
     public void start() {
+        view.clean();
         try {
             String username = sessionManager.getCurrentUser().getUsername();
-            List<Appuntamento> appuntamenti = appuntamentoDAO.trovaAppuntamento(username);
-            if (appuntamenti.isEmpty()) {
-                view.displayErrorMessage("Non ci sono appuntamenti");
+            List<Paziente> pazienti = pazienteDAO.trovaPaziente(username);
+
+
+            if (pazienti.isEmpty()) {
+                view.displayErrorMessagePatient();
                 return;
             }
 
-            // Convertiamo la lista di Appuntamenti in lista di bean
-            List<AppuntamentiBean> beans = new ArrayList<>();
-            for (Appuntamento appuntamento : appuntamenti) {
-                AppuntamentiBean bean = new AppuntamentiBean(
-                        appuntamento.getData(),
-                        appuntamento.getOra(),
-                        appuntamento.getNomePsicologo(),
-                        appuntamento.getCognomePsicologo(),
-                        appuntamento.getNomePaziente(),
-                        appuntamento.getCognomePaziente(),
-                        appuntamento.getUsernamePaziente(),
-                        appuntamento.getUsernamePsicologo(),
-                        appuntamento.getIdAppuntamento()
+            // Convertiamo la lista di pazienti in lista di bean
+            List<PazientiBean> beans = new ArrayList<>();
+            for (Paziente paziente : pazienti) {
+                PazientiBean bean = new PazientiBean(
+                        paziente.getNome(),
+                        paziente.getCognome(),
+                        paziente.getGenere(),
+                        paziente.getEtà(),
+                        paziente.getDiagnosi(),
+                        paziente.getUsername()
                 );
                 beans.add(bean);
             }
 
-            view.displayAppointmentsBean(beans);
+            view.displayPatientsBean(beans);
 
-            int num_app = 0;
-
-            int scelta = view.getUserInput();
+            // QUI BISOGNA GESTIRE MEGLIO LA SCELTA
+            int scelta = view.getUserInput(inputHandler,0, beans.size());
             if (scelta == 0) {
                 cliNavigator.showHomepage();
                 return;
             }
-            num_app = scelta-1;
-            AppuntamentiBean selectedAppuntamento = beans.get(num_app);
+            int pat = scelta-1;
+            PazientiBean selectedPatient = beans.get(pat);
+
+            // qui va aggiunta la logica per la scheda personale del paziente
+            cliNavigator.showSchedaPersonale(selectedPatient.getUsername());
+
+/*
             // Qui aggiungi la logica per "Prescrivi Terapia", "Seleziona Test", ecc.
+            CLIScegliTestController scegliTestController = new CLIScegliTestController(sessionManager, cliNavigator, selectedPatient.getUsername());
+            scegliTestController.selezionaTest();
+
+ */
+
 
         } catch (SQLException e) {
-            view.displayErrorMessage("Errore durante la ricerca degli appuntamenti");
+            view.displayErrorMessageForm(e);
         }
     }
 }

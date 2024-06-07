@@ -1,9 +1,6 @@
 package com.example.mindharbor.CLI.Navigator;
 
-import com.example.mindharbor.CLI.Controller.CLIHomepageController;
-import com.example.mindharbor.CLI.Controller.CLILoginController;
-import com.example.mindharbor.CLI.Controller.CLIPrescriviTerapiaController;
-import com.example.mindharbor.CLI.Controller.CLIVisualizzaAppuntamentiPsicologoController;
+import com.example.mindharbor.CLI.Controller.*;
 import com.example.mindharbor.session.SessionManager;
 
 public class CLINavigator {
@@ -13,9 +10,9 @@ public class CLINavigator {
     private  CLIHomepageController cliHomepageController;
     private CLIVisualizzaAppuntamentiPsicologoController cliVisualizzaAppuntamentiPsicologoController;
     private CLIPrescriviTerapiaController cliPrescriviTerapiaController;
+    private CLISchedaPersonaleController cliSchedaPersonaleController;
 
     public CLINavigator(SessionManager sessionManager) {
-
         this.sessionManager = sessionManager;
     }
 
@@ -37,5 +34,13 @@ public class CLINavigator {
     public void showPrescriviTerapia() {
         CLIPrescriviTerapiaController prescriviTerapiaController = new CLIPrescriviTerapiaController(sessionManager, this);
         prescriviTerapiaController.start();
+    }
+    public void showSchedaPersonale(String username) {
+        CLISchedaPersonaleController cliSchedaPersonaleController = new CLISchedaPersonaleController(sessionManager, this);
+        cliSchedaPersonaleController.visualizzaSchedaPersonale(username);
+    }
+    public void selezionaTest(String usernamePaziente){
+        CLIScegliTestController cliScegliTestController = new CLIScegliTestController(sessionManager, this, usernamePaziente);
+        cliScegliTestController.selezionaTest();
     }
 }

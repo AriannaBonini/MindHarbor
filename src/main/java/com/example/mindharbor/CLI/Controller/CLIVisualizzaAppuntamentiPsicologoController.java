@@ -24,7 +24,7 @@ public class CLIVisualizzaAppuntamentiPsicologoController {
 
     }
     public void visualizza() {
-
+        view.cleanPage();
         try {
             String username = sessionManager.getCurrentUser().getUsername();
             List<Appuntamento> appuntamenti = appuntamentoDAO.trovaAppuntamento(username);
