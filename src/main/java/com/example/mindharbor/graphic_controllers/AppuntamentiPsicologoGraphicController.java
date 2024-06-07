@@ -68,14 +68,13 @@ public class AppuntamentiPsicologoGraphicController {
 
     private String nome;
     private String cognome;
+    AppuntamentiPsicologoController appuntamentiController = new AppuntamentiPsicologoController();
 
 
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
 
 
     public void initialize() {
-
-        AppuntamentiPsicologoController appuntamentiController = new AppuntamentiPsicologoController();
 
         HomeInfoUtenteBean infoUtenteBean = appuntamentiController.getAppPsiInfo();
 
@@ -108,7 +107,7 @@ public class AppuntamentiPsicologoGraphicController {
 
     private void ricercaAppuntamenti(String selectedTabName, Text text, ListView<Node> listView) throws SQLException{
         try {
-            List<AppuntamentiBean> appuntamenti = AppuntamentiPsicologoController.getAppuntamenti(selectedTabName);
+            List<AppuntamentiBean> appuntamenti = appuntamentiController.getAppuntamenti(selectedTabName);
             if (appuntamenti.isEmpty()) {
                 text.setText("Non ci sono appuntamenti");
             }else {

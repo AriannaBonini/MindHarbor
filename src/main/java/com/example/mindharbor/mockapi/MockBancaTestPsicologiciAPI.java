@@ -41,8 +41,6 @@ public class MockBancaTestPsicologiciAPI {
                         .withStatus(200)
                         .withBody("{\"nome\": \"Test di Memoria\", \"domande\": [\"Domanda 1\", \"Domanda 2\"]}")));
 
-
-
     }
 
 }

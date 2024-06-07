@@ -85,7 +85,7 @@ public class ScegliTestGraphicController {
 
     public void getInfoPaziente() {
         try {
-            PazientiBean paziente= ScegliTestController.getInfoPaziente(username);
+            PazientiBean paziente= scegliTest.getInfoPaziente(username);
             AggiungiInformazioni(paziente);
 
         } catch (SQLException e) {
@@ -144,7 +144,7 @@ public class ScegliTestGraphicController {
     }
 
     public void getTest() {
-         listaTestPsicologici=ScegliTestController.getListaTest();
+         listaTestPsicologici=scegliTest.getListaTest();
 
         if (listaTestPsicologici != null) {
             CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4}; // Array di CheckBox

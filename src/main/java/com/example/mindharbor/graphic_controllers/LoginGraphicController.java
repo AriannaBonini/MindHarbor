@@ -94,7 +94,6 @@ public class LoginGraphicController implements Observer{
 
                 Stage loginstage = (Stage) accediButton.getScene().getWindow();
                 loginstage.close();
-                navigator.setParametro(username);
 
                 navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 

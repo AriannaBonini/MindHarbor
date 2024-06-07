@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ListaPazientiController {
 
-    public static List<PazientiBean> getListaPazienti() throws SQLException {
+    public List<PazientiBean> getListaPazienti() throws SQLException {
         List<Paziente> ListaPazienti = new PazienteDAO().trovaPaziente(
                 SessionManager.getInstance().getCurrentUser().getUsername()
         );

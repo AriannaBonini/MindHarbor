@@ -20,13 +20,10 @@ public class LoginController extends abstractController{
 
     private ClassObserver observer= new ClassObserver();
 
-    private LoginGraphicController controller= new LoginGraphicController();
-
 
     public void login(LoginCredentialBean credenziali) throws DAOException, SQLException, SessionUserException {
         Utente utente= new UtenteDao().TrovaUtente(credenziali.getUsername(),credenziali.getPassword());
 
-        //observer.addObserver(controller);
 
         if (utente!= null) {
             storeSessionUtente(utente.getUsername(), utente.getNome(), utente.getCognome(), utente.getUserType());

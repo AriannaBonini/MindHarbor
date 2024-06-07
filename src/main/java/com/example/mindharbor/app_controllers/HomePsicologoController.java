@@ -9,8 +9,6 @@ public class HomePsicologoController extends setInfoUtente{
 
     public HomeInfoUtenteBean getHomepageInfo() {
 
-        SessionManager.getInstance().isSessionOpen();
-
         HomeInfoUtenteBean homeInfoUtente = new setInfoUtente().getInfo();
         return homeInfoUtente;
     }
@@ -18,9 +16,5 @@ public class HomePsicologoController extends setInfoUtente{
     public void logout() throws SessionUserException {
         SessionManager sessionManager = SessionManager.getInstance();
         sessionManager.logout();
-
-        SessionManager.getInstance().isSessionOpen();
     }
-
-
 }

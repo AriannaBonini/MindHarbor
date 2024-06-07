@@ -44,7 +44,6 @@ public class HomePazienteGraphicController {
 
     private String nome;
     private String cognome;
-    private String username;
 
     HomePazienteController homeController;
     private static final Logger logger = LoggerFactory.getLogger(HomePazienteGraphicController.class);
@@ -60,13 +59,11 @@ public class HomePazienteGraphicController {
         LabelNomePaziente.setText(nome + " " + cognome);
 
         NavigatorSingleton navigator=NavigatorSingleton.getInstance();
-        username=navigator.getParametro();
 
-        navigator.eliminaParametro();
-
-        Notifica(username);
+        Notifica();
     }
 
+    @FXML
     public void onVisualAppuntamentiClick() {
         try {
             Stage HomePaziente = (Stage) ListaAppuntamenti.getScene().getWindow();
@@ -81,15 +78,30 @@ public class HomePazienteGraphicController {
 
     }
 
+    @FXML
+    public void onVisualTestClick() {
+        try {
+            Stage HomePaziente = (Stage) ListaAppuntamenti.getScene().getWindow();
+            HomePaziente.close();
 
+            NavigatorSingleton navigator = NavigatorSingleton.getInstance();
+            navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
+
+        } catch (IOException e) {
+            logger.error("Impossibile caricare l'interfaccia", e);
+        }
+    }
+
+
+    @FXML
     public void clickPrenotaAppuntamento() {
 
     }
 
 
-    public void Notifica(String username) {
+    public void Notifica() {
         try {
-            int count= homeController.cercaNuoviTest(username);
+            int count= homeController.cercaNuoviTest();
             if (count!=0) {
                 NotificaTest.setText(String.valueOf(count));
             } else{

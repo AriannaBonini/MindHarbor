@@ -16,9 +16,9 @@ public class HomePazienteController {
             return homeInfoUtente;
     }
 
-    public int cercaNuoviTest(String username) throws SQLException {
+    public int cercaNuoviTest() throws SQLException {
 
-        int count= new TestPsicologicoDAO().getTestAssegnato(username);
+        int count= new TestPsicologicoDAO().getTestAssegnato(SessionManager.getInstance().getCurrentUser().getUsername());
 
         return count;
     }

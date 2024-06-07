@@ -64,6 +64,7 @@ public class HomePsicologoGraphicController {
 
     }
 
+    @FXML
     public void onPrescriviTerapiaClick() {
 
         NavigatorSingleton navigator = NavigatorSingleton.getInstance();
@@ -80,6 +81,7 @@ public class HomePsicologoGraphicController {
         }
     }
 
+    @FXML
     public void Logout() {
 
         NavigatorSingleton navigator = NavigatorSingleton.getInstance();

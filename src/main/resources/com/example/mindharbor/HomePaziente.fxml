@@ -50,7 +50,7 @@
          </image>
       </ImageView>
       <Label fx:id="Terapia" layoutX="431.0" layoutY="76.0" text="TERAPIA" textFill="WHITE" />
-      <Label fx:id="Test" layoutX="219.0" layoutY="229.0" text="TEST" textFill="WHITE" />
+      <Label fx:id="Test" onMouseClicked="#onVisualTestClick" layoutX="219.0" layoutY="229.0" text="TEST" textFill="WHITE" />
       <Label fx:id="PrenotaAppuntamento" layoutX="85.0" layoutY="122.0" onMouseClicked="#clickPrenotaAppuntamento" prefHeight="54.0" prefWidth="101.0" text="PRENOTA &#10;APPUNTAMENTO" textAlignment="CENTER" textFill="WHITE" />
       <Label fx:id="NotificaTest" layoutX="244.0" layoutY="218.0" prefHeight="26.0" prefWidth="14.0" textAlignment="CENTER" textFill="#8cff00">
          <font>

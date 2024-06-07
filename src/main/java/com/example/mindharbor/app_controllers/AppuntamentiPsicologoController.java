@@ -21,7 +21,7 @@ public class AppuntamentiPsicologoController {
         HomeInfoUtenteBean homeInfoUtente = new setInfoUtente().getInfo();
         return homeInfoUtente;
     }
-    public static List<AppuntamentiBean> getAppuntamenti(String selectedTabName) throws SQLException {
+    public List<AppuntamentiBean> getAppuntamenti(String selectedTabName) throws SQLException {
         List<Appuntamento> appuntamentoList = new AppuntamentoDAO().trovaAppuntamento(
                 SessionManager.getInstance().getCurrentUser().getUsername(), selectedTabName
         );

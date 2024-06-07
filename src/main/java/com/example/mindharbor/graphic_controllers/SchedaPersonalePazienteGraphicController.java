@@ -42,10 +42,10 @@ public class SchedaPersonalePazienteGraphicController {
     private String nome;
     private String cognome;
     private String username;
+    SchedaPersonalePazienteController SchedaPersonale = new SchedaPersonalePazienteController();
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
 
     public void initialize() {
-        SchedaPersonalePazienteController SchedaPersonale = new SchedaPersonalePazienteController();
 
         HomeInfoUtenteBean infoUtenteBean = SchedaPersonale.getPagePsiInfo();
 
@@ -66,7 +66,7 @@ public class SchedaPersonalePazienteGraphicController {
 
     public void PopolaSchedaPersonale()  {
         try {
-            PazientiBean paziente= SchedaPersonalePazienteController.getSchedaPersonale(username);
+            PazientiBean paziente= SchedaPersonale.getSchedaPersonale(username);
             CreaSchedaPersonale(paziente);
 
         } catch (SQLException e) {

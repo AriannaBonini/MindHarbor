@@ -60,12 +60,12 @@ public class ListaPazientiGraphicController {
     private String nome;
     private String cognome;
 
+    ListaPazientiController ListaController = new ListaPazientiController();
+
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
 
 
     public void initialize() {
-
-        ListaPazientiController ListaController = new ListaPazientiController();
 
         HomeInfoUtenteBean infoUtenteBean = ListaController.getPagePsiInfo();
 
@@ -79,7 +79,7 @@ public class ListaPazientiGraphicController {
 
     public void PopolaLista() {
         try {
-            List<PazientiBean> listaPazienti = ListaPazientiController.getListaPazienti();
+            List<PazientiBean> listaPazienti = ListaController.getListaPazienti();
             CreaVBoxListaPazienti(listaPazienti);
 
         }catch (SQLException e) {

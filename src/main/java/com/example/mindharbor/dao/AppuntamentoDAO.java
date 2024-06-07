@@ -76,5 +76,58 @@ public class AppuntamentoDAO {
 
         return appuntamentoList;
     }
+
+    public List<Appuntamento> trovaAppuntamentoPaziente(String username, String selectedTabName) throws SQLException {
+        List<Appuntamento> appuntamentoList = new ArrayList<>();
+
+        PreparedStatement stmt = null;
+        Connection conn = null;
+
+        conn = ConnectionFactory.getConnection();
+
+        if (selectedTabName=="IN PROGRAMMA") {
+
+            String sql = "SELECT Data, Ora, Ps.Nome, Ps.Cognome, Pa.Nome, Pa.Cognome, Username_Paziente, Username_Psicologo " +
+                    "FROM Appuntamento " +
+                    "JOIN Utente AS Pa ON Pa.Username=Username_Paziente " +
+                    "JOIN Utente AS Ps ON Ps.Username=Username_Psicologo " +
+                    "WHERE Username_Paziente= ? AND Data>=NOW()";
+            // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt.setString(1, username);
+        } else {
+            String sql = "SELECT Data, Ora, Ps.Nome, Ps.Cognome, Pa.Nome, Pa.Cognome, Username_Paziente, Username_Psicologo " +
+                    "FROM Appuntamento " +
+                    "JOIN Utente AS Pa ON Pa.Username=Username_Paziente " +
+                    "JOIN Utente AS Ps ON Ps.Username=Username_Psicologo " +
+                    "WHERE Username_Paziente= ? AND Data<NOW()";
+            // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt.setString(1, username);
+        }
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+
+            Appuntamento appuntamento = new Appuntamento( rs.getString(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getString(5),
+                    rs.getString(6),
+                    rs.getString(7),
+                    rs.getString(8),
+                    " ");
+
+            appuntamentoList.add(appuntamento);
+        }
+
+        // Closing ResultSet and freeing resources
+        rs.close();
+        stmt.close();
+
+        return appuntamentoList;
+    }
 }
 
