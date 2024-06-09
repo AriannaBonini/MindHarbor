@@ -99,6 +99,8 @@ public class BoundaryMockAPI {
     }
 
     public static List<DomandeTest> TrovaDomande(String urlTest) {
+
+        List<String> domande=null;
         try {
             URL url = new URL(urlTest);
 
@@ -117,18 +119,18 @@ public class BoundaryMockAPI {
 
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(response.toString());
-            for (Object key : jsonObject.keySet()) {
-                String testName = (String) key;
-                if (testName=="domande") {
 
-                }
-
+            JSONArray domandeArray = (JSONArray) jsonObject.get("domande");
+            for (Object domanda : domandeArray) {
+                domande.add((String) domanda);
             }
 
+            return domande;
 
         }catch (Exception e) {
             e.printStackTrace();
         }
+
 
     }
 }
