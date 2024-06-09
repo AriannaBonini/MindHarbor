@@ -11,6 +11,7 @@ import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.patterns.ClassObserver;
 import com.example.mindharbor.patterns.Observer;
+import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.setInfoUtente;
 
 import java.sql.SQLException;
@@ -18,9 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScegliTestController {
-    private ClassObserver observer= new ClassObserver();
 
-    public static PazientiBean getInfoPaziente(String username) throws SQLException {
+    public  PazientiBean getInfoPaziente(String username) throws SQLException {
         Paziente paziente= new PazienteDAO().getInfoPaziente(username);
 
         PazientiBean pazienteBean= new PazientiBean(
@@ -34,7 +34,7 @@ public class ScegliTestController {
 
         return pazienteBean;
     }
-    public static List<String> getListaTest() {
+    public List<String> getListaTest() {
         List <String> listaTestPsicologici=BoundaryMockAPI.TestPiscologici();
 
         return listaTestPsicologici;
@@ -49,6 +49,6 @@ public class ScegliTestController {
 
     public void NotificaTest(String usernamePaziente, String nomeTest) throws SQLException {
         PazienteDAO pazienteDao= new PazienteDAO();
-        new TestPsicologicoDAO().assegnaTest(usernamePaziente,pazienteDao.TrovaPsicologo(usernamePaziente), nomeTest );
+        new TestPsicologicoDAO().assegnaTest(usernamePaziente, SessionManager.getInstance().getCurrentUser().getUsername(), nomeTest );
     }
 }

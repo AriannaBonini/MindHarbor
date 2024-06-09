@@ -15,7 +15,7 @@ public class SchedaPersonalePazienteController {
         return homeInfoUtente;
     }
 
-    public static PazientiBean getSchedaPersonale(String username) throws SQLException {
+    public PazientiBean getSchedaPersonale(String username) throws SQLException {
         Paziente paziente= new PazienteDAO().getInfoSchedaPersonale(username);
 
         PazientiBean pazienteBean= new PazientiBean(

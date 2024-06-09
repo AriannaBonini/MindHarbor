@@ -63,13 +63,6 @@ public class SessionManager {
             return null;
         }
 
-    public boolean isSessionOpen() {
-        if (utenteCorrente != null) {
-            return true;
-        }else {
-            return false;
-        }
-    }
 }
 
 

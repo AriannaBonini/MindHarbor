@@ -3,28 +3,28 @@ package com.example.mindharbor.model;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 
+import java.util.Date;
+
 public class TestPsicologico {
-    private String data;
+    private Date data;
     private Integer risultato;
     private String psicologo;
     private String paziente;
     private String test;
-    private Integer stato;
 
-    public TestPsicologico(String data, Integer risultato, String psicologo, String paziente, String test, Integer stato) {
+    public TestPsicologico(Date data, Integer risultato, String psicologo, String paziente, String test) {
         this.data = data;
         this.risultato = risultato;
         this.psicologo= psicologo;
         this.paziente=paziente;
         this.test=test;
-        this.stato=stato;
     }
 
-    public String getData() {
+    public Date getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(Date data) {
         this.data = data;
     }
 
@@ -55,28 +55,5 @@ public class TestPsicologico {
     public void setTest(String test) {
         this.test = test;
     }
-
-    public Integer getStato() {
-        return stato;
-    }
-    public void setStato(Integer stato) {
-        this.stato = stato;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

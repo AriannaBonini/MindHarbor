@@ -138,15 +138,16 @@ public class PazienteDAO {
     }
 
     public String TrovaPsicologo(String username) throws SQLException {
-        String usernamePsicologo=null;
+        String nomePsicologo=null;
 
         PreparedStatement stmt = null;
         Connection conn = null;
 
         conn = ConnectionFactory.getConnection();
 
-        String sql ="SELECT Username_Psicologo " +
-                "FROM Paziente " +
+        String sql ="SELECT Nome, Cognome " +
+                "FROM Utente " +
+                "JOIN Paziente AS P ON P.Username_Psicologo=Username " +
                 "WHERE Paziente_Username= ?;";
         // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -155,12 +156,11 @@ public class PazienteDAO {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
-            usernamePsicologo=rs.getString(1);
+            nomePsicologo=(rs.getString(1) + rs.getString(2));
 
         }
 
-        return usernamePsicologo;
-
+        return nomePsicologo;
     }
 
 }
