@@ -1,29 +1,31 @@
 package com.example.mindharbor.model;
 
+import java.util.List;
+
 public class DomandeTest {
 
-    private String domanda;
-    private Integer punteggio;
+    private List<String> domande;
+    private List<Integer> punteggi;
 
-    public DomandeTest(String domanda, Integer punteggio) {
-        this.domanda= domanda;
-        this.punteggio= punteggio;
+    public DomandeTest(List<String> domande, List<Integer> punteggi) {
+        this.domande= domande;
+        this.punteggi= punteggi;
     }
 
-    public String getDomanda() {
-        return domanda;
+    public List<String> getDomande() {
+        return domande;
     }
 
-    public void setDomanda(String domanda) {
-        this.domanda = domanda;
+    public void setDomande(List<String> domande) {
+        this.domande = domande;
     }
 
-    public Integer getPunteggio() {
-        return punteggio;
+    public List<Integer> getPunteggi() {
+        return punteggi;
     }
 
-    public void setPunteggio(Integer punteggio) {
-        this.punteggio = punteggio;
+    public void setPunteggio(List<Integer> punteggi) {
+        this.punteggi = punteggi;
     }
 
 }

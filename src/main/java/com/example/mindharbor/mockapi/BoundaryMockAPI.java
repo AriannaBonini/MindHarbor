@@ -1,6 +1,7 @@
 package com.example.mindharbor.mockapi;
 
 import com.example.mindharbor.model.DomandeTest;
+import com.example.mindharbor.utilities.HttpUtil;
 import wiremock.net.minidev.json.JSONArray;
 import wiremock.net.minidev.json.JSONObject;
 import wiremock.net.minidev.json.parser.JSONParser;
@@ -16,14 +17,21 @@ import java.util.concurrent.TransferQueue;
 public class BoundaryMockAPI {
 
     private static final String BASE_URL = "http://localhost:8080"; // Indirizzo del server WireMock
+
     public static List<String> TestPiscologici() {
 
         MockBancaTestPsicologiciAPI.mockTestPiscologiciAPI();
 
         List<String> testNames = new ArrayList<>();
 
+        String jsonResponse = HttpUtil.makeHttpRequest(BASE_URL + "/test", "GET");
+
         try {
+
+            /* Qui inizia la connessione Http
+
             // Crea un'istanza di URL per la richiesta HTTP
+
             URL url = new URL(BASE_URL+ "/test"); // Sostituisci con l'URL corretto della tua API fittizia
 
             // Apre una connessione HTTP
@@ -41,8 +49,11 @@ public class BoundaryMockAPI {
 
             connection.disconnect();
 
+            // qui finisce la connessione Http */
+
             JSONParser parser = new JSONParser();
-            JSONArray jsonArray = (JSONArray) parser.parse(response.toString());
+
+            JSONArray jsonArray = (JSONArray) parser.parse(jsonResponse); // al posto di response.toString() ci andrà il return della classe HttpUtile
             for (Object obj : jsonArray) {
                 String testName = (String) obj;
                 testNames.add(testName);
@@ -55,14 +66,17 @@ public class BoundaryMockAPI {
     }
 
     public static List<DomandeTest> DomandeTest(String nomeTest) {
+
         MockBancaTestPsicologiciAPI.mockTestPiscologiciAPI();
 
         List<DomandeTest> domande=new ArrayList<>();
+        String jsonResponse = HttpUtil.makeHttpRequest(BASE_URL + "/api/test-urls", "GET");
         String urlTest=null;
 
         //List<String> testNames= new ArrayList<>();
 
         try {
+             /* Inizio connessione
             URL url = new URL(BASE_URL+ "/api/test-urls");
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -77,9 +91,10 @@ public class BoundaryMockAPI {
             reader.close();
 
             connection.disconnect();
+         Fine connessione */
 
             JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(response.toString());
+            JSONObject jsonObject = (JSONObject) parser.parse(jsonResponse);
             for (Object key : jsonObject.keySet()) {
                 String testName = (String) key;
                 if (testName==nomeTest) {
@@ -100,8 +115,12 @@ public class BoundaryMockAPI {
 
     public static List<DomandeTest> TrovaDomande(String urlTest) {
 
+        String jsonResponse = HttpUtil.makeHttpRequest(urlTest, "GET");
         List<String> domande=null;
         try {
+
+            /* inizio connessione
+
             URL url = new URL(urlTest);
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -117,8 +136,10 @@ public class BoundaryMockAPI {
 
             connection.disconnect();
 
+            fine connessione */
+
             JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(response.toString());
+            JSONObject jsonObject = (JSONObject) parser.parse(jsonResponse);
 
             JSONArray domandeArray = (JSONArray) jsonObject.get("domande");
             for (Object domanda : domandeArray) {
