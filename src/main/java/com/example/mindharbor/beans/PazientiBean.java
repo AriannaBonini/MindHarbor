@@ -1,7 +1,7 @@
 package com.example.mindharbor.beans;
 
 public class PazientiBean {
-
+//aljehja
     private String nome;
     private String cognome;
     private String genere;

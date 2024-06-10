@@ -11,7 +11,7 @@ public class DomandeTest {
         this.domande= domande;
         this.punteggi= punteggi;
     }
-
+//jadhj
     public List<String> getDomande() {
         return domande;
     }

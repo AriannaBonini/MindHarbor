@@ -6,6 +6,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HttpUtil {
+    //aelihjb
+
     /*
     Il metodo makeHttpRequest è progettato per eseguire richieste HTTP.
     Prende due parametri: urlPath, che è l'URL a cui fare la richiesta,
