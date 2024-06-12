@@ -10,14 +10,17 @@ public class TestBean {
     private Integer risultato;
     private Date data;
 
+    private Integer svolto;
+
     public TestBean() {}
 
-    public TestBean(String nomeTest, String psicologo, String paziente, Integer risultato, Date data ) {
+    public TestBean(String nomeTest, String psicologo, String paziente, Integer risultato, Date data, Integer svolto ) {
         this.nomeTest=nomeTest;
         this.psicologo=psicologo;
         this.paziente=paziente;
         this.risultato=risultato;
         this.data=data;
+        this.svolto=svolto;
     }
 
     public String getNomeTest() {
@@ -52,4 +55,11 @@ public class TestBean {
     }
 
     public void setData(Date data) {this.data = data;}
+
+    public Integer getSvolto() {
+        return svolto;
+    }
+    public void setSvolto(Integer svolto) {
+        this.svolto = svolto;
+    }
 }

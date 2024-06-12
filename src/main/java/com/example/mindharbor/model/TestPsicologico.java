@@ -11,13 +11,15 @@ public class TestPsicologico {
     private String psicologo;
     private String paziente;
     private String test;
+    private Integer svolto;
 
-    public TestPsicologico(Date data, Integer risultato, String psicologo, String paziente, String test) {
+    public TestPsicologico(Date data, Integer risultato, String psicologo, String paziente, String test, Integer svolto) {
         this.data = data;
         this.risultato = risultato;
         this.psicologo= psicologo;
         this.paziente=paziente;
         this.test=test;
+        this.svolto=svolto;
     }
 
     public Date getData() {
@@ -54,6 +56,13 @@ public class TestPsicologico {
     }
     public void setTest(String test) {
         this.test = test;
+    }
+
+    public Integer getSvolto() {
+        return svolto;
+    }
+    public void setSvolto(Integer svolto) {
+        this.svolto = svolto;
     }
 
 }

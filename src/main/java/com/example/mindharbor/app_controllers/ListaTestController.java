@@ -29,7 +29,8 @@ public class ListaTestController {
                     test.getPsicologo(),
                     test.getPaziente(),
                     test.getRisultato(),
-                    test.getData());
+                    test.getData(),
+                    test.getSvolto());
 
 
             testBeanList.add(testBean);

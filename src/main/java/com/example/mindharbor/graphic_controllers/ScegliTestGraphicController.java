@@ -185,18 +185,25 @@ public class ScegliTestGraphicController {
         } else {
             try {
                 scegliTest.NotificaTest(username, nomeTest);
+
+                Alert alert= new AlertMessage().Informazione("Operazione Completata","Esito Positivo", "Test assegnato con successo");
+                alert.show();
+
+                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+                    alert.close();
+                }));
+
+                timeline.play();
             } catch (SQLException e) {
                 logger.info("Errore assegnazione Test");
+                Alert alert= new AlertMessage().Errore("Limite test raggiunto per questo paziente");
+                alert.show();
+
+                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+                    alert.close();
+                }));
             }
 
-            Alert alert= new AlertMessage().Informazione("Test assegnato con successo");
-            alert.show();
-
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
-                alert.close();
-            }));
-
-            timeline.play();
         }
     }
 }

@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TransferQueue;
 
@@ -28,29 +29,6 @@ public class BoundaryMockAPI {
 
         try {
 
-            /* Qui inizia la connessione Http
-
-            // Crea un'istanza di URL per la richiesta HTTP
-
-            URL url = new URL(BASE_URL+ "/test"); // Sostituisci con l'URL corretto della tua API fittizia
-
-            // Apre una connessione HTTP
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            // Legge la risposta dalla connessione
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            reader.close();
-
-            connection.disconnect();
-
-            // qui finisce la connessione Http */
-
             JSONParser parser = new JSONParser();
 
             JSONArray jsonArray = (JSONArray) parser.parse(jsonResponse); // al posto di response.toString() ci andrà il return della classe HttpUtile
@@ -65,79 +43,41 @@ public class BoundaryMockAPI {
         return testNames;
     }
 
-    public static List<DomandeTest> DomandeTest(String nomeTest) {
+    public static DomandeTest DomandeTest(String nomeTest) {
 
         MockBancaTestPsicologiciAPI.mockTestPiscologiciAPI();
 
-        List<DomandeTest> domande=new ArrayList<>();
+        DomandeTest domande=new DomandeTest();
         String jsonResponse = HttpUtil.makeHttpRequest(BASE_URL + "/api/test-urls", "GET");
         String urlTest=null;
 
-        //List<String> testNames= new ArrayList<>();
-
         try {
-             /* Inizio connessione
-            URL url = new URL(BASE_URL+ "/api/test-urls");
-
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            reader.close();
-
-            connection.disconnect();
-         Fine connessione */
 
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(jsonResponse);
             for (Object key : jsonObject.keySet()) {
                 String testName = (String) key;
-                if (testName==nomeTest) {
+                if (testName.equalsIgnoreCase(nomeTest)) {
                     urlTest = (String) jsonObject.get(key);
                     break;
-                    //testNames.add(testName+ ": " + urlTest);
                 }
             }
-            domande=TrovaDomande(urlTest);
-
+            domande.setDomande(TrovaDomande(urlTest));
+            domande.setPunteggio(TrovaPunteggio(nomeTest));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return domande;
-        //jkhil
     }
 
-    public static List<DomandeTest> TrovaDomande(String urlTest) {
+    public static List<String> TrovaDomande(String urlTest) {
 
         String jsonResponse = HttpUtil.makeHttpRequest(urlTest, "GET");
-        List<String> domande=null;
+        List<String> domande= new ArrayList<>();
+
         try {
-
-            /* inizio connessione
-
-            URL url = new URL(urlTest);
-
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            reader.close();
-
-            connection.disconnect();
-
-            fine connessione */
 
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(jsonResponse);
@@ -147,12 +87,49 @@ public class BoundaryMockAPI {
                 domande.add((String) domanda);
             }
 
-            return domande;
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return domande;
+    }
+
+    public static List<Integer> TrovaPunteggio(String nomeTest) {
+        String urlPunteggi=null;
+        List<Integer> punteggi= new ArrayList<>(Arrays.asList(0,0,0));
+
+        if(nomeTest.equalsIgnoreCase("Test di Personalità")) {
+            urlPunteggi= BASE_URL+"/api/contenuti/punteggitest1";
+        } else if (nomeTest.equalsIgnoreCase("Test di Ansia")) {
+            urlPunteggi= BASE_URL+"/api/contenuti/punteggitest2";
+        }else {
+            urlPunteggi= BASE_URL+"/api/contenuti/punteggitest3";
+        }
+
+        String jsonResponse = HttpUtil.makeHttpRequest(urlPunteggi, "GET");
+
+        try{
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(jsonResponse);
+
+            for (Object key : jsonObject.keySet()) {
+                String nomeRisposta = (String) key;
+                String valoreStringa = (String) jsonObject.get(key);
+                Integer valoreIntero = Integer.parseInt(valoreStringa);
+                if (nomeRisposta.equalsIgnoreCase("felice")) {
+                    punteggi.set(0,valoreIntero);
+                } else if (nomeRisposta.equalsIgnoreCase("triste")) {
+                    punteggi.set(1,valoreIntero);
+                }else {
+                    punteggi.set(2,valoreIntero);
+                }
+            }
 
         }catch (Exception e) {
             e.printStackTrace();
         }
 
+        return punteggi;
     }
 }
 

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Objects;
 
 public class NavigatorSingleton {
@@ -19,6 +20,8 @@ public class NavigatorSingleton {
     protected Stage stg;
 
     private String parametro;
+
+    private Date data;
 
     public Stage getStg() {
         return this.stg;
@@ -59,8 +62,9 @@ public class NavigatorSingleton {
         return parametro;
     }
 
-    public void eliminaParametro() {
-        this.parametro = null;
-    }
+    public void eliminaParametro() {this.parametro = null;}
+
+    public void setData(Date data) {this.data=data;}
+    public Date getData() {return data;}
 
 }

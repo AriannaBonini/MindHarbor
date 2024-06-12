@@ -46,6 +46,12 @@ insert into Psicologo values(32,'Soffia il Vento','Sph97');
 insert into appuntamento values('1','2024-07-23','15:30','Giacomino','Ciccio');
 insert into appuntamento values('2','2024-10-2','9:45','Luigi@67','Ciccio');
 
+--TEST PSICOLOGICI
+
+--ciccio
+INSERT INTO testpsicologico VALUES ('2024-05-10', 0, 'Ciccio', '_Venere@_', 'Test di Memoria',1)
+
+
 
 
 

@@ -7,11 +7,12 @@ public class DomandeTest {
     private List<String> domande;
     private List<Integer> punteggi;
 
+    public DomandeTest() {}
+
     public DomandeTest(List<String> domande, List<Integer> punteggi) {
         this.domande= domande;
         this.punteggi= punteggi;
     }
-//jadhj
     public List<String> getDomande() {
         return domande;
     }

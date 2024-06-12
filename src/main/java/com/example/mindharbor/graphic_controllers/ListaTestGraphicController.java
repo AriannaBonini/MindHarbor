@@ -5,7 +5,9 @@ import com.example.mindharbor.app_controllers.ListaTestController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.beans.TestBean;
+import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,6 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +44,7 @@ public class ListaTestGraphicController {
     private Label LabelNomePaziente;
 
     @FXML
-    private Text ListaVuota;
+    private Label Info;
 
     @FXML
     private Label Home;
@@ -93,7 +96,7 @@ public class ListaTestGraphicController {
         try {
             List<TestBean> listaTest = listaTestController.getListaTest();
             if (listaTest.isEmpty()) {
-                ListaVuota.setText("Non esistono appuntamenti");
+                Info.setText("Non esistono appuntamenti");
             } else {
                 CreaVBoxListaTest(listaTest);
             }
@@ -121,15 +124,22 @@ public class ListaTestGraphicController {
             ImageView ImmagineStato= new ImageView();
 
             Label NomeTest=new Label("\n     NOME:" + " " + test.getNomeTest());
-            Label RisultatoTest=new Label("\n     RISULTATO:" + " " + test.getRisultato());
             Label DataTest=new Label("\n     DATA:" + " " + test.getData());
+
+            Label RisultatoTest;
+            if(test.getRisultato()==null) {
+                RisultatoTest=new Label("\n     RISULTATO:" + "non presente" );
+
+            } else {
+                RisultatoTest=new Label("\n     RISULTATO:" + " " + test.getRisultato());
+            }
 
             NomeTest.setTextFill(Color.WHITE);
             RisultatoTest.setTextFill(Color.WHITE);
 
             BoxTest.getChildren().addAll(DataTest,NomeTest,RisultatoTest);
 
-            if (test.getRisultato()==0) {
+            if (test.getSvolto()==0) {
                 image= new Image(getClass().getResourceAsStream("/com/example/mindharbor/Img/NonCompletato.png"));
                 ImmagineStato.setImage(image);
             } else {
@@ -146,7 +156,9 @@ public class ListaTestGraphicController {
 
             items.add(HBoxTest);
 
+
             HBoxTest.setUserData(test);
+
         }
 
         ListViewTest.setFixedCellSize(100);
@@ -179,7 +191,14 @@ public class ListaTestGraphicController {
             }
 
             TestBean test = (TestBean) nodo.getUserData();
+
+            if(test.getSvolto()==1) {
+                new LabelDuration().Duration(Info,"test già effettuato");
+                return;
+            }
+
             String nometest = test.getNomeTest();
+            Date dataTest=test.getData();
 
 
             Stage ListaTest = (Stage) ListViewTest.getScene().getWindow();
@@ -187,6 +206,7 @@ public class ListaTestGraphicController {
 
             NavigatorSingleton navigator = NavigatorSingleton.getInstance();
             navigator.setParametro(nometest);
+            navigator.setData(dataTest);
 
             navigator.gotoPage("/com/example/mindharbor/SvolgiTest.fxml");
 

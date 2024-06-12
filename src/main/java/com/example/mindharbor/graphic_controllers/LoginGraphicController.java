@@ -7,6 +7,7 @@ import com.example.mindharbor.exceptions.SessionUserException;
 import com.example.mindharbor.patterns.ClassObserver;
 import com.example.mindharbor.patterns.Observer;
 import com.example.mindharbor.session.ConnectionFactory;
+import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -71,15 +72,15 @@ public class LoginGraphicController implements Observer{
 
         } catch (DAOException e){
             logger.info("Credenziali errate per l'utente" + username, e);
-            msgLbl.setText("Credenziali errate");
+            new LabelDuration().Duration(msgLbl,"Credenziali errate");
         }
         catch (SQLException e) {
             logger.info("Problemi di connessione al database", e);
-            msgLbl.setText("Problema di connessione al database");
+            new LabelDuration().Duration(msgLbl,"Problema di connessione al database");
         }
         catch(SessionUserException e) {
             logger.info(username + "già loggato", e);
-            msgLbl.setText("Utente già loggato");
+            new LabelDuration().Duration(msgLbl,"Utente già loggato");
         }
 
     }

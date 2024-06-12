@@ -10,7 +10,7 @@ import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.patterns.ClassObserver;
 import com.example.mindharbor.patterns.Observer;
 import com.example.mindharbor.utilities.NavigatorSingleton;
-import wiremock.org.checkerframework.checker.units.qual.N;
+import wiremock.org.checkerframework.checker.units.qual.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
