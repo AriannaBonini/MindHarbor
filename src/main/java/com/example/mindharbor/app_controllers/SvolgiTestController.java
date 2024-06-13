@@ -54,18 +54,21 @@ public class SvolgiTestController {
 
         } else {
             if (punteggioPassato == 0) {
-                progressi=(double) punteggioPassato*100;
+                progressi=(double) testResult.getRisultatoUltimoTest()*10;
                 progressi=Math.round(progressi*100.0)/100.0;
                 return progressi;
 
             }
-            System.out.println("attuale:" + testResult.getRisultatoUltimoTest() + "  passato: " + punteggioPassato);
+            if(testResult.getRisultatoUltimoTest()==0) {
+                progressi=(double) (-punteggioPassato)*10;
+                progressi=Math.round(progressi*100.0)/100.0;
+                return progressi;
+
+            }
 
             progressi = (double) (testResult.getRisultatoUltimoTest() - punteggioPassato);
             progressi= (progressi/punteggioPassato)*100;
-            progressi= Math.round(progressi * 100.0) / 100.0; //arrotonda a due cifre dopo la virgola
-            System.out.println(progressi);
-
+            progressi= Math.round(progressi * 100.0) / 100.0;
 
             return progressi;
         }

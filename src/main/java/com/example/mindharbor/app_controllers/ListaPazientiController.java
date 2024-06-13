@@ -1,12 +1,12 @@
 package com.example.mindharbor.app_controllers;
 
-import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
-import com.example.mindharbor.dao.AppuntamentoDAO;
+import com.example.mindharbor.beans.PazientiNumTestBean;
 import com.example.mindharbor.dao.PazienteDAO;
-import com.example.mindharbor.model.Appuntamento;
+import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.model.Paziente;
+import com.example.mindharbor.model.PazientiNumTest;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.setInfoUtente;
 
@@ -16,33 +16,29 @@ import java.util.List;
 
 public class ListaPazientiController {
 
-    public List<PazientiBean> getListaPazienti() throws SQLException {
-        List<Paziente> ListaPazienti = new PazienteDAO().trovaPaziente(
+    public List<PazientiNumTestBean> getListaPazienti() throws SQLException {
+        List<PazientiNumTest> ListaPazienti = new PazienteDAO().trovaPaziente(
                 SessionManager.getInstance().getCurrentUser().getUsername()
         );
 
-        List<PazientiBean> pazientiBeanList = new ArrayList<>();
+        List<PazientiNumTestBean> pazientiNumTestBeanList = new ArrayList<>();
 
-        for (Paziente paz : ListaPazienti) {
-            PazientiBean pazientiBean = new PazientiBean(
+        for (PazientiNumTest paz : ListaPazienti) {
+            PazientiNumTestBean pazientiTestBean = new PazientiNumTestBean(
+                    paz.getUsername(),
+                    paz.getNumTest(),
                     paz.getNome(),
                     paz.getCognome(),
-                    paz.getGenere(),
-                    0,
-                    "",
-                    paz.getUsername()
-            );
+                    paz.getGenere());
 
-            pazientiBeanList.add(pazientiBean);
+            pazientiNumTestBeanList.add(pazientiTestBean);
         }
-        return pazientiBeanList;
-
+        return pazientiNumTestBeanList;
     }
 
     public HomeInfoUtenteBean getPagePsiInfo() {
         HomeInfoUtenteBean homeInfoUtente = new setInfoUtente().getInfo();
         return homeInfoUtente;
     }
-
 
 }

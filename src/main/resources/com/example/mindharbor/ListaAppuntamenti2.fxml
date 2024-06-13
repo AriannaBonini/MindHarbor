@@ -82,7 +82,7 @@
                         </HBox>
                         <Label fx:id="HomeTab1" layoutX="54.0" layoutY="19.0" onMouseClicked="#goToHomeFromTab1" text="HOME" textFill="WHITE" />
                         <Circle fill="WHITE" layoutX="27.0" layoutY="28.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
-                        <ImageView fx:id="image_home" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0">
+                        <ImageView fx:id="image_home" onMouseClicked="#goToHomeFromTab1" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0">
                            <image>
                               <Image url="@Img/icona_home.png" />
                            </image>
@@ -156,7 +156,7 @@
                         </HBox>
                         <Label fx:id="HomeTab2" layoutX="54.0" layoutY="19.0" onMouseClicked="#goToHomeFromTab2" text="HOME" textFill="WHITE" />
                         <Circle fill="WHITE" layoutX="27.0" layoutY="28.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
-                        <ImageView fx:id="image_home1" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0">
+                        <ImageView fx:id="image_home1" onMouseClicked="#goToHomeFromTab2" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0">
                            <image>
                               <Image url="@Img/icona_home.png" />
                            </image>

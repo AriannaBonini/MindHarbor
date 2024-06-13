@@ -12,8 +12,8 @@ public class AlertMessage {
         alert.setHeaderText("Attenzione");
         alert.setContentText(messaggio);
 
-        alert.getDialogPane().setPrefWidth(250);
-        alert.getDialogPane().setPrefHeight(70);
+        alert.getDialogPane().setPrefWidth(300);
+        alert.getDialogPane().setPrefHeight(100);
         alert.getDialogPane().setGraphic(null);
 
         return alert;
@@ -26,7 +26,7 @@ public class AlertMessage {
         alert.setHeaderText(Header);
         alert.setContentText(messaggio);
 
-        alert.getDialogPane().setPrefWidth(250);
+        alert.getDialogPane().setPrefWidth(300);
         alert.getDialogPane().setPrefHeight(100);
         alert.getDialogPane().setGraphic(null);
 
@@ -40,8 +40,8 @@ public class AlertMessage {
         alert.setHeaderText("Tornando indietro perderai tutti i tuoi progessi");
         alert.setContentText(messaggio);
 
-        alert.getDialogPane().setPrefWidth(250);
-        alert.getDialogPane().setPrefHeight(150);
+        alert.getDialogPane().setPrefWidth(300);
+        alert.getDialogPane().setPrefHeight(100);
         alert.getDialogPane().setGraphic(null);
 
         alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);

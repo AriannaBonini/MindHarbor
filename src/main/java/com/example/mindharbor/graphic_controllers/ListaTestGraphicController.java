@@ -37,25 +37,10 @@ public class ListaTestGraphicController {
 
     @FXML
     private ListView<Node> ListViewTest;
-
     @FXML
-    private Label LabelPsicologo;
-    @FXML
-    private Label LabelNomePaziente;
-
-    @FXML
-    private Label Info;
-
-    @FXML
-    private Label Home;
-
-    @FXML
-    private Label SCEGLITEST;
-
-    private String nome;
-    private String cognome;
+    private Label LabelPsicologo, LabelNomePaziente, Info, Home, SCEGLITEST;
+    private String nome, cognome;
     ListaTestController listaTestController= new ListaTestController();
-
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
 
     public void initialize() {
@@ -75,16 +60,17 @@ public class ListaTestGraphicController {
 
     }
 
-    public void TrovaPsicologo() {
+    private void TrovaPsicologo() {
         try {
             String nomePsicologo= listaTestController.ricercaPsicologo();
+            LabelPsicologo.setText(nomePsicologo);
         } catch (SQLException e) {
             logger.info("Errore durante la ricerca dello psicologo: ", e);
         }
 
     }
 
-    public void ModificaStatoNotifica()  {
+    private void ModificaStatoNotifica()  {
         try {
             listaTestController.modificaStatoTest();
         } catch (SQLException e ) {
@@ -92,7 +78,7 @@ public class ListaTestGraphicController {
         }
     }
 
-    public void PopolaLista() {
+    private void PopolaLista() {
         try {
             List<TestBean> listaTest = listaTestController.getListaTest();
             if (listaTest.isEmpty()) {
@@ -108,11 +94,8 @@ public class ListaTestGraphicController {
 
     }
 
-    public void CreaVBoxListaTest(List<TestBean> listaTest) {
+    private void CreaVBoxListaTest(List<TestBean> listaTest) {
         ListViewTest.getItems().clear();
-
-        TestBean primoTest= listaTest.get(0);
-        LabelPsicologo.setText("PSICOLOGO: " + primoTest.getPsicologo());
 
         ObservableList<Node> items = FXCollections.observableArrayList();
 
@@ -167,7 +150,7 @@ public class ListaTestGraphicController {
 
 
     @FXML
-    public void goToHome() {
+    private void goToHome() {
         try {
             Stage ListaTest = (Stage) Home.getScene().getWindow();
             ListaTest.close();
@@ -182,7 +165,7 @@ public class ListaTestGraphicController {
     }
 
     @FXML
-    public void TestSelezionato() {
+    private void TestSelezionato() {
         try {
             Node nodo = ListViewTest.getSelectionModel().getSelectedItem();
 

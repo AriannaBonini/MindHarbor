@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -19,35 +20,19 @@ import java.sql.SQLException;
 
 public class SchedaPersonalePazienteGraphicController {
     @FXML
-    private Label Home;
-    @FXML
-    private Label NomePaziente;
-    @FXML
-    private Label CognomePaziente;
-    @FXML
-    private Label EtàPaziente;
+    private Label Home, NomePaziente, CognomePaziente, EtàPaziente, ScegliTest, PrescriviTerapia, LabelNomePsicologo, NotificaTest;
     @FXML
     private Text DiagnosiPaziente;
     @FXML
-    private Label ScegliTest;
-    @FXML
-    private Label PrescriviTerapia;
-    @FXML
-    private ImageView ImmaginePaziente;
-    @FXML
-    private Label LabelNomePsicologo;
-    @FXML
-    private ImageView TornaIndietro;
+    private ImageView ImmaginePaziente, TornaIndietro;
 
-    private String nome;
-    private String cognome;
-    private String username;
-    SchedaPersonalePazienteController SchedaPersonale = new SchedaPersonalePazienteController();
+    private String nome, cognome, username;
+    SchedaPersonalePazienteController SchedaPersonaleController = new SchedaPersonalePazienteController();
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
 
     public void initialize() {
 
-        HomeInfoUtenteBean infoUtenteBean = SchedaPersonale.getPagePsiInfo();
+        HomeInfoUtenteBean infoUtenteBean = SchedaPersonaleController.getPagePsiInfo();
 
         nome = infoUtenteBean.getNome();
         cognome = infoUtenteBean.getCognome();
@@ -58,15 +43,36 @@ public class SchedaPersonalePazienteGraphicController {
         username=navigator.getParametro();
 
         navigator.eliminaParametro();
+        NotificaStatoTest();
 
         PopolaSchedaPersonale();
     }
 
-
-
-    public void PopolaSchedaPersonale()  {
+    private void NotificaStatoTest() {
         try {
-            PazientiBean paziente= SchedaPersonale.getSchedaPersonale(username);
+            int count = SchedaPersonaleController.cercaNuoviTestSvoltiPaziente(username);
+            if (count>0) {
+                NotificaTest.setText(String.valueOf(count));
+            }
+        } catch (SQLException e) {
+            logger.info("Errore durante la ricerca dei nuovi test svolti dal paziente " , e);
+        }
+
+    }
+
+    private void ModificaStatoNotifica() {
+        try {
+            SchedaPersonaleController.modificaStatoTestSvolto(username);
+        } catch (SQLException e ) {
+            logger.info("Errore durante la modifica dello stato dei test psicologici", e);
+        }
+    }
+
+
+
+    private void PopolaSchedaPersonale()  {
+        try {
+            PazientiBean paziente= SchedaPersonaleController.getSchedaPersonale(username);
             CreaSchedaPersonale(paziente);
 
         } catch (SQLException e) {
@@ -76,7 +82,7 @@ public class SchedaPersonalePazienteGraphicController {
     }
 
 
-    public void CreaSchedaPersonale(PazientiBean paziente) {
+    private void CreaSchedaPersonale(PazientiBean paziente) {
 
         Image image;
 
@@ -102,7 +108,8 @@ public class SchedaPersonalePazienteGraphicController {
 
     }
 
-    public void goToHome() {
+    @FXML
+    private void goToHome() {
         try {
             Stage SchedaPersonale = (Stage) Home.getScene().getWindow();
             SchedaPersonale.close();
@@ -117,8 +124,8 @@ public class SchedaPersonalePazienteGraphicController {
 
     }
 
-
-    public void TornaIndietro() {
+    @FXML
+    private void TornaIndietro() {
         try {
             Stage SchedaPersonale = (Stage) TornaIndietro.getScene().getWindow();
             SchedaPersonale.close();
@@ -133,7 +140,9 @@ public class SchedaPersonalePazienteGraphicController {
 
     }
 
-    public void ScegliTest() {
+
+    @FXML
+    private void ScegliTest() {
         try {
             Stage SchedaPersonale = (Stage) Home.getScene().getWindow();
             SchedaPersonale.close();
@@ -150,6 +159,9 @@ public class SchedaPersonalePazienteGraphicController {
         }
 
     }
-
+    @FXML
+    public void PrescriviTerapia() {
+        ModificaStatoNotifica();
+    }
 }
 

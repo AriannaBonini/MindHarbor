@@ -85,7 +85,7 @@
       </HBox>
       <Label fx:id="Home" layoutX="48.0" layoutY="19.0" onMouseClicked="#goToHome" text="HOME" textFill="WHITE" />
       <Circle fill="WHITE" layoutX="27.0" layoutY="28.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
-      <ImageView fx:id="image_home" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0">
+      <ImageView fx:id="image_home" onMouseClicked="#goToHome" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0">
          <image>
             <Image url="@Img/icona_home.png" />
          </image>
