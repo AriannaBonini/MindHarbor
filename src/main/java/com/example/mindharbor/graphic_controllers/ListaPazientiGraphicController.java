@@ -5,6 +5,7 @@ import com.example.mindharbor.app_controllers.ListaPazientiController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazientiNumTestBean;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,42 +33,25 @@ public class ListaPazientiGraphicController {
 
     @FXML
     private HBox HBoxPaziente;
-
     @FXML
-    private Label NomePaziente;
-
-    @FXML
-    private Label CognomePaziente;
-
+    private Label NomePaziente, CognomePaziente, LabelNomePsicologo, Home;
     @FXML
     private ImageView ImmaginePaziente;
-
-    @FXML
-    private Label LabelNomePsicologo;
-
-    @FXML
-    private Label Home;
-
     @FXML
     private Text ListaVuota;
-
     @FXML
     private VBox BoxPaziente;
-
     @FXML
     private ListView<Node> ListViewPazienti;
 
-    private String nome;
-    private String cognome;
-
-    ListaPazientiController ListaController = new ListaPazientiController();
-
+    private String nome, cognome;
+    ListaPazientiController ListaPazientiController = new ListaPazientiController();
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
 
 
     public void initialize() {
 
-        HomeInfoUtenteBean infoUtenteBean = ListaController.getPagePsiInfo();
+        HomeInfoUtenteBean infoUtenteBean = ListaPazientiController.getPagePsiInfo();
 
         nome = infoUtenteBean.getNome();
         cognome = infoUtenteBean.getCognome();
@@ -77,9 +61,11 @@ public class ListaPazientiGraphicController {
         PopolaLista();
     }
 
-    public void PopolaLista() {
+
+    private void PopolaLista() {
         try {
-            List<PazientiBean> listaPazienti = ListaController.getListaPazienti();
+            List<PazientiNumTestBean> listaPazienti = ListaPazientiController.getListaPazienti();
+
             CreaVBoxListaPazienti(listaPazienti);
 
         }catch (SQLException e) {
@@ -89,12 +75,12 @@ public class ListaPazientiGraphicController {
     }
 
 
-    public void CreaVBoxListaPazienti( List<PazientiBean> listaPazienti) {
+    private void CreaVBoxListaPazienti( List<PazientiNumTestBean> listaPazienti) {
         ListViewPazienti.getItems().clear();
 
         ObservableList<Node> items = FXCollections.observableArrayList();
 
-        for (PazientiBean paz : listaPazienti) {
+        for (PazientiNumTestBean paz : listaPazienti) {
 
             VBox BoxPaziente= new VBox();
             HBox HBoxPaziente= new HBox();
@@ -103,6 +89,12 @@ public class ListaPazientiGraphicController {
 
             Label NomePaziente = new Label("\n     NOME:" + " " + paz.getNome());
             Label CognomePaziente = new Label("     COGNOME:" + " " + paz.getCognome());
+
+            if(paz.getNumTest()>0) {
+                NomePaziente.setStyle("-fx-font-weight: bold;");
+                CognomePaziente.setStyle("-fx-font-weight: bold;");
+
+            }
 
             NomePaziente.setTextFill(Color.WHITE);
             CognomePaziente.setTextFill(Color.WHITE);
@@ -129,7 +121,9 @@ public class ListaPazientiGraphicController {
         ListViewPazienti.getItems().addAll(items);
     }
 
-    public void goToHome() {
+
+    @FXML
+    private void goToHome() {
         try {
             Stage ListaPazienti = (Stage) Home.getScene().getWindow();
             ListaPazienti.close();
@@ -144,7 +138,8 @@ public class ListaPazientiGraphicController {
 
     }
 
-    public void NodoSelezionato() {
+    @FXML
+    private void NodoSelezionato() {
         try {
             Node nodo = ListViewPazienti.getSelectionModel().getSelectedItem();
 
@@ -152,7 +147,7 @@ public class ListaPazientiGraphicController {
             if(nodo==null) {
                 return;
             }
-            PazientiBean paziente =(PazientiBean) nodo.getUserData();
+            PazientiNumTestBean paziente =(PazientiNumTestBean) nodo.getUserData();
             String username=paziente.getUsername();
 
 

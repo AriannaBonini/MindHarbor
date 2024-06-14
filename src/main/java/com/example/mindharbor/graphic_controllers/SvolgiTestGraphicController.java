@@ -81,9 +81,7 @@ public class SvolgiTestGraphicController {
 
     }
 
-
-    @FXML
-    public void AggiungiDomande(String nomeTest) {
+    private void AggiungiDomande(String nomeTest) {
         domandeBean= controller.CercaDomande(nomeTest);
 
         int numLabels = Math.min(domandeBean.getDomande().size(), labels.length); // Numero di Label da popolare
@@ -100,7 +98,7 @@ public class SvolgiTestGraphicController {
 
 
    @FXML
-    public void goToHome() {
+    private void goToHome() {
         try {
 
             Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare indietro?");
@@ -121,7 +119,7 @@ public class SvolgiTestGraphicController {
     }
 
     @FXML
-    public void TornaIndietro() {
+    private void TornaIndietro() {
         try {
 
             Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare indietro?");
@@ -143,7 +141,7 @@ public class SvolgiTestGraphicController {
     }
 
     @FXML
-    public void ConcludiTest() throws SQLException {
+    private void ConcludiTest() throws SQLException {
         int numCheckBoxes = Math.min(domandeBean.getDomande().size(), labels.length);
         int count;
         List<Integer> punteggio=new ArrayList<>();
@@ -171,7 +169,6 @@ public class SvolgiTestGraphicController {
         TestResultBean testResult=controller.calcolaRisultato(punteggio, dataTest, nomeTest);
 
         if (testResult.getRisultatoTestPrecedente()==null) {
-            System.out.println(testResult.getRisultatoUltimoTest());
             notificaProgresso("Risultato test: " + testResult.getRisultatoUltimoTest(), "Test Concluso", "Complimenti! Hai svolto il tuo primo test");
 
         } else {
@@ -190,11 +187,11 @@ public class SvolgiTestGraphicController {
         ButtonType result = alert.showAndWait().orElse(ButtonType.OK);
         if (result==ButtonType.OK) {
             alert.close();
-            indirizzaAllaLiataTest();
+            indirizzaAllaListaTest();
         }
     }
 
-    private void indirizzaAllaLiataTest() {
+    private void indirizzaAllaListaTest() {
         Stage SchedaPersonale = (Stage) TornaIndietro.getScene().getWindow();
         SchedaPersonale.close();
 

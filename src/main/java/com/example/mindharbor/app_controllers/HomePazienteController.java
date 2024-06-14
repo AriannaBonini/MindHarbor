@@ -16,10 +16,15 @@ public class HomePazienteController {
             return homeInfoUtente;
     }
 
-    public int cercaNuoviTest() throws SQLException {
+    public int cercaNuoviTestDaSvolgere() throws SQLException {
 
         int count= new TestPsicologicoDAO().getTestAssegnato(SessionManager.getInstance().getCurrentUser().getUsername());
 
         return count;
+    }
+
+    public void Logout() {
+        SessionManager sessionManager = SessionManager.getInstance();
+        sessionManager.logout();
     }
 }

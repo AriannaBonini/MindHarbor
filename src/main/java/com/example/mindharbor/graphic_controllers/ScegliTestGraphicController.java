@@ -31,31 +31,12 @@ import java.util.List;
 public class ScegliTestGraphicController {
 
     @FXML
-    private Label NomePaziente;
+    private Label NomePaziente, CognomePaziente, EtàPaziente, LabelNomePsicologo, Home;
     @FXML
-    private Label CognomePaziente;
+    private ImageView ImmaginePaziente, TornaIndietro;
     @FXML
-    private Label EtàPaziente;
-    @FXML
-    private Label LabelNomePsicologo;
-    @FXML
-    private ImageView ImmaginePaziente;
-    @FXML
-    private CheckBox Test1;
-    @FXML
-    private CheckBox Test2;
-    @FXML
-    private CheckBox Test3;
-    @FXML
-    private CheckBox Test4;
-    @FXML
-    private Label Home;
-    @FXML
-    private ImageView TornaIndietro;
-
-    private String nome;
-    private String cognome;
-    private String username;
+    private CheckBox Test1, Test2, Test3, Test4;
+    private String nome, cognome, username;
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
     private List<String> listaTestPsicologici;
 
@@ -83,7 +64,7 @@ public class ScegliTestGraphicController {
 
     }
 
-    public void getInfoPaziente() {
+    private void getInfoPaziente() {
         try {
             PazientiBean paziente= scegliTest.getInfoPaziente(username);
             AggiungiInformazioni(paziente);
@@ -93,7 +74,7 @@ public class ScegliTestGraphicController {
         }
     }
 
-    public void AggiungiInformazioni(PazientiBean paziente) {
+    private void AggiungiInformazioni(PazientiBean paziente) {
         Image image;
 
         NomePaziente.setText(paziente.getNome());
@@ -112,7 +93,8 @@ public class ScegliTestGraphicController {
 
     }
 
-    public void goToHome() {
+    @FXML
+    private void goToHome() {
         try {
             Stage SchedaPersonale = (Stage) Home.getScene().getWindow();
             SchedaPersonale.close();
@@ -127,8 +109,8 @@ public class ScegliTestGraphicController {
 
     }
 
-
-    public void TornaIndietro() {
+    @FXML
+    private void TornaIndietro() {
         try {
             Stage SchedaPersonale = (Stage) TornaIndietro.getScene().getWindow();
             SchedaPersonale.close();
@@ -143,7 +125,8 @@ public class ScegliTestGraphicController {
 
     }
 
-    public void getTest() {
+    @FXML
+    private void getTest() {
          listaTestPsicologici=scegliTest.getListaTest();
 
         if (listaTestPsicologici != null) {
@@ -160,7 +143,8 @@ public class ScegliTestGraphicController {
         }
     }
 
-    public void AssegnaTest(MouseEvent mouseEvent) {
+    @FXML
+    private void AssegnaTest(MouseEvent mouseEvent) {
         CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4};
         int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length);
         int count=0;

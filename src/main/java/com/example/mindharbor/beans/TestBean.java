@@ -9,7 +9,6 @@ public class TestBean {
     private String paziente;
     private Integer risultato;
     private Date data;
-
     private Integer svolto;
 
     public TestBean() {}

@@ -1,18 +1,13 @@
 package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.AppuntamentiPsicologoController;
-import com.example.mindharbor.app_controllers.HomePsicologoController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
@@ -34,40 +29,17 @@ public class AppuntamentiPsicologoGraphicController {
     @FXML
     private VBox BoxAppuntamentiInProgramma;
     @FXML
-    private Label DataAppuntamentoInProgramma;
+    private Label DataAppuntamentoInProgramma, OraAppuntamentoInProgramma, NomePsicologoInProgramma, NomePazienteInProgramma, LabelNomePsicologoTab1;
     @FXML
-    private Label OraAppuntamentoInProgramma;
+    private Text ListaVuotaInProgramma,  ListaVuotaPassati;
     @FXML
-    private Label NomePsicologoInProgramma;
+    private Label DataAppuntamentoPassati, OraAppuntamentoPassati, NomePsicologoPassati,  NomePazientePassati, LabelNomePsicologoTab2;
     @FXML
-    private Label NomePazienteInProgramma;
+    private ListView<Node> ListViewInProgramma, ListViewPassati;
     @FXML
-    private Label LabelNomePsicologoTab1;
-    @FXML
-    private Text ListaVuotaInProgramma;
-    @FXML
-    private Label DataAppuntamentoPassati;
-    @FXML
-    private Label OraAppuntamentoPassati;
-    @FXML
-    private Label NomePsicologoPassati;
-    @FXML
-    private Label NomePazientePassati;
-    @FXML
-    private Label LabelNomePsicologoTab2;
-    @FXML
-    private Text ListaVuotaPassati;
-    @FXML
-    private ListView<Node> ListViewInProgramma;
-    @FXML
-    private ListView<Node> ListViewPassati;
-    @FXML
-    private Label HomeTab1;
-    @FXML
-    private Label HomeTab2;
+    private Label HomeTab1, HomeTab2;
 
-    private String nome;
-    private String cognome;
+    private String nome, cognome;
     AppuntamentiPsicologoController appuntamentiController = new AppuntamentiPsicologoController();
 
 
@@ -145,17 +117,16 @@ public class AppuntamentiPsicologoGraphicController {
     }
 
     @FXML
-    public void goToHomeFromTab1() {
+    private void goToHomeFromTab1() {
         goToHome(HomeTab1);
     }
 
     @FXML
-    public void goToHomeFromTab2() {
+    private void goToHomeFromTab2() {
         goToHome(HomeTab2);
     }
 
-    @FXML
-    public void goToHome(Label label) {
+    private void goToHome(Label label) {
         try {
             Stage Appuntamenti = (Stage) label.getScene().getWindow();
             Appuntamenti.close();

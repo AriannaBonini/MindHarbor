@@ -61,7 +61,7 @@
                   <Insets left="15.0" />
                </padding>
             </Label>
-            <ImageView fitHeight="23.0" fitWidth="25.0">
+            <ImageView fx:id="logoutImage" onMouseClicked="#Logout" fitHeight="23.0" fitWidth="25.0">
                <image>
                   <Image url="@Img/IconaLogout.png" />
                </image>
@@ -74,5 +74,10 @@
             <Insets bottom="10.0" left="4.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
+      <Label fx:id="NotificaTest" layoutX="452.0" layoutY="190.0" prefHeight="26.0" prefWidth="14.0" textAlignment="CENTER" textFill="#8cff00">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

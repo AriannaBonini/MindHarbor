@@ -5,6 +5,8 @@ public class HomeInfoUtenteBean {
 
     private String cognome;
 
+    public HomeInfoUtenteBean() {}
+
     public HomeInfoUtenteBean(String nome,String cognome) {
         this.nome = nome;
         this.cognome= cognome;

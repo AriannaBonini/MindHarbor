@@ -2,6 +2,7 @@ package com.example.mindharbor.dao;
 
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
+import com.example.mindharbor.model.PazientiNumTest;
 import com.example.mindharbor.session.ConnectionFactory;
 
 import java.sql.Connection;
@@ -26,19 +27,21 @@ public class PazienteDAO {
     protected static final String USERNAME= "Username";
 
 
-    public List<Paziente> trovaPaziente(String username) throws SQLException {
+    public List<PazientiNumTest> trovaPaziente(String username) throws SQLException {
 
-        List<Paziente> pazienteList = new ArrayList<>();
+        List<PazientiNumTest> pazienteList = new ArrayList<>();
 
         PreparedStatement stmt = null;
         Connection conn = null;
 
         conn = ConnectionFactory.getConnection();
 
-        String sql ="SELECT U.Nome, U.Cognome, U.Genere, U.Username " +
-                "FROM Paziente Pa " +
-                "JOIN Utente AS U ON U.Username=Pa.Paziente_Username " +
-                "WHERE Username_Psicologo= ?;";
+        String sql ="SELECT P.Paziente_Username, COUNT(T.StatoPsicologo), u.Nome, u.Cognome, u.Genere " +
+                "FROM paziente P " +
+                "LEFT JOIN testpsicologico T ON P.Paziente_Username = T.Paziente " +
+                "JOIN utente U ON U.Username=P.Paziente_Username " +
+                "WHERE P.Username_Psicologo= ? " +
+                "GROUP BY  P.Paziente_Username ";
         // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         stmt.setString(1, username);
@@ -47,12 +50,12 @@ public class PazienteDAO {
 
         while (rs.next()) {
 
-            Paziente paziente = new Paziente( rs.getString(1),
-                    rs.getString(2),
+            PazientiNumTest paziente = new PazientiNumTest( rs.getString(1),
+                    rs.getInt(2),
                     rs.getString(3),
                     rs.getString(4),
-                    0,
-                    "");
+                    rs.getString(5));
+
 
             pazienteList.add(paziente);
         }
@@ -156,7 +159,7 @@ public class PazienteDAO {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
-            nomePsicologo=(rs.getString(1) + rs.getString(2));
+            nomePsicologo=(rs.getString(1) + " " + rs.getString(2));
 
         }
 

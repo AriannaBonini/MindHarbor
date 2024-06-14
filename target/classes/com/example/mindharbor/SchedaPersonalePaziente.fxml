@@ -86,7 +86,7 @@
          </image>
       </ImageView>
       <Label layoutX="86.0" layoutY="19.0" prefHeight="18.0" prefWidth="116.0" text="/ PRESCRIVI TERAPIA" textFill="WHITE" />
-      <Label fx:id="ScegliTest" alignment="CENTER" layoutX="199.0" layoutY="256.0" prefHeight="18.0" prefWidth="216.0" text="SCEGLI TEST" textAlignment="CENTER" textFill="WHITE" onMouseClicked="#ScegliTest">
+      <Label fx:id="ScegliTest" alignment="CENTER" layoutX="199.0" layoutY="256.0" onMouseClicked="#ScegliTest" prefHeight="18.0" prefWidth="216.0" text="SCEGLI TEST" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
@@ -94,13 +94,18 @@
             <Insets top="2.0" />
          </padding>
       </Label>
-      <Label fx:id="PrescriviTerapia" alignment="CENTER" disable="true" layoutX="199.0" layoutY="286.0" prefHeight="18.0" prefWidth="216.0" text="PRESCRIVI" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="PrescriviTerapia" onMouseClicked="#PrescriviTerapia" alignment="CENTER" disable="true" layoutX="199.0" layoutY="286.0" prefHeight="18.0" prefWidth="216.0" text="PRESCRIVI" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
          <padding>
             <Insets top="2.0" />
          </padding>
+      </Label>
+      <Label fx:id="NotificaTest" layoutX="351.0" layoutY="279.0" prefHeight="26.0" prefWidth="14.0" textAlignment="CENTER" textFill="#8cff00">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
       </Label>
    </children>
 </AnchorPane>

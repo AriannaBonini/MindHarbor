@@ -39,7 +39,7 @@ public class ListaTestController {
     }
 
     public void modificaStatoTest() throws SQLException {
-        new TestPsicologicoDAO().modificaStatoTest(SessionManager.getInstance().getCurrentUser().getUsername());
+        new TestPsicologicoDAO().modificaStatoTest(SessionManager.getInstance().getCurrentUser().getUsername(), "paziente", "");
 
     }
 

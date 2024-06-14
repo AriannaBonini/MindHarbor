@@ -11,32 +11,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class HomePsicologoGraphicController {
 
     @FXML
-    private Label logout;
-
-    @FXML
-    private Label PrescriviTerapia;
-
-    @FXML
-    private Label RichiestaPrenotazione;
-
-    @FXML
-    private Label VisualizzaAppuntamenti;
-
-    @FXML
-    private Label LabelNomePsicologo;
+    private Label logout, PrescriviTerapia, RichiestaPrenotazione, VisualizzaAppuntamenti, LabelNomePsicologo, NotificaTest;
 
     private static final Logger logger = LoggerFactory.getLogger(HomePsicologoGraphicController.class);
+    HomePsicologoController homeController= new HomePsicologoController();
 
-    private String nome;
-    private String cognome;
+    private String nome, cognome;
 
     public void initialize() {
-
-        HomePsicologoController homeController = new HomePsicologoController();
 
         HomeInfoUtenteBean infoUtenteBean = homeController.getHomepageInfo();
 
@@ -44,10 +31,30 @@ public class HomePsicologoGraphicController {
         cognome = infoUtenteBean.getCognome();
 
         LabelNomePsicologo.setText(nome + " " + cognome);
+
+        notificaTestEffettuati();
+    }
+
+    private void notificaTestEffettuati() {
+        //Ho aggiunto una colonna alla tabella testpsicologico che si chiama StatoPsicologo.
+        //Di default sarà posta a zero, ossia "lo psicologo non deve visualizzare la notifica".
+        //Non appena il paziente svolge il test, la colonna viene settata ad 1, ossia "lo psicologo deve vedere la notifica del test svolto dal paziente".
+        //Non appena lo psicologo vede la notifica, questa sarà settata nuovamente a zero.
+        //Quello stato non potrà più essere modificato poiché il paziente non può più svolgere il test.
+
+        try {
+            int count = homeController.cercaNuoviTestSvolti();
+            if (count > 0) {
+                NotificaTest.setText(String.valueOf(count));
+            }
+        } catch (SQLException e) {
+            logger.info("Errore nella ricerca dei test ", e);
+        }
+
     }
 
     @FXML
-    public void onVisualAppuntamentiClick() {
+    private void onVisualAppuntamentiClick() {
 
         try {
             Stage HomePsicologo = (Stage) VisualizzaAppuntamenti.getScene().getWindow();
@@ -65,7 +72,7 @@ public class HomePsicologoGraphicController {
     }
 
     @FXML
-    public void onPrescriviTerapiaClick() {
+    private void onPrescriviTerapiaClick() {
 
         NavigatorSingleton navigator = NavigatorSingleton.getInstance();
 
@@ -82,21 +89,16 @@ public class HomePsicologoGraphicController {
     }
 
     @FXML
-    public void Logout() {
-
+    private void Logout() {
         NavigatorSingleton navigator = NavigatorSingleton.getInstance();
-
         try {
-
-            new HomePsicologoController().logout();
 
             Stage HomePsicologo= (Stage) logout.getScene().getWindow();
             HomePsicologo.close();
 
-            navigator.gotoPage("/com/example/mindharbor/Login.fxml");
+            homeController.logout();
 
-        } catch (SessionUserException e) {
-            logger.error("Errore", e);
+            navigator.gotoPage("/com/example/mindharbor/Login.fxml");
 
         } catch (IOException e ) {
             logger.error("Impossibile caricare l'interfaccia", e);

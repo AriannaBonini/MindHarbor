@@ -6,14 +6,10 @@ import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.exceptions.SessionUserException;
 import com.example.mindharbor.patterns.ClassObserver;
 import com.example.mindharbor.patterns.Observer;
-import com.example.mindharbor.session.ConnectionFactory;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -30,13 +26,11 @@ public class LoginGraphicController implements Observer{
     @FXML
     private Label msgLbl;
     @FXML
-    private TextField usernameTextField;
-    @FXML
-    private TextField enterPasswordField;
+    private TextField usernameTextField, enterPasswordField;
     @FXML
     private Button accediButton;
 
-    private LoginController loginController;
+    private LoginController loginController= new LoginController();
 
     private static final Logger logger = LoggerFactory.getLogger(LoginGraphicController.class);
 
@@ -46,7 +40,6 @@ public class LoginGraphicController implements Observer{
 
 
     public void initialize() {
-       loginController= new LoginController();
        //possiamo aggiungere la registrazione
         observer.addObserver(this);
         msgLbl.setText("Benvenuto");
@@ -55,7 +48,7 @@ public class LoginGraphicController implements Observer{
 
 
     @FXML
-    public void onLoginClick(ActionEvent event) throws DAOException, SQLException {
+    private void onLoginClick(ActionEvent event) throws DAOException, SQLException {
         username = usernameTextField.getText();
         String password = enterPasswordField.getText();
 
