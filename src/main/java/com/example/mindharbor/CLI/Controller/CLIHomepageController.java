@@ -9,6 +9,8 @@ import com.example.mindharbor.utilities.InputHandler;
 import com.example.mindharbor.utilities.OutputHandler;
 import com.example.mindharbor.utilities.setInfoUtente;
 
+import java.sql.SQLException;
+
 public class CLIHomepageController {
     private SessionManager sessionManager;
     private CLIHomepageView view;
@@ -24,7 +26,7 @@ public class CLIHomepageController {
         this.cliNavigator = cliNavigator;
     }
 
-    public void mostraHomepage() {
+    public void mostraHomepage() throws SQLException {
         boolean isRunning = true;
         Utente utente = sessionManager.getCurrentUser();
 

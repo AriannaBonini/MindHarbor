@@ -48,7 +48,7 @@ public class CLISchedaPersonaleController {
             view.displayErrorMessage(e);
         }
     }
-    private void handleUserInput(int scelta, String usernamePaziente){
+    private void handleUserInput(int scelta, String usernamePaziente) throws SQLException {
         switch (scelta){
             case 1:
                 // Logica per Seleziona Test

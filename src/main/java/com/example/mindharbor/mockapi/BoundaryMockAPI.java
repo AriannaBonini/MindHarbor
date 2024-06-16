@@ -13,7 +13,10 @@ import java.util.List;
 public class BoundaryMockAPI {
 
     private  static final String BASE_URL = "http://localhost:8080"; // Indirizzo del server WireMock
+
     public static List<String> TestPsicologici() {
+
+        MockBancaTestPsicologiciAPI.mockTestPiscologiciAPI();
 
         List<String> testNames = new ArrayList<>();
 

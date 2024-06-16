@@ -6,9 +6,15 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 
 public class MockBancaTestPsicologiciAPI {
+
     private static final WireMockServer wireMockServer = new WireMockServer(8080);
+
     public static void mockTestPiscologiciAPI() {
-        wireMockServer.start();
+
+        if ( !wireMockServer.isRunning() ) {
+            wireMockServer.start();
+        }
+
         stubFor(get(urlEqualTo("/test"))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -44,6 +50,12 @@ public class MockBancaTestPsicologiciAPI {
 
 
 
+    }
+
+    public static void stopMockServer() {
+        if ( wireMockServer.isRunning() ) {
+            wireMockServer.stop();
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.mindharbor.CLI.View;
 
+import com.example.mindharbor.utilities.ANSI_CODE;
 import com.example.mindharbor.utilities.InputHandler;
 import com.example.mindharbor.utilities.OutputHandler;
 
@@ -8,7 +9,6 @@ import java.util.Scanner;
 
 public class CLIScegliTestView {
     private Scanner scanner;
-    private OutputHandler outputHandler;
 
     private InputHandler inputHandler = new InputHandler();
 
@@ -17,12 +17,12 @@ public class CLIScegliTestView {
     }
 
     public void displayTests(List<String> testNames) {
-        outputHandler.print("\nElenco dei Test Psicologici disponibili:");
+        OutputHandler.print(ANSI_CODE.ANSI_BOLD + "\nElenco dei Test Psicologici disponibili:" + ANSI_CODE.ANSI_RESET_BOLD);
         for (int i = 0; i < testNames.size(); i++) {
-            outputHandler.print(String.format("%d. %s", i + 1, testNames.get(i)));
+            OutputHandler.print(String.format("%d. %s", i + 1, testNames.get(i)));
         }
-        outputHandler.print("0. Torna alla homepage");
-        outputHandler.print("Seleziona il numero del test da assegnare:");
+        OutputHandler.print("");
+        OutputHandler.print("0. Torna alla homepage");
     }
 
     public int getUserInput(List<String> testNames) {
@@ -30,10 +30,10 @@ public class CLIScegliTestView {
     }
 
     public void displayErrorMessage(String message) {
-        outputHandler.print("Errore: " + message);
+        OutputHandler.print("Errore: " + message);
     }
 
     public void displaySuccess(String nomeTest) {
-        outputHandler.print("Test \"" + nomeTest + "\" assegnato con successo!");
+        OutputHandler.print("Test \"" + nomeTest + "\" assegnato con successo!");
     }
 }

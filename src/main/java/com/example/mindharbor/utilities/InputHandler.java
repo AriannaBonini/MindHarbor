@@ -44,6 +44,22 @@ public class InputHandler {
         }
     }
 
+    public int getIntInputWithZeroOption() {
+        while (true) {
+            OutputHandler.print("Inserisci '0' per tornare alla homepage: ");
+            if (scanner.hasNextInt()) {
+                int choice = scanner.nextInt();
+                if (choice == 0) {
+                    return choice;
+                } else {
+                    OutputHandler.print("Errore: inserisci '0' per tornare alla homepage.");
+                }
+            } else {
+                OutputHandler.print("Errore: inserisci un numero valido.");
+                scanner.next(); // Consuma l'input non valido
+            }
+        }
+    }
 
     // Implementa altri metodi di input se necessario
 }
