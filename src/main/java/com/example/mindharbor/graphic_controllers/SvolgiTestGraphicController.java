@@ -4,6 +4,7 @@ import com.example.mindharbor.app_controllers.SvolgiTestController;
 import com.example.mindharbor.beans.DomandeTestBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.TestResultBean;
+import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.animation.KeyFrame;
@@ -14,18 +15,14 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.SplittableRandom;
 
 public class SvolgiTestGraphicController {
     @FXML
@@ -44,11 +41,7 @@ public class SvolgiTestGraphicController {
 
     @FXML
     private ImageView TornaIndietro;
-
-    private String nome;
-    private String cognome;
-
-    private SvolgiTestController controller= new SvolgiTestController();
+    private final SvolgiTestController controller= new SvolgiTestController();
     private DomandeTestBean domandeBean;
     private String nomeTest;
 
@@ -57,21 +50,14 @@ public class SvolgiTestGraphicController {
 
     private CheckBox[][] risposteTest;
 
-    private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SvolgiTestGraphicController.class);
+    private final  NavigatorSingleton navigator=NavigatorSingleton.getInstance();
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = controller.getPagePazInfo();
-
-        nome = infoUtenteBean.getNome();
-        cognome = infoUtenteBean.getCognome();
-
-        LabelNomePaziente.setText(nome + " " + cognome);
-
-        NavigatorSingleton navigator=NavigatorSingleton.getInstance();
-        nomeTest=navigator.getParametro();
-        dataTest=navigator.getData();
-
-        navigator.eliminaParametro();
+        HomeInfoUtenteBean infoUtenteBean = controller.getInfoPaziente();
+        LabelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        nomeTest=controller.getNomeTest();
+        dataTest=controller.getData();
 
         labels= new Label[]{Domanda1, Domanda2, Domanda3, Domanda4, Domanda5, Domanda6};
         risposteTest= new CheckBox[][]{{Felice1,Triste1,Arrabbiata1}, {Felice2,Triste2,Arrabbiata2},{Felice3,Triste3,Arrabbiata3},
@@ -84,9 +70,9 @@ public class SvolgiTestGraphicController {
     private void AggiungiDomande(String nomeTest) {
         domandeBean= controller.CercaDomande(nomeTest);
 
-        int numLabels = Math.min(domandeBean.getDomande().size(), labels.length); // Numero di Label da popolare
+        int numLabels = Math.min(domandeBean.getDomande().size(), labels.length);
         for (int i = 0; i < numLabels; i++) {
-            labels[i].setText(domandeBean.getDomande().get(i)); // Imposta il testo della Label con la domanda corrispondente
+            labels[i].setText(domandeBean.getDomande().get(i));
             labels[i].setWrapText(true);
             labels[i].setVisible(true);
             risposteTest[i][0].setVisible(true);
@@ -98,19 +84,15 @@ public class SvolgiTestGraphicController {
 
 
    @FXML
-    private void goToHome() {
+    public void goToHome() {
         try {
-
             Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare indietro?");
             if (risposta==0) {
                 return;
             }
-
             Stage SvolgiTest = (Stage) Home.getScene().getWindow();
             SvolgiTest.close();
 
-
-            NavigatorSingleton navigator = NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
         } catch (IOException e) {
@@ -119,21 +101,16 @@ public class SvolgiTestGraphicController {
     }
 
     @FXML
-    private void TornaIndietro() {
+    public void TornaIndietro() {
         try {
-
             Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare indietro?");
             if (risposta==0) {
                 return;
             }
-
             Stage SchedaPersonale = (Stage) TornaIndietro.getScene().getWindow();
             SchedaPersonale.close();
 
-            NavigatorSingleton navigator= NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
-
-
         }catch(IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
         }
@@ -141,7 +118,7 @@ public class SvolgiTestGraphicController {
     }
 
     @FXML
-    private void ConcludiTest() throws SQLException {
+    public void ConcludiTest()  {
         int numCheckBoxes = Math.min(domandeBean.getDomande().size(), labels.length);
         int count;
         List<Integer> punteggio=new ArrayList<>();
@@ -159,24 +136,30 @@ public class SvolgiTestGraphicController {
                 Alert alert= new AlertMessage().Errore("Selezionare una sola risposta per ogni domanda");
                 alert.show();
 
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
-                    alert.close();
-                }));
+                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
+                timeline.play();
                 return;
             }
         }
 
-        TestResultBean testResult=controller.calcolaRisultato(punteggio, dataTest, nomeTest);
+        try {
 
-        if (testResult.getRisultatoTestPrecedente()==null) {
-            notificaProgresso("Risultato test: " + testResult.getRisultatoUltimoTest(), "Test Concluso", "Complimenti! Hai svolto il tuo primo test");
+            TestResultBean testResult = controller.calcolaRisultato(punteggio, dataTest, nomeTest);
 
-        } else {
-            if (testResult.getRisultatoTestPrecedente()>0) {
-                notificaProgresso("Progresso: " + testResult.getRisultatoTestPrecedente()+ "%", "Test Concluso","Complimenti!");
+            if (testResult.getRisultatoTestPrecedente() == null) {
+                notificaProgresso("Risultato test: " + testResult.getRisultatoUltimoTest(), "Test Concluso", "Complimenti! Hai svolto il tuo primo test");
+
             } else {
-                notificaProgresso("Regresso: " + testResult.getRisultatoTestPrecedente()+ "%", "Test Concluso","Mi dispiace!");
+                if (testResult.getRisultatoTestPrecedente() > 0) {
+                    notificaProgresso("Progresso: " + testResult.getRisultatoTestPrecedente() + "%", "Test Concluso", "Complimenti!");
+                } else {
+                    notificaProgresso("Regresso: " + testResult.getRisultatoTestPrecedente() + "%", "Test Concluso", "Mi dispiace!");
+                }
             }
+        }catch (DAOException e) {
+            logger.info("Errore nel calcolo del risultato del test ", e);
+
+
         }
     }
 
@@ -195,7 +178,6 @@ public class SvolgiTestGraphicController {
         Stage SchedaPersonale = (Stage) TornaIndietro.getScene().getWindow();
         SchedaPersonale.close();
 
-        NavigatorSingleton navigator= NavigatorSingleton.getInstance();
         try {
             navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
         } catch (IOException e) {

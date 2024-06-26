@@ -3,6 +3,7 @@ package com.example.mindharbor.app_controllers;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.dao.AppuntamentoDAO;
+import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.setInfoUtente;
@@ -13,31 +14,31 @@ import java.util.List;
 
 public class AppuntamentiPazienteController {
 
-    public HomeInfoUtenteBean getAppPazInfo() {
-        HomeInfoUtenteBean homeInfoUtente = new setInfoUtente().getInfo();
-        return homeInfoUtente;
-    }
+    public HomeInfoUtenteBean getInfoPaziente() {return new setInfoUtente().getInfo();}
 
-    public List<AppuntamentiBean> getAppuntamentiPaziente(String selectedTabName) throws SQLException {
-        List<Appuntamento> appuntamentoList = new AppuntamentoDAO().trovaAppuntamentoPaziente(
-                SessionManager.getInstance().getCurrentUser().getUsername(), selectedTabName
-        );
-
+    public List<AppuntamentiBean> getAppuntamentiPaziente(String selectedTabName) throws DAOException {
         List<AppuntamentiBean> appuntamentiBeanList = new ArrayList<>();
+        try {
+            List<Appuntamento> appuntamentoList = new AppuntamentoDAO().trovaAppuntamentoPaziente(SessionManager.getInstance().getCurrentUser().getUsername(), selectedTabName);
 
-        for (Appuntamento app : appuntamentoList) {
-            AppuntamentiBean appuntamentiBean = new AppuntamentiBean(
-                    app.getData(),
-                    app.getOra(),
-                    app.getNomePsicologo(),
-                    app.getCognomePsicologo(),
-                    app.getNomePaziente(),
-                    app.getCognomePaziente(),
-                    app.getUsernamePaziente(),
-                    app.getUsernamePsicologo(),
-                    "");
 
-            appuntamentiBeanList.add(appuntamentiBean);
+            for (Appuntamento app : appuntamentoList) {
+                AppuntamentiBean appuntamentiBean = new AppuntamentiBean(
+                        app.getData(),
+                        app.getOra(),
+                        app.getPsicologo().getNome(),
+                        app.getPsicologo().getCognome(),
+                        app.getPaziente().getNome(),
+                        app.getPaziente().getCognome(),
+                        app.getPaziente().getUsername(),
+                        app.getPsicologo().getUsername(),
+                        "",
+                        0);
+
+                appuntamentiBeanList.add(appuntamentiBean);
+            }
+        }catch (SQLException e) {
+            throw new DAOException(e.getMessage());
         }
         return appuntamentiBeanList;
     }

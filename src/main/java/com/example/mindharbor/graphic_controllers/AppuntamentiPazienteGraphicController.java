@@ -3,6 +3,7 @@ package com.example.mindharbor.graphic_controllers;
 import com.example.mindharbor.app_controllers.AppuntamentiPazienteController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Tab;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -24,36 +24,22 @@ import java.util.List;
 
 public class AppuntamentiPazienteGraphicController {
     @FXML
-    private Tab AppuntamentiInProgramma;
-    @FXML
-    private VBox BoxAppuntamentiInProgramma;
-    @FXML
-    private Label DataAppuntamentoInProgramma, OraAppuntamentoInProgramma, NomePsicologoInProgramma, NomePazienteInProgramma,  LabelNomePsicologoTab1, DataAppuntamentoPassati;
-    @FXML
     private Text ListaVuotaInProgramma, ListaVuotaPassati;
     @FXML
-    private Label OraAppuntamentoPassati, NomePsicologoPassati, NomePazientePassati, LabelNomePsicologoTab2;
+    private Label LabelNomePazienteTab2, LabelNomePazienteTab1;
     @FXML
     private ListView<Node> ListViewInProgramma, ListViewPassati;
     @FXML
     private Label HomeTab1, HomeTab2;
-    private String nome, cognome;
 
-    AppuntamentiPazienteController controllerAppuntamenti= new AppuntamentiPazienteController();
+    private final AppuntamentiPazienteController controllerAppuntamenti= new AppuntamentiPazienteController();
 
-    private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPazienteGraphicController.class);
 
     public void initialize() {
-
-
-        HomeInfoUtenteBean infoUtenteBean = controllerAppuntamenti.getAppPazInfo();
-
-        nome = infoUtenteBean.getNome();
-        cognome = infoUtenteBean.getCognome();
-
-        LabelNomePsicologoTab1.setText(nome + " " + cognome);
-
-        LabelNomePsicologoTab2.setText(nome + " " + cognome);
+        HomeInfoUtenteBean infoUtenteBean = controllerAppuntamenti.getInfoPaziente();
+        LabelNomePazienteTab1.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        LabelNomePazienteTab2.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
         try {
             tab1Selezionato();
@@ -65,12 +51,9 @@ public class AppuntamentiPazienteGraphicController {
 
 
     @FXML
-    private void tab1Selezionato() throws SQLException {
-        ricercaAppuntamentiPaziente("IN PROGRAMMA",ListaVuotaInProgramma,ListViewInProgramma);
-    }
-
+    public void tab1Selezionato() throws SQLException {ricercaAppuntamentiPaziente("IN PROGRAMMA",ListaVuotaInProgramma,ListViewInProgramma);}
     @FXML
-    private void tab2Selezionato() throws SQLException {
+    public void tab2Selezionato() {
         ricercaAppuntamentiPaziente("PASSATI",ListaVuotaPassati,ListViewPassati);
     }
 
@@ -82,7 +65,7 @@ public class AppuntamentiPazienteGraphicController {
             }else {
                 CreaVBoxAppuntamentiPaziente(appuntamenti, listView);
             }
-        }catch (SQLException e) {
+        }catch (DAOException e) {
             logger.info("Non non ci sono appuntamenti", e);
         }
     }
@@ -114,15 +97,14 @@ public class AppuntamentiPazienteGraphicController {
     }
 
     @FXML
-    private void goToHomeFromTab1() { goToHome(HomeTab1);}
+    public void goToHomeFromTab1() { goToHome(HomeTab1);}
     @FXML
-    private void goToHomeFromTab2() { goToHome(HomeTab2);}
+    public void goToHomeFromTab2() { goToHome(HomeTab2);}
 
     private void goToHome(Label label) {
         try {
             Stage Appuntamenti = (Stage) label.getScene().getWindow();
             Appuntamenti.close();
-
 
             NavigatorSingleton navigator= NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");

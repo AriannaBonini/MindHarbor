@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="377.0" prefWidth="599.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mindharbor.graphic_controllers.SelezionaDataEOraGraphicController">
+   <children>
+      <ImageView fx:id="sfondo" fitHeight="378.0" fitWidth="600.0" smooth="false">
+         <image>
+            <Image url="@Img/Sfondo.png" />
+         </image>
+      </ImageView>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="192.0" layoutY="81.0" prefHeight="18.0" prefWidth="216.0" text="SELEZIONA DATA E ORA" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <HBox layoutX="288.0" layoutY="6.0" prefHeight="42.0" prefWidth="317.0" spacing="33.0">
+         <children>
+            <Label fx:id="LabelNomePaziente" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="302.0" textFill="WHITE">
+               <font>
+                  <Font name="Hiragino Sans W1" size="12.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+            <ImageView fitHeight="24.0" fitWidth="24.0">
+               <image>
+                  <Image url="@Img/IconaProfilo.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="-26.0" top="-3.0" />
+               </HBox.margin>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="4.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+      <Label fx:id="Home" layoutX="48.0" layoutY="19.0" onMouseClicked="#goToHome" text="HOME" textFill="WHITE" />
+      <Circle fill="WHITE" layoutX="27.0" layoutY="28.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
+      <ImageView fx:id="image_home" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0" onMouseClicked="#goToHome">
+         <image>
+            <Image url="@Img/icona_home.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="86.0" layoutY="19.0" prefHeight="18.0" prefWidth="170.0" text="/ PRENOTA APPUNTAMENTO" textFill="WHITE" />
+      <TextField fx:id="Orario" layoutX="226.0" layoutY="183.0" prefHeight="26.0" prefWidth="170.0" promptText="00:00" />
+      <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="196.0" layoutY="183.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Img/Orologio.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="27.0" fitWidth="240.0" layoutX="180.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Img/LOGOconNOME.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="196.0" layoutY="139.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Img/Calendario.png" />
+         </image>
+      </ImageView>
+      <DatePicker fx:id="Data" layoutX="226.0" layoutY="138.0" prefHeight="26.0" prefWidth="170.0" promptText="gg/mm/aaaa" />
+      <Label fx:id="Avanti" alignment="CENTER" contentDisplay="CENTER" layoutX="242.0" layoutY="230.0" onMouseClicked="#ClickAvanti" prefHeight="26.0" prefWidth="138.0" text="AVANTI" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="Info" layoutX="226.0" layoutY="108.0" prefHeight="18.0" prefWidth="170.0" textFill="WHITE" />
+   </children>
+</AnchorPane>

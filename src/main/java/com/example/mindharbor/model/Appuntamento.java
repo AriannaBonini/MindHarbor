@@ -1,83 +1,60 @@
 package com.example.mindharbor.model;
 
 public class Appuntamento {
-        private String idAppuntamento;
-        private String data;
-        private String ora;
-        private String usernamePaziente;
-        private String usernamePsicologo;
-        private String nomePsicologo;
-        private String cognomePsicologo;
-        private String nomePaziente;
-        private String cognomePaziente;
+    private String idAppuntamento;
+    private String data;
+    private String ora;
+    private Paziente paziente;
+    private Psicologo psicologo;
 
 
-        public Appuntamento(String data, String ora, String nomePsicologo, String cognomePsicologo, String nomePaziente, String cognomePaziente, String usernamePaziente, String usernamePsicologo, String idAppuntamento) {
-            this.idAppuntamento = idAppuntamento;
-            this.data = data;
-            this.ora = ora;
-            this.usernamePaziente = usernamePaziente;
-            this.usernamePsicologo = usernamePsicologo;
-            this.nomePaziente = nomePaziente;
-            this.cognomePaziente = cognomePaziente;
-            this.nomePsicologo = nomePsicologo;
-            this.cognomePsicologo = cognomePsicologo;
+    public Appuntamento(String data, String ora, String idAppuntamento, Paziente paziente, Psicologo psicologo) {
+        this.idAppuntamento = idAppuntamento;
+        this.data = data;
+        this.ora = ora;
+        this.paziente = paziente;
+        this.psicologo = psicologo;
 
-        }
-        public String getIdAppuntamento() {
-            return idAppuntamento;
-        }
+    }
 
-        public void setIdAppuntamento(String idAppuntamento) {
-            this.idAppuntamento = idAppuntamento;
-        }
+    public String getIdAppuntamento() {
+        return idAppuntamento;
+    }
 
-        public String getData() {
-            return data;
-        }
+    public void setIdAppuntamento(String idAppuntamento) {
+        this.idAppuntamento = idAppuntamento;
+    }
 
-        public void setData(String data) {
-            this.data = data;
-        }
+    public String getData() {
+        return data;
+    }
 
-        public String getOra() {
-            return ora;
-        }
+    public void setData(String data) {
+        this.data = data;
+    }
 
-        public void setOra(String ora) {
-            this.ora = ora;
-        }
+    public String getOra() {
+        return ora;
+    }
 
-        public String getUsernamePaziente() {
-            return usernamePaziente;
-        }
+    public void setOra(String ora) {
+        this.ora = ora;
+    }
 
-        public void setUsernamePaziente(String usernamePaziente) {
-            this.usernamePaziente = usernamePaziente;
-        }
+    public Paziente getPaziente() {
+        return paziente;
+    }
 
-        public String getUsernamePsicologo() {
-            return usernamePsicologo;
-        }
+    public void setPaziente(Paziente paziente) {
+        this.paziente = paziente;
+    }
 
-        public void setUsernamePsicologo(String usernamePsicologo) {
-            this.usernamePsicologo = usernamePsicologo;
-        }
+    public Psicologo getPsicologo() {
+        return psicologo;
+    }
 
-        public String getNomePsicologo() {return nomePsicologo;}
-
-        public void setNomePsicologo(String nomePsicologo) {this.nomePsicologo = nomePsicologo;}
-
-        public String getCognomePsicologo() {return cognomePsicologo;}
-
-        public void setCognomePsicologo(String cognomePsicologo) {this.cognomePsicologo = cognomePsicologo;}
-
-        public String getNomePaziente() {return nomePaziente;}
-
-        public void setNomePaziente(String nomePaziente) {this.nomePaziente = nomePaziente;}
-
-        public String getCognomePaziente() {return cognomePaziente;}
-
-        public void setCognomePaziente(String cognomePaziente) {this.cognomePaziente = cognomePaziente;}
+    public void setPsicologo(Psicologo psicologo) {
+        this.psicologo = psicologo;
+    }
 }
 

@@ -13,13 +13,14 @@ public class TestBean {
 
     public TestBean() {}
 
-    public TestBean(String nomeTest, String psicologo, String paziente, Integer risultato, Date data, Integer svolto ) {
+    public TestBean(String nomeTest, String psicologo, String paziente, Integer risultato, Date data, Integer svolto) {
         this.nomeTest=nomeTest;
         this.psicologo=psicologo;
         this.paziente=paziente;
         this.risultato=risultato;
         this.data=data;
         this.svolto=svolto;
+
     }
 
     public String getNomeTest() {

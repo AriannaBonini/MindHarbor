@@ -17,7 +17,7 @@
             <Image url="@Img/Sfondo.png" />
          </image>
       </ImageView>
-      <Label fx:id="ListaPazienti" alignment="CENTER" layoutX="204.0" layoutY="59.0" prefHeight="18.0" prefWidth="216.0" text="SCHEDA PERSONALE" textAlignment="CENTER" textFill="WHITE">
+      <Label alignment="CENTER" layoutX="204.0" layoutY="59.0" prefHeight="18.0" prefWidth="216.0" text="SCHEDA PERSONALE" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
@@ -94,7 +94,7 @@
             <Insets top="2.0" />
          </padding>
       </Label>
-      <Label fx:id="PrescriviTerapia" onMouseClicked="#PrescriviTerapia" alignment="CENTER" disable="true" layoutX="199.0" layoutY="286.0" prefHeight="18.0" prefWidth="216.0" text="PRESCRIVI" textAlignment="CENTER" textFill="WHITE">
+      <Label fx:id="PrescriviTerapia" alignment="CENTER" disable="true" layoutX="199.0" layoutY="286.0" onMouseClicked="#PrescriviTerapia" prefHeight="18.0" prefWidth="216.0" text="PRESCRIVI" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>

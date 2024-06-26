@@ -19,18 +19,18 @@
             <Image url="@Img/Sfondo.png" />
          </image>
       </ImageView>
-      <ListView fx:id="ListViewPazienti" fixedCellSize="50.0" layoutX="40.0" layoutY="74.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="246.0" prefWidth="543.0" onMouseClicked="#NodoSelezionato" style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-background-insets: 0; -fx-padding: 10px; -fx-selection-bar: #48635a; -fx-selection-bar-border: white;">
+      <ListView fx:id="ListViewPazienti" fixedCellSize="50.0" layoutX="40.0" layoutY="74.0" nodeOrientation="LEFT_TO_RIGHT" onMouseClicked="#NodoSelezionato" prefHeight="246.0" prefWidth="543.0" style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-background-insets: 0; -fx-padding: 10px; -fx-selection-bar: #48635a; -fx-selection-bar-border: white;">
          <padding>
             <Insets right="5.0" top="10.0" />
          </padding></ListView>
-      <HBox fx:id="HBoxPaziente" layoutX="114.0" layoutY="95.0" prefHeight="174.0" prefWidth="348.0" spacing="18.0">
+      <HBox layoutX="114.0" layoutY="95.0" prefHeight="174.0" prefWidth="348.0" spacing="18.0">
          <children>
             <ImageView fx:id="ImmaginePaziente" fitHeight="52.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
                <HBox.margin>
                   <Insets left="17.0" right="5.0" top="33.0" />
                </HBox.margin>
             </ImageView>
-            <VBox fx:id="BoxPaziente" alignment="CENTER_LEFT" prefHeight="127.0" prefWidth="234.0" spacing="3.0">
+            <VBox alignment="CENTER_LEFT" prefHeight="127.0" prefWidth="234.0" spacing="3.0">
                <children>
                   <Label fx:id="NomePaziente" prefHeight="18.0" prefWidth="239.0" textFill="WHITE">
                      <VBox.margin>
@@ -85,13 +85,12 @@
       </HBox>
       <Label fx:id="Home" layoutX="48.0" layoutY="19.0" onMouseClicked="#goToHome" text="HOME" textFill="WHITE" />
       <Circle fill="WHITE" layoutX="27.0" layoutY="28.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
-      <ImageView fx:id="image_home" onMouseClicked="#goToHome" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0">
+      <ImageView fx:id="image_home" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0" onMouseClicked="#goToHome">
          <image>
             <Image url="@Img/icona_home.png" />
          </image>
       </ImageView>
       <Text fx:id="ListaVuota" fill="WHITE" layoutX="220.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="178.93670654296875" />
       <Label layoutX="86.0" layoutY="19.0" prefHeight="18.0" prefWidth="116.0" text="/ PRESCRIVI TERAPIA" textFill="WHITE" />
-      <VBox layoutX="16.0" layoutY="297.0" prefHeight="52.0" prefWidth="227.0" />
    </children>
 </AnchorPane>

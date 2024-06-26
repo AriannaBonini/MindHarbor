@@ -7,7 +7,6 @@ public class PazientiNumTestBean {
     private String cognome;
     private String genere;
 
-    public PazientiNumTestBean() {}
 
     public PazientiNumTestBean(String username, Integer numTest, String nome, String cognome, String genere) {
         this.username=username;

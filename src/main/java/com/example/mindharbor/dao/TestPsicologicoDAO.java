@@ -1,13 +1,10 @@
 package com.example.mindharbor.dao;
 
-import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.session.ConnectionFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 public class TestPsicologicoDAO {
 
@@ -18,107 +15,117 @@ public class TestPsicologicoDAO {
     protected static final String TEST="Test";
     protected static final String SVOLTO="Svolto";
     protected static final String STATOPSICOLOGO="StatoPsicologo";
+    protected static final String TABELLA_TESTPSICOLOGICO= "testpsicologico";
+    protected static final String TERAPIA= "terapia";
+    protected static final String STATO= "Stato";
+    protected static final String DATATEST="DataTest";
 
 
-    public void assegnaTest(String usernamePaziente,String usernamePsicologo, String nomeTest) throws SQLException {
-        PreparedStatement stmt = null;
-        Connection conn = null;
+    public void assegnaTest(TestPsicologico test) throws SQLException {
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
-        String sql = "INSERT INTO testpsicologico(DataOdierna, Risultato, Psicologo, Paziente, Test, Stato, Svolto, StatoPsicologo) VALUES (?,DEFAULT,?,?,?, DEFAULT, DEFAULT,DEFAULT) ";
+        String sql = "INSERT INTO " + TABELLA_TESTPSICOLOGICO + " (" +
+                DATA + ", " +
+                RISULTATO + ", " +
+                PSICOLOGO + ", " +
+                PAZIENTE + ", " +
+                TEST + ", " +
+                STATO + ", " +
+                SVOLTO + ", " +
+                STATOPSICOLOGO + ") " +
+                "VALUES (?, DEFAULT, ?, ?, ?, DEFAULT, DEFAULT, DEFAULT)";
         // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
         stmt = conn.prepareStatement(sql);
         stmt.setDate(1, new java.sql.Date(System.currentTimeMillis()));
-        stmt.setString(2, usernamePsicologo);
-        stmt.setString(3, usernamePaziente);
-        stmt.setString(4, nomeTest);
+        stmt.setString(2, test.getPsicologo().getUsername());
+        stmt.setString(3, test.getPaziente().getUsername());
+        stmt.setString(4, test.getTest());
 
-        int rs = stmt.executeUpdate();
+        stmt.executeUpdate();
         stmt.close();
     }
 
-    public int getTestAssegnato(String username) throws SQLException {
+    public Integer getNotificaPazientePerTestAssegnato(String usernamePaziente) throws SQLException {
+
         int count=0;
-
-        PreparedStatement stmt = null;
-        Connection conn = null;
-
-        conn = ConnectionFactory.getConnection();
+        Connection conn = ConnectionFactory.getConnection();
 
         String sql = "SELECT COUNT(*) AS Total " +
-                "FROM testpsicologico " +
-                "WHERE Paziente = ? AND Stato = 1;";
+                "FROM " + TABELLA_TESTPSICOLOGICO + " " +
+                "WHERE " + PAZIENTE + " = ? AND " +  STATO + " = 1;";
         // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
-        stmt = conn.prepareStatement(sql,  ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setString(1, username);
+        PreparedStatement stmt = conn.prepareStatement(sql,  ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        stmt.setString(1, usernamePaziente);
 
         ResultSet rs = stmt.executeQuery();
 
         if(rs.next()) {
             count = rs.getInt("Total");
         }
+
         rs.close();
         stmt.close();
 
         return count;
-
     }
 
-    public void modificaStatoTest(String usernamePsicologo, String notificato, String usernamePaziente) throws SQLException {
+    public void modificaStatoNotificaTest(String usernamePsicologo, String notificato, String usernamePaziente) throws SQLException {
 
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
         if(notificato.equalsIgnoreCase("paziente")) {
 
-            String updateQuery = "UPDATE testpsicologico " +
-                    "SET Stato = 0 " +
-                    "WHERE Paziente = ? AND Stato = 1";
+            String updateQuery = "UPDATE " +  TABELLA_TESTPSICOLOGICO + " " +
+                    "SET " +  STATO + " = 0 " +
+                    "WHERE " +  PAZIENTE +  " = ? AND " +  STATO + " = 1";
 
             stmt = conn.prepareStatement(updateQuery);
             stmt.setString(1, usernamePsicologo);
         } else {
-            String updateQuery= "UPDATE testpsicologico " +
-                                "SET StatoPsicologo = 0 " +
-                                "WHERE Psicologo = ? AND StatoPsicologo = 1 AND Paziente = ? ";
+            String updateQuery= "UPDATE " + TABELLA_TESTPSICOLOGICO + " " +
+                                "SET " + STATOPSICOLOGO +  " = 0 " +
+                                "WHERE " + PSICOLOGO + " = ? AND " + STATOPSICOLOGO + " = 1 AND " +  PAZIENTE  + " = ? ";
 
             stmt = conn.prepareStatement(updateQuery);
             stmt.setString(1, usernamePsicologo);
             stmt.setString(2, usernamePaziente);
 
         }
-        int rowsUpdated = stmt.executeUpdate();
+        stmt.executeUpdate();
         stmt.close();
     }
 
-    public List<TestPsicologico> TrovaListaTest(String username) throws SQLException {
+    public List<TestPsicologico> TrovaListaTest(String usernamePaziente) throws SQLException {
 
         List<TestPsicologico> testPsicologicoList= new ArrayList<>();
 
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
-        String sql= "SELECT Psicologo, Risultato, Test, DataOdierna, Svolto " +
-                "FROM testpsicologico " +
-                "WHERE Paziente = ? " ;
+        String sql= "SELECT " + RISULTATO + " , " + TEST + " , " +  DATA + " , " +  SVOLTO  + " " +
+                "FROM " + TABELLA_TESTPSICOLOGICO + " " +
+                "WHERE " +  PAZIENTE + " = ? " ;
 
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setString(1, username);
+        stmt.setString(1, usernamePaziente);
 
         ResultSet rs = stmt.executeQuery();
 
         while(rs.next()) {
-            TestPsicologico test= new TestPsicologico(rs.getDate(4),
-                    rs.getInt(2),
-                    rs.getString(1),
-                    "",
-                    rs.getString(3),
-                    rs.getInt(5));
+            TestPsicologico test= new TestPsicologico(rs.getDate(3),
+                    rs.getInt(1),
+                    null,
+                    null,
+                    rs.getString(2),
+                    rs.getInt(4));
 
             testPsicologicoList.add(test);
         }
@@ -129,23 +136,23 @@ public class TestPsicologicoDAO {
         return testPsicologicoList;
     }
 
-    public Integer trovaTestPassati(Integer ultimoTest, String username, Date dataTest, String nomeTest) throws SQLException {
+    public Integer trovaTestPassati(TestPsicologico testDaAggiungere) throws SQLException {
 
         Integer testPassati=null;
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
-        String sql= "SELECT Risultato " +
-                "FROM testpsicologico " +
-                "WHERE DataOdierna = (SELECT MAX(DataOdierna) " +
-                "FROM testpsicologico " +
-                "WHERE Paziente = ? AND Svolto = 1 AND Test= ?) ";
+        String sql= "SELECT " + RISULTATO + " " +
+                "FROM " + TABELLA_TESTPSICOLOGICO + " " +
+                "WHERE " + DATA + " = (SELECT MAX( " + DATA + ") " +
+                "FROM " + TABELLA_TESTPSICOLOGICO + " "  +
+                "WHERE " + PAZIENTE + " = ? AND " +  SVOLTO + " = 1 AND " + TEST + " = ?) ";
 
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setString(2, nomeTest);
-        stmt.setString(1,username);
+        stmt.setString(2, testDaAggiungere.getTest());
+        stmt.setString(1,testDaAggiungere.getPaziente().getUsername());
 
 
         ResultSet rs = stmt.executeQuery();
@@ -156,52 +163,52 @@ public class TestPsicologicoDAO {
         rs.close();
         stmt.close();
 
-        AggiornaNuovoTestInserito(ultimoTest, dataTest, username);
+        aggiornaTestAppenaSvolto(testDaAggiungere);
         return testPassati;
 
     }
 
-    private void AggiornaNuovoTestInserito(Integer ultimoTest, Date dataTest, String username) throws SQLException {
-        PreparedStatement stmt = null;
-        Connection conn = null;
+    private void aggiornaTestAppenaSvolto(TestPsicologico testDaAggiungere) throws SQLException {
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
-        String updateQuery= "UPDATE testpsicologico " +
-                "SET Risultato = ? , Svolto = 1 , StatoPsicologo = 1 " +
-                "WHERE Paziente = ? AND DataOdierna = ? ";
+        String updateQuery= "UPDATE " +  TABELLA_TESTPSICOLOGICO + " " +
+                "SET " + RISULTATO + " = ? , " +  SVOLTO + " = 1 , " +  STATOPSICOLOGO + " = 1 " +
+                "WHERE " + PAZIENTE + " = ? AND " +  DATA + " = ? ";
 
         stmt = conn.prepareStatement(updateQuery);
-        stmt.setInt(1, ultimoTest);
-        stmt.setString(2, username);
-        stmt.setDate(3, (java.sql.Date) dataTest);
+        stmt.setInt(1, testDaAggiungere.getRisultato());
+        stmt.setString(2, testDaAggiungere.getPaziente().getUsername());
+        stmt.setDate(3, (java.sql.Date) testDaAggiungere.getData());
 
-        int rowsUpdated = stmt.executeUpdate();
+        stmt.executeUpdate();
 
         stmt.close();
     }
 
-    public Integer getTestSvolto(String usernamePsicologo, String usernamePaziente) throws SQLException {
-        Integer count=0;
+    public Integer getNumTestSvoltiDaNotificare(String usernamePsicologo, String usernamePaziente) throws SQLException {
+        int count=0;
 
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
-        if (usernamePaziente== "") {
+        if (usernamePaziente.isEmpty()) {
 
             String sql = "SELECT COUNT(*) AS Total " +
-                    "FROM testpsicologico " +
-                    "WHERE StatoPsicologo = 1 AND Psicologo = ? ";
+                    "FROM " + TABELLA_TESTPSICOLOGICO + " " +
+                    "WHERE " + STATOPSICOLOGO + " = 1 AND " + PSICOLOGO + " = ? ";
 
             stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt.setString(1, usernamePsicologo);
 
         } else {
             String sql = "SELECT COUNT(*) AS Total " +
-                    "FROM testpsicologico " +
-                    "WHERE StatoPsicologo = 1 AND Psicologo = ? AND Paziente = ? ";
+                    "FROM " + TABELLA_TESTPSICOLOGICO + " " +
+                    "WHERE " + STATOPSICOLOGO + " = 1 AND " + PSICOLOGO + " = ? AND " +  PAZIENTE + " = ? ";
 
             stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt.setString(1, usernamePsicologo);
@@ -219,5 +226,74 @@ public class TestPsicologicoDAO {
 
         return count;
 
+    }
+
+    public Integer getNumTestSvoltiSenzaPrescrizione(String usernamePsicologo, String usernamePaziente) throws SQLException {
+        int count=0;
+
+        PreparedStatement stmt;
+        Connection conn;
+
+        conn = ConnectionFactory.getConnection();
+
+        String sql = "SELECT COUNT(*) AS Total " +
+                    "FROM " + TABELLA_TESTPSICOLOGICO + " " +
+                    "WHERE " + SVOLTO + " = 1 AND " +  PSICOLOGO + " = ? AND " + PAZIENTE + " = ? ";
+
+        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        stmt.setString(1, usernamePsicologo);
+        stmt.setString(2, usernamePaziente);
+
+        ResultSet rs = stmt.executeQuery();
+
+        if(rs.next()) {
+            count = rs.getInt("Total");
+        }
+        rs.close();
+        stmt.close();
+
+        return count;
+
+    }
+
+    public List<TestPsicologico> ListaTestSvoltiSenzaPrescrizione(String usernamePaziente, String usernamePsicologo) throws SQLException {
+        List<TestPsicologico> testSvolti= new ArrayList<>();
+
+        PreparedStatement stmt;
+        Connection conn;
+
+        conn = ConnectionFactory.getConnection();
+
+        String sql=  "SELECT " + DATA + ", " + RISULTATO + ", " + TEST + " " +
+                "FROM " + TABELLA_TESTPSICOLOGICO + " " +
+                "WHERE " + SVOLTO + " = 1 AND " + PSICOLOGO + " = ? AND " + PAZIENTE + " = ? " +
+                "AND NOT EXISTS ( " +
+                "SELECT 1 " +
+                "FROM " + TERAPIA + " " +
+                "WHERE " + TABELLA_TESTPSICOLOGICO + "." + PSICOLOGO + " = " + TERAPIA + "." + PSICOLOGO + " " +
+                "AND " + TABELLA_TESTPSICOLOGICO + "." + PAZIENTE + " = " + TERAPIA + "." + PAZIENTE + " " +
+                "AND " + TABELLA_TESTPSICOLOGICO + "." + DATA + " = " + TERAPIA + "." +  DATATEST +  " )";
+
+
+        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        stmt.setString(1, usernamePsicologo);
+        stmt.setString(2, usernamePaziente);
+
+        ResultSet rs = stmt.executeQuery();
+
+        while(rs.next()) {
+            TestPsicologico testSvolto= new TestPsicologico(rs.getDate(1),
+                    rs.getInt(2),
+                    null,
+                    null,
+                    rs.getString(3),
+                    null);
+
+            testSvolti.add(testSvolto);
+        }
+        rs.close();
+        stmt.close();
+
+        return testSvolti;
     }
 }

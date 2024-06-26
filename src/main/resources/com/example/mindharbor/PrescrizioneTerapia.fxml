@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="377.0" prefWidth="599.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mindharbor.graphic_controllers.PrescriviTerapiaGraphicController">
+   <children>
+      <SplitPane dividerPositions="0.29797979797979796" layoutY="53.0" prefHeight="326.0" prefWidth="599.0">
+        <items>
+          <AnchorPane fx:id="areaTest" minHeight="0.0" minWidth="0.0" prefHeight="325.0" prefWidth="198.0">
+               <children>
+                  <ImageView fx:id="sfondo" fitHeight="325.0" fitWidth="183.0" layoutX="-8.0" smooth="false">
+                     <image>
+                        <Image url="@Img/Sfondo.png" />
+                     </image>
+                  </ImageView>
+                  <ListView fx:id="ListViewTest" layoutY="12.0" onMouseClicked="#NodoSelezionato" prefHeight="314.0" prefWidth="175.0" style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-background-insets: 0; -fx-padding: 10px; -fx-selection-bar: #48635a; -fx-selection-bar-border: white;" />
+                  <VBox fx:id="VboxTest" layoutY="48.0" prefHeight="114.0" prefWidth="175.0">
+                     <children>
+                        <Label fx:id="dataTest" prefHeight="24.0" prefWidth="150.0" textFill="WHITE" visible="true">
+                           <font>
+                              <Font size="10.0" />
+                           </font></Label>
+                        <Label fx:id="nomeTest" prefHeight="26.0" prefWidth="151.0" textFill="WHITE">
+                           <font>
+                              <Font size="10.0" />
+                           </font></Label>
+                        <Label fx:id="risultatoTest" prefHeight="26.0" prefWidth="151.0" textFill="WHITE">
+                           <font>
+                              <Font size="10.0" />
+                           </font></Label>
+                     </children>
+                     <padding>
+                        <Insets left="8.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </AnchorPane>
+          <AnchorPane fx:id="areaPrescrizione" minHeight="0.0" minWidth="0.0" prefHeight="325.0" prefWidth="388.0">
+               <children>
+                  <Label fx:id="campoNome" layoutX="18.0" layoutY="9.0" prefHeight="24.0" prefWidth="116.0" text="NOME " textFill="#234439">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="campoCognome" layoutX="17.0" layoutY="37.0" prefHeight="24.0" prefWidth="116.0" text="COGNOME" textFill="#234439">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="campoData" layoutX="275.0" layoutY="2.0" prefHeight="24.0" prefWidth="116.0" text="DATA" textFill="#234439">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="20.0" layoutY="75.0" prefHeight="24.0" prefWidth="116.0" text="PRESCRIZIONE: " textFill="#234439">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="34.0" fitWidth="66.0" layoutX="308.0" layoutY="239.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@Img/Firma.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="61.0" layoutX="21.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
+                     <image>
+                        <Image url="@Img/LineaVerde.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="61.0" layoutX="74.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
+                     <image>
+                        <Image url="@Img/LineaVerde.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="61.0" layoutX="74.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
+                     <image>
+                        <Image url="@Img/LineaVerde.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="61.0" layoutX="21.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
+                     <image>
+                        <Image url="@Img/LineaVerde.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="61.0" layoutX="74.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
+                     <image>
+                        <Image url="@Img/LineaVerde.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="61.0" layoutX="21.0" layoutY="78.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
+                     <image>
+                        <Image url="@Img/LineaVerde.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="61.0" layoutX="331.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
+                     <image>
+                        <Image url="@Img/LineaVerde.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="61.0" layoutX="278.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
+                     <image>
+                        <Image url="@Img/LineaVerde.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="61.0" layoutX="347.0" layoutY="249.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
+                     <image>
+                        <Image url="@Img/LineaVerde.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="42.0" fitWidth="61.0" layoutX="294.0" layoutY="249.0" pickOnBounds="true" preserveRatio="true" rotate="45.0">
+                     <image>
+                        <Image url="@Img/LineaVerde.png" />
+                     </image>
+                  </ImageView>
+                  <TextArea fx:id="campoPrescrizione" layoutX="13.0" layoutY="102.0" prefHeight="136.0" prefWidth="386.0" />
+                  <Button fx:id="PRESCRIVI" layoutX="172.0" layoutY="273.0" mnemonicParsing="false" onMouseClicked="#Prescrivi" style="-fx-background-color: #234439; -fx-border-color: white;" text="PRESCRIVI" textFill="WHITE" />
+                  <Text fx:id="campoInfoTest" layoutX="15.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="150.39999999999998">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+      <ImageView fitHeight="55.0" fitWidth="599.0" layoutY="-2.0" pickOnBounds="true">
+         <image>
+            <Image url="@Img/Sfondo.png" />
+         </image>
+      </ImageView>
+      <Label alignment="CENTER" layoutX="197.0" layoutY="14.0" prefHeight="18.0" prefWidth="216.0" text="PRESCRIVI TERAPIA " textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <HBox layoutX="288.0" layoutY="6.0" prefHeight="42.0" prefWidth="317.0" spacing="33.0">
+         <children>
+            <Label fx:id="LabelNomePsicologo" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="302.0" textFill="WHITE">
+               <font>
+                  <Font name="Hiragino Sans W1" size="12.0" />
+               </font>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
+            </Label>
+            <ImageView fitHeight="24.0" fitWidth="24.0">
+               <image>
+                  <Image url="@Img/IconaProfilo.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="-26.0" top="-3.0" />
+               </HBox.margin>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="4.0" right="10.0" top="10.0" />
+         </padding>
+      </HBox>
+      <Label fx:id="Home" layoutX="48.0" layoutY="19.0" onMouseClicked="#goToHome" text="HOME" textFill="WHITE" />
+      <ImageView fx:id="tornaIndietro" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0" onMouseClicked="#tornaIndietro">
+         <image>
+            <Image url="@Img/TornaIndietro.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="86.0" layoutY="19.0" prefHeight="18.0" prefWidth="116.0" text="/ PRESCRIVI TERAPIA" textFill="WHITE" />
+   </children>
+</AnchorPane>

@@ -18,7 +18,7 @@
          </image>
       </ImageView>
       <CheckBox fx:id="Test1" layoutX="200.0" layoutY="206.0" mnemonicParsing="false" text="Test 1 " textFill="WHITE" />
-      <Label fx:id="ListaPazienti" alignment="CENTER" layoutX="204.0" layoutY="59.0" prefHeight="18.0" prefWidth="216.0" text="SCEGLI TEST" textAlignment="CENTER" textFill="WHITE">
+      <Label alignment="CENTER" layoutX="204.0" layoutY="59.0" prefHeight="18.0" prefWidth="216.0" text="SCEGLI TEST" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
@@ -90,7 +90,7 @@
          </image>
       </ImageView>
       <Label layoutX="86.0" layoutY="19.0" prefHeight="18.0" prefWidth="116.0" text="/ PRESCRIVI TERAPIA" textFill="WHITE" />
-      <Label fx:id="AssegnaTest" alignment="CENTER" layoutX="199.0" layoutY="286.0" prefHeight="18.0" prefWidth="216.0" text="ASSEGNA TEST" textAlignment="CENTER" textFill="WHITE" onMouseClicked="#AssegnaTest">
+      <Label fx:id="AssegnaTest" alignment="CENTER" layoutX="199.0" layoutY="286.0" onMouseClicked="#AssegnaTest" prefHeight="18.0" prefWidth="216.0" text="ASSEGNA TEST" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>

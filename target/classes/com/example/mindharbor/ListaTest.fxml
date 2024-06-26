@@ -24,14 +24,14 @@
          </padding>
       </ListView>
       <Label fx:id="LabelPsicologo" layoutX="35.0" layoutY="62.0" prefHeight="18.0" prefWidth="159.0" textFill="WHITE" />
-      <HBox fx:id="HBoxTest" layoutX="114.0" layoutY="95.0" prefHeight="174.0" prefWidth="348.0" spacing="2.0">
+      <HBox layoutX="114.0" layoutY="95.0" prefHeight="174.0" prefWidth="348.0" spacing="2.0">
          <children>
             <ImageView fx:id="Stato" fitHeight="29.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                <HBox.margin>
                   <Insets top="33.0" />
                </HBox.margin>
             </ImageView>
-            <VBox fx:id="BoxTest" alignment="CENTER_LEFT" prefHeight="128.0" prefWidth="199.0">
+            <VBox alignment="CENTER_LEFT" prefHeight="128.0" prefWidth="199.0">
                <children>
                   <Label fx:id="DataTest" prefHeight="18.0" prefWidth="239.0" textFill="WHITE">
                      <VBox.margin>
@@ -61,7 +61,7 @@
             <Insets left="14.0" right="4.0" top="8.0" />
          </padding>
       </HBox>
-      <Label fx:id="ListaTest" layoutX="234.0" layoutY="14.0" prefHeight="18.0" prefWidth="216.0" text="    LISTA TEST" textAlignment="CENTER" textFill="WHITE">
+      <Label layoutX="234.0" layoutY="14.0" prefHeight="18.0" prefWidth="216.0" text="    LISTA TEST" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
@@ -91,7 +91,7 @@
       </HBox>
       <Label fx:id="Home" layoutX="48.0" layoutY="19.0" onMouseClicked="#goToHome" text="HOME" textFill="WHITE" />
       <Circle fill="WHITE" layoutX="27.0" layoutY="28.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
-      <ImageView fx:id="image_home"  onMouseClicked="#goToHome" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0">
+      <ImageView fx:id="image_home" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0" onMouseClicked="#goToHome">
          <image>
             <Image url="@Img/icona_home.png" />
          </image>

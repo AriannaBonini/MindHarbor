@@ -21,19 +21,17 @@ public class UtenteDao {
 
     protected static final String RUOLO = "Categoria";
 
-    private Connection connection;
-
-    public Utente TrovaUtente(String username, String password) throws SQLException, DAOException {
-        PreparedStatement stmt = null;
-        Connection conn = null;
-        Utente utente = null;
+    public Utente TrovaUtente(Utente credenzialiUtenteLogin) throws SQLException, DAOException {
+        PreparedStatement stmt;
+        Connection conn;
+        Utente utente;
         conn = ConnectionFactory.getConnection();
 
-        String sql = "SELECT * FROM Utente WHERE Username = ? AND Password = ?;";
+        String sql = "SELECT * FROM utente WHERE " + USERNAME + " = ? AND " + PSW + " = ?;";
         // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setString(1, username);
-        stmt.setString(2, password);
+        stmt.setString(1, credenzialiUtenteLogin.getUsername());
+        stmt.setString(2, credenzialiUtenteLogin.getPassword());
 
         ResultSet rs = stmt.executeQuery();
 
@@ -41,12 +39,10 @@ public class UtenteDao {
             throw new DAOException("Utente non trovato");
         }
 
-        // Repositioning of the cursor
         rs.first();
 
         utente = getUser(rs);
 
-        // Closing ResultSet and freeing resources
         rs.close();
         stmt.close();
 
