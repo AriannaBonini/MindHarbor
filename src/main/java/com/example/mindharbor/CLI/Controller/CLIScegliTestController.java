@@ -40,7 +40,9 @@ public class CLIScegliTestController {
             notificaTest(usernamePaziente, nomeTest);
 
             view.displaySuccess(nomeTest);
-            cliNavigator.showHomepage();
+
+
+            cliNavigator.showHomepage(); // Questa riga crea problemi, perche in showhomepage si fa il cleanpage e quindi l'utente non ha modo di vedere il messaggio di successo.
 
         } catch (SQLException e) {
             view.displayErrorMessage("Errore durante la selezione del test: " + e.getMessage());
