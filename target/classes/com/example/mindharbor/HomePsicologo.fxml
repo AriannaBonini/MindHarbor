@@ -30,7 +30,7 @@
       <Label fx:id="Home" layoutX="70.0" layoutY="22.0" text="HOME" textFill="WHITE" />
       <HBox layoutX="278.0" layoutY="22.0" prefHeight="42.0" prefWidth="317.0" spacing="33.0">
          <children>
-            <Label fx:id="LabelNomePsicologo" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="302.0" text="Claudia Rossi" textFill="WHITE">
+            <Label fx:id="LabelNomePsicologo" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="302.0" textFill="WHITE">
                <font>
                   <Font name="Hiragino Sans W1" size="12.0" />
                </font>
@@ -61,7 +61,7 @@
                   <Insets left="15.0" />
                </padding>
             </Label>
-            <ImageView fx:id="logoutImage" onMouseClicked="#Logout" fitHeight="23.0" fitWidth="25.0">
+            <ImageView fx:id="logoutImage" fitHeight="23.0" fitWidth="25.0" onMouseClicked="#Logout">
                <image>
                   <Image url="@Img/IconaLogout.png" />
                </image>

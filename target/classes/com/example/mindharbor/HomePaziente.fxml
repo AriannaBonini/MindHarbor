@@ -20,7 +20,7 @@
       </ImageView>
       <HBox layoutX="268.0" layoutY="12.0" prefHeight="42.0" prefWidth="317.0" spacing="33.0">
          <children>
-            <Label fx:id="LabelNomePaziente" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="302.0" text="Claudia Rossi" textFill="WHITE">
+            <Label fx:id="LabelNomePaziente" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="302.0" textFill="WHITE">
                <font>
                   <Font name="Hiragino Sans W1" size="12.0" />
                </font>
@@ -49,7 +49,7 @@
             <Image url="@Img/icona_home.png" />
          </image>
       </ImageView>
-      <Label fx:id="Terapia" layoutX="431.0" layoutY="76.0" text="TERAPIA" textFill="WHITE" />
+      <Label fx:id="Terapia" layoutX="431.0" layoutY="76.0" onMouseClicked="#Terapia" text="TERAPIA" textFill="WHITE" />
       <Label fx:id="Test" layoutX="219.0" layoutY="229.0" onMouseClicked="#onVisualTestClick" text="TEST" textFill="WHITE" />
       <Label fx:id="PrenotaAppuntamento" layoutX="85.0" layoutY="122.0" onMouseClicked="#clickPrenotaAppuntamento" prefHeight="54.0" prefWidth="101.0" text="PRENOTA &#10;APPUNTAMENTO" textAlignment="CENTER" textFill="WHITE" />
       <Label fx:id="NotificaTest" layoutX="244.0" layoutY="218.0" prefHeight="26.0" prefWidth="14.0" textAlignment="CENTER" textFill="#8cff00">
@@ -67,7 +67,7 @@
                   <Insets left="15.0" />
                </padding>
             </Label>
-            <ImageView fx:id="logoutImage" onMouseClicked="#Logout" fitHeight="23.0" fitWidth="25.0">
+            <ImageView fx:id="logoutImage" fitHeight="23.0" fitWidth="25.0" onMouseClicked="#Logout">
                <image>
                   <Image url="@Img/IconaLogout.png" />
                </image>
@@ -80,5 +80,10 @@
             <Insets bottom="10.0" left="4.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
+      <Label fx:id="NotificaTerapie" layoutX="477.0" layoutY="62.0" prefHeight="26.0" prefWidth="14.0" text="1" textAlignment="CENTER" textFill="#8cff00" visible="false">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

@@ -8,7 +8,6 @@ import com.example.mindharbor.patterns.ClassObserver;
 import com.example.mindharbor.patterns.Observer;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,7 +16,6 @@ import com.example.mindharbor.app_controllers.LoginController;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -30,13 +28,9 @@ public class LoginGraphicController implements Observer{
     @FXML
     private Button accediButton;
 
-    private LoginController loginController= new LoginController();
-
+    private final LoginController loginController= new LoginController();
     private static final Logger logger = LoggerFactory.getLogger(LoginGraphicController.class);
-
-    private String username;
-
-    private ClassObserver observer= new ClassObserver();
+    private final ClassObserver observer= new ClassObserver();
 
 
     public void initialize() {
@@ -48,11 +42,10 @@ public class LoginGraphicController implements Observer{
 
 
     @FXML
-    private void onLoginClick(ActionEvent event) throws DAOException, SQLException {
-        username = usernameTextField.getText();
+    public void onLoginClick()  {
+        String username = usernameTextField.getText();
         String password = enterPasswordField.getText();
 
-        // Controllo se i campi sono vuoti
         if (username.isEmpty() || password.isEmpty()) {
             msgLbl.setText("Inserisci username e password");
             return;
@@ -60,7 +53,6 @@ public class LoginGraphicController implements Observer{
         try {
             LoginCredentialBean credenziali = new LoginCredentialBean(username, password);
             loginController.login(credenziali);
-
 
 
         } catch (DAOException e){
@@ -84,7 +76,6 @@ public class LoginGraphicController implements Observer{
         NavigatorSingleton navigator= NavigatorSingleton.getInstance();
         try {
             if (userType == UserType.PAZIENTE) {
-                // carico l'interfaccia grafica della home del paziente
 
                 Stage loginstage = (Stage) accediButton.getScene().getWindow();
                 loginstage.close();
@@ -92,7 +83,6 @@ public class LoginGraphicController implements Observer{
                 navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
             } else if (userType == UserType.PSICOLOGO) {
-                // carico l'interfaccia grafica della home dello psicologo
 
                 Stage loginstage = (Stage) accediButton.getScene().getWindow();
                 loginstage.close();

@@ -1,61 +1,46 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.ListaPazientiController;
 import com.example.mindharbor.app_controllers.ListaTestController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.beans.TestBean;
+import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
-import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class ListaTestGraphicController {
 
     @FXML
     private ListView<Node> ListViewTest;
     @FXML
-    private Label LabelPsicologo, LabelNomePaziente, Info, Home, SCEGLITEST;
-    private String nome, cognome;
-    ListaTestController listaTestController= new ListaTestController();
-    private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
+    private Label LabelPsicologo, LabelNomePaziente, Info, Home;
+    private final ListaTestController listaTestController= new ListaTestController();
+    private static final Logger logger = LoggerFactory.getLogger(ListaTestGraphicController.class);
+    private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
 
     public void initialize() {
-
-        HomeInfoUtenteBean infoUtenteBean = listaTestController.getPagePazInfo();
-
-        nome = infoUtenteBean.getNome();
-        cognome = infoUtenteBean.getCognome();
-
-        LabelNomePaziente.setText(nome + " " + cognome);
+        HomeInfoUtenteBean infoUtenteBean = listaTestController.getInfoPaziente();
+        LabelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
         ModificaStatoNotifica();
-
         TrovaPsicologo();
-
         PopolaLista();
 
     }
@@ -64,7 +49,7 @@ public class ListaTestGraphicController {
         try {
             String nomePsicologo= listaTestController.ricercaPsicologo();
             LabelPsicologo.setText(nomePsicologo);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             logger.info("Errore durante la ricerca dello psicologo: ", e);
         }
 
@@ -73,7 +58,7 @@ public class ListaTestGraphicController {
     private void ModificaStatoNotifica()  {
         try {
             listaTestController.modificaStatoTest();
-        } catch (SQLException e ) {
+        } catch (DAOException e ) {
             logger.info("Errore durante la modifica dello stato dei test psicologici", e);
         }
     }
@@ -82,16 +67,13 @@ public class ListaTestGraphicController {
         try {
             List<TestBean> listaTest = listaTestController.getListaTest();
             if (listaTest.isEmpty()) {
-                Info.setText("Non esistono appuntamenti");
+                Info.setText("Non esistono test");
             } else {
                 CreaVBoxListaTest(listaTest);
             }
-
-        }catch (SQLException e) {
-            logger.info("Non non ci sono appuntamenti", e);
-
+        }catch (DAOException e) {
+            logger.info("Non non ci sono test", e);
         }
-
     }
 
     private void CreaVBoxListaTest(List<TestBean> listaTest) {
@@ -123,10 +105,10 @@ public class ListaTestGraphicController {
             BoxTest.getChildren().addAll(DataTest,NomeTest,RisultatoTest);
 
             if (test.getSvolto()==0) {
-                image= new Image(getClass().getResourceAsStream("/com/example/mindharbor/Img/NonCompletato.png"));
+                image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/NonCompletato.png")));
                 ImmagineStato.setImage(image);
             } else {
-                image= new Image(getClass().getResourceAsStream("/com/example/mindharbor/Img/Completato.png"));
+                image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/Completato.png")));
                 ImmagineStato.setImage(image);
             }
 
@@ -136,27 +118,20 @@ public class ListaTestGraphicController {
             HBoxTest.getChildren().addAll(ImmagineStato, BoxTest);
             HBoxTest.setSpacing(10);
 
-
             items.add(HBoxTest);
 
-
             HBoxTest.setUserData(test);
-
         }
-
         ListViewTest.setFixedCellSize(100);
         ListViewTest.getItems().addAll(items);
     }
 
-
     @FXML
-    private void goToHome() {
+    public void goToHome() {
         try {
             Stage ListaTest = (Stage) Home.getScene().getWindow();
             ListaTest.close();
 
-
-            NavigatorSingleton navigator = NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
         } catch (IOException e) {
@@ -165,32 +140,24 @@ public class ListaTestGraphicController {
     }
 
     @FXML
-    private void TestSelezionato() {
+    public void TestSelezionato() {
         try {
             Node nodo = ListViewTest.getSelectionModel().getSelectedItem();
-
             if (nodo == null) {
                 return;
             }
-
             TestBean test = (TestBean) nodo.getUserData();
-
             if(test.getSvolto()==1) {
                 new LabelDuration().Duration(Info,"test già effettuato");
                 return;
             }
-
-            String nometest = test.getNomeTest();
+            String nomeTest = test.getNomeTest();
             Date dataTest=test.getData();
-
 
             Stage ListaTest = (Stage) ListViewTest.getScene().getWindow();
             ListaTest.close();
 
-            NavigatorSingleton navigator = NavigatorSingleton.getInstance();
-            navigator.setParametro(nometest);
-            navigator.setData(dataTest);
-
+            listaTestController.setNomeTestData(nomeTest,dataTest);
             navigator.gotoPage("/com/example/mindharbor/SvolgiTest.fxml");
 
         } catch (IOException e) {

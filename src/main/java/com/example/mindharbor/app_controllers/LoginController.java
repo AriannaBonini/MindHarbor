@@ -22,7 +22,9 @@ public class LoginController extends abstractController{
 
 
     public void login(LoginCredentialBean credenziali) throws DAOException, SQLException, SessionUserException {
-        Utente utente= new UtenteDao().TrovaUtente(credenziali.getUsername(),credenziali.getPassword());
+        Utente credenzialiUtenteLogin= new Utente(credenziali.getUsername(), credenziali.getPassword());
+
+        Utente utente= new UtenteDao().TrovaUtente(credenzialiUtenteLogin);
 
 
         if (utente!= null) {

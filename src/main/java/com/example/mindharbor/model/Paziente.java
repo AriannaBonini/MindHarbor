@@ -1,57 +1,27 @@
 package com.example.mindharbor.model;
 
-public class Paziente {
-    private String nome;
-    private String cognome;
-    private String genere;
-    private String username;
+import com.example.mindharbor.Enum.UserType;
+
+public class Paziente extends Utente{
     private Integer età;
     private String diagnosi;
+    private String usernamePsicologo;
 
 
-    // Costruttore
-    public Paziente(String nome, String cognome, String genere, String username,Integer età,String diagnosi) {
-        this.nome = nome;
-        this.cognome = cognome;
-        this.genere= genere;
-        this.username=username;
+    public Paziente(Integer età, String diagnosi, String username, String nome, String cognome, UserType userType, String genere, String password, String usernamePsicologo) {
+        super(username, nome, cognome, userType, genere, password);
         this.età=età;
         this.diagnosi=diagnosi;
+        this.usernamePsicologo=usernamePsicologo;
     }
 
-    // Metodi getter e setter per il nome e il cognome
-    public String getNome() {
-        return nome;
+    public Paziente(String username, String nome, String cognome) {
+        super(username,nome,cognome,UserType.PAZIENTE);
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+    public Paziente(String username) { super(username); }
 
-    public String getCognome() {
-        return cognome;
-    }
-
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
-    }
-    public String getGenere() {
-        return genere;
-    }
-    public void setGenere(String genere) {
-        this.genere = genere;
-    }
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Integer getEtà() {
-        return età;
-    }
-
+    public Integer getEtà() {return età;}
     public void setEtà(Integer età) {
         this.età = età;
     }

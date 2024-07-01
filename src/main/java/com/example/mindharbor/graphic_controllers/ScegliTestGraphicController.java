@@ -3,8 +3,7 @@ package com.example.mindharbor.graphic_controllers;
 import com.example.mindharbor.app_controllers.ScegliTestController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
-import com.example.mindharbor.mockapi.BoundaryMockAPI;
-import com.example.mindharbor.patterns.Observer;
+import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.animation.KeyFrame;
@@ -15,18 +14,13 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import wiremock.org.checkerframework.checker.units.qual.A;
-
 import java.io.IOException;
-import java.sql.Array;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ScegliTestGraphicController {
 
@@ -36,29 +30,19 @@ public class ScegliTestGraphicController {
     private ImageView ImmaginePaziente, TornaIndietro;
     @FXML
     private CheckBox Test1, Test2, Test3, Test4;
-    private String nome, cognome, username;
-    private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
+    private String username;
+    private static final Logger logger = LoggerFactory.getLogger(ScegliTestGraphicController.class);
     private List<String> listaTestPsicologici;
-
-    ScegliTestController scegliTest= new ScegliTestController();
+    private final  ScegliTestController scegliTest= new ScegliTestController();
+    private final  NavigatorSingleton navigator= NavigatorSingleton.getInstance();
 
 
     public void initialize() {
-
-        HomeInfoUtenteBean infoUtenteBean = scegliTest.getPagePsiInfo();
-
-        nome = infoUtenteBean.getNome();
-        cognome = infoUtenteBean.getCognome();
-
-        LabelNomePsicologo.setText(nome + " " + cognome);
-
-        NavigatorSingleton navigator=NavigatorSingleton.getInstance();
-        username=navigator.getParametro();
-
-        navigator.eliminaParametro();
+        HomeInfoUtenteBean infoUtenteBean = scegliTest.getInfoPsicologo();
+        LabelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        username=scegliTest.getUsername();
 
         getInfoPaziente();
-
         getTest();
 
 
@@ -68,8 +52,7 @@ public class ScegliTestGraphicController {
         try {
             PazientiBean paziente= scegliTest.getInfoPaziente(username);
             AggiungiInformazioni(paziente);
-
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             logger.info("Non esistono informazioni relative al paziente", e);
         }
     }
@@ -80,29 +63,25 @@ public class ScegliTestGraphicController {
         NomePaziente.setText(paziente.getNome());
         CognomePaziente.setText(paziente.getCognome());
 
-        EtàPaziente.setText(Integer.toString(paziente.getEtà())+ " anni");
+        EtàPaziente.setText(paziente.getEtà()+ " anni");
 
         if (paziente.getGenere().equals("M")) {
-            image= new Image(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaMaschio.png"));
+            image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaMaschio.png")));
             ImmaginePaziente.setImage(image);
 
         } else {
-            image= new Image(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaFemmina.png"));
+            image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaFemmina.png")));
             ImmaginePaziente.setImage(image);
         }
 
     }
-
     @FXML
-    private void goToHome() {
+    public void goToHome() {
         try {
             Stage SchedaPersonale = (Stage) Home.getScene().getWindow();
             SchedaPersonale.close();
 
-            NavigatorSingleton navigator= NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
-
-
         }catch(IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
         }
@@ -110,13 +89,12 @@ public class ScegliTestGraphicController {
     }
 
     @FXML
-    private void TornaIndietro() {
+    public void TornaIndietro() {
         try {
             Stage SchedaPersonale = (Stage) TornaIndietro.getScene().getWindow();
             SchedaPersonale.close();
 
-            NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-            navigator.setParametro(username);
+            scegliTest.setUsername(username);
             navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
 
         }catch(IOException e) {
@@ -126,17 +104,16 @@ public class ScegliTestGraphicController {
     }
 
     @FXML
-    private void getTest() {
+    public void getTest() {
          listaTestPsicologici=scegliTest.getListaTest();
 
         if (listaTestPsicologici != null) {
-            CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4}; // Array di CheckBox
-            int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length); // Numero di CheckBox da popolare
+            CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4};
+            int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length);
             for (int i = 0; i < numCheckBoxes; i++) {
-                checkBoxes[i].setText(listaTestPsicologici.get(i)); // Imposta il testo del CheckBox con il nome del test corrispondente
-                checkBoxes[i].setVisible(true); // Rendi il CheckBox visibile
+                checkBoxes[i].setText(listaTestPsicologici.get(i));
+                checkBoxes[i].setVisible(true);
             }
-            // Nascondi i CheckBox rimanenti se ce ne sono più di quattro
             for (int i = numCheckBoxes; i < checkBoxes.length; i++) {
                 checkBoxes[i].setVisible(false);
             }
@@ -144,7 +121,7 @@ public class ScegliTestGraphicController {
     }
 
     @FXML
-    private void AssegnaTest(MouseEvent mouseEvent) {
+    public void AssegnaTest() {
         CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4};
         int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length);
         int count=0;
@@ -161,9 +138,7 @@ public class ScegliTestGraphicController {
             Alert alert= new AlertMessage().Errore("Selezionare uno ed un solo test");
             alert.show();
 
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
-                alert.close();
-            }));
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
 
             timeline.play();
         } else {
@@ -173,19 +148,16 @@ public class ScegliTestGraphicController {
                 Alert alert= new AlertMessage().Informazione("Operazione Completata","Esito Positivo", "Test assegnato con successo");
                 alert.show();
 
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
-                    alert.close();
-                }));
+                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
 
                 timeline.play();
-            } catch (SQLException e) {
+            } catch (DAOException e) {
                 logger.info("Errore assegnazione Test");
                 Alert alert= new AlertMessage().Errore("Limite test raggiunto per questo paziente");
                 alert.show();
 
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
-                    alert.close();
-                }));
+                 Timeline timeline= new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
+                 timeline.play();
             }
 
         }

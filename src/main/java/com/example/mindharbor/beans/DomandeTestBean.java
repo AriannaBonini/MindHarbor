@@ -3,11 +3,8 @@ package com.example.mindharbor.beans;
 import java.util.List;
 
 public class DomandeTestBean {
-
     private List<String> domande;
     private List<Integer> punteggi;
-
-    public DomandeTestBean() {}
 
     public DomandeTestBean(List<String> domande, List<Integer> punteggi) {
         this.domande= domande;

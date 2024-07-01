@@ -1,8 +1,10 @@
 package com.example.mindharbor.app_controllers;
 
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.dao.TerapiaDAO;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
-import com.example.mindharbor.model.TestPsicologico;
+import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.setInfoUtente;
 
@@ -10,21 +12,27 @@ import java.sql.SQLException;
 
 public class HomePazienteController {
 
-    public HomeInfoUtenteBean getHomepageInfo() {
+    public HomeInfoUtenteBean getInfoPaziente() {return new setInfoUtente().getInfo();}
 
-            HomeInfoUtenteBean homeInfoUtente = new setInfoUtente().getInfo();
-            return homeInfoUtente;
-    }
+    public Integer cercaNuoviTestDaSvolgere() throws DAOException{
+        try {
+            return new TestPsicologicoDAO().getNotificaPazientePerTestAssegnato(SessionManager.getInstance().getCurrentUser().getUsername());
 
-    public int cercaNuoviTestDaSvolgere() throws SQLException {
-
-        int count= new TestPsicologicoDAO().getTestAssegnato(SessionManager.getInstance().getCurrentUser().getUsername());
-
-        return count;
+        }catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
     }
 
     public void Logout() {
         SessionManager sessionManager = SessionManager.getInstance();
         sessionManager.logout();
+    }
+
+    public int cercaNuoveTerapie() throws DAOException {
+        try {
+            return new TerapiaDAO().getNuoveTerapie(SessionManager.getInstance().getCurrentUser().getUsername());
+        }catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
     }
 }

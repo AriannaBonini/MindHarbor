@@ -14,7 +14,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.mindharbor.graphic_controllers.AppuntamentiPazienteGraphicController">
    <children>
       <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
@@ -60,7 +59,7 @@
                         </Label>
                         <HBox layoutX="288.0" layoutY="6.0" prefHeight="42.0" prefWidth="317.0" spacing="33.0">
                            <children>
-                              <Label fx:id="LabelNomePsicologoTab1" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="302.0" textFill="WHITE">
+                              <Label fx:id="LabelNomePazienteTab1" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="302.0" textFill="WHITE">
                                  <font>
                                     <Font name="Hiragino Sans W1" size="12.0" />
                                  </font>
@@ -83,7 +82,7 @@
                         </HBox>
                         <Label fx:id="HomeTab1" layoutX="54.0" layoutY="19.0" onMouseClicked="#goToHomeFromTab1" text="HOME" textFill="WHITE" />
                         <Circle fill="WHITE" layoutX="27.0" layoutY="28.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
-                        <ImageView fx:id="image_home" onMouseClicked="#goToHomeFromTab1" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0">
+                        <ImageView fx:id="image_home" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0" onMouseClicked="#goToHomeFromTab1">
                            <image>
                               <Image url="@Img/icona_home.png" />
                            </image>
@@ -134,7 +133,7 @@
                         </Label>
                         <HBox layoutX="288.0" layoutY="6.0" prefHeight="42.0" prefWidth="317.0" spacing="33.0">
                            <children>
-                              <Label fx:id="LabelNomePsicologoTab2" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="302.0" textFill="WHITE">
+                              <Label fx:id="LabelNomePazienteTab2" alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="302.0" textFill="WHITE">
                                  <font>
                                     <Font name="Hiragino Sans W1" size="12.0" />
                                  </font>
@@ -157,7 +156,7 @@
                         </HBox>
                         <Label fx:id="HomeTab2" layoutX="54.0" layoutY="19.0" onMouseClicked="#goToHomeFromTab2" text="HOME" textFill="WHITE" />
                         <Circle fill="WHITE" layoutX="27.0" layoutY="28.0" radius="13.0" stroke="WHITE" strokeType="INSIDE" />
-                        <ImageView fx:id="image_home1" onMouseClicked="#goToHomeFromTab2" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0">
+                        <ImageView fx:id="image_home1" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0" onMouseClicked="#goToHomeFromTab2">
                            <image>
                               <Image url="@Img/icona_home.png" />
                            </image>

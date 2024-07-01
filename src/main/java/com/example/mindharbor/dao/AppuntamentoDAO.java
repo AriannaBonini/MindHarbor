@@ -1,6 +1,8 @@
 package com.example.mindharbor.dao;
 
 import com.example.mindharbor.model.Appuntamento;
+import com.example.mindharbor.model.Paziente;
+import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.session.ConnectionFactory;
 
 import java.sql.Connection;
@@ -11,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppuntamentoDAO {
-    protected static final String ID_APPUNTAMENTO = "ID_Appuntamento";
     protected static final String DATA = "Data";
     protected static final String ORA = "Ora";
     protected static final String USERNAME_PAZIENTE = "Username_Paziente";
@@ -21,89 +22,92 @@ public class AppuntamentoDAO {
     protected static final String COGNOME_PSICOLOGO = "Cognome";
     protected static final String COGNOME_PAZIENTE = "Cognome";
     protected static final String USERNAME = "Username";
+    protected static final String TABELLA_UTENTE="utente";
+    protected static final String TABELLA_APPUNTAMENTO="Appuntamento";
 
 
-    public List<Appuntamento> trovaAppuntamento(String username, String selectedTabName) throws SQLException {
+    public List<Appuntamento> trovaAppuntamentoPsicologo(String usernamePsicologo, String selectedTabName) throws SQLException {
 
         List<Appuntamento> appuntamentoList = new ArrayList<>();
 
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
-        if (selectedTabName=="IN PROGRAMMA") {
+        String sql = "SELECT " +
+                    "a." +  DATA + ", " +
+                    "a." + ORA + ", " +
+                    "p." + NOME_PSICOLOGO + ", " +
+                    "p." + COGNOME_PSICOLOGO + ", " +
+                    "pp." + NOME_PAZIENTE + ", " +
+                    "pp." + COGNOME_PAZIENTE + ", " +
+                    "a." + USERNAME_PAZIENTE + ", " +
+                    "a." + USERNAME_PSICOLOGO + " " +
+                    "FROM " + TABELLA_APPUNTAMENTO + " a " +
+                    "JOIN " + TABELLA_UTENTE + " p ON p." + USERNAME + " = a." + USERNAME_PSICOLOGO + " " +
+                    "JOIN " + TABELLA_UTENTE + " pp ON pp." + USERNAME + " = a." + USERNAME_PAZIENTE + " " +
+                    "WHERE a." + USERNAME_PSICOLOGO + " = ? ";
 
-            String sql = "SELECT Data, Ora, Ps.Nome, Ps.Cognome, Pa.Nome, Pa.Cognome, Username_Paziente, Username_Psicologo " +
-                    "FROM Appuntamento " +
-                    "JOIN Utente AS Pa ON Pa.Username=Username_Paziente " +
-                    "JOIN Utente AS Ps ON Ps.Username=Username_Psicologo " +
-                    "WHERE Username_Psicologo= ? AND Data>=NOW()";
-            // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+        if (selectedTabName.equals("IN PROGRAMMA")) {
+            sql += "AND a." + DATA + " >= NOW() ";
             stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, username);
+            stmt.setString(1, usernamePsicologo);
         } else {
-            String sql = "SELECT Data, Ora, Ps.Nome, Ps.Cognome, Pa.Nome, Pa.Cognome, Username_Paziente, Username_Psicologo " +
-                    "FROM Appuntamento " +
-                    "JOIN Utente AS Pa ON Pa.Username=Username_Paziente " +
-                    "JOIN Utente AS Ps ON Ps.Username=Username_Psicologo " +
-                    "WHERE Username_Psicologo= ? AND Data<NOW()";
-            // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+            sql += "AND a." + DATA + " < NOW() " ;
             stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, username);
+            stmt.setString(1, usernamePsicologo);
         }
 
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
-
             Appuntamento appuntamento = new Appuntamento( rs.getString(1),
                     rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getString(5),
-                    rs.getString(6),
-                    rs.getString(7),
-                    rs.getString(8),
-                    " ");
+                    "",
+                    new Paziente(rs.getString(7), rs.getString(5), rs.getString(6)),
+                    new Psicologo(rs.getString(8), rs.getString(3),rs.getString(4)));
+
 
             appuntamentoList.add(appuntamento);
         }
 
-        // Closing ResultSet and freeing resources
         rs.close();
         stmt.close();
 
         return appuntamentoList;
     }
 
-    public List<Appuntamento> trovaAppuntamentoPaziente(String username, String selectedTabName) throws SQLException {
+    public List<Appuntamento> trovaAppuntamentoPaziente(String usernamePaziente, String selectedTabName) throws SQLException {
         List<Appuntamento> appuntamentoList = new ArrayList<>();
 
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
-        if (selectedTabName=="IN PROGRAMMA") {
+        String sql =  "SELECT " +
+                    "a." + DATA + " , " +
+                    "a." + ORA + " , " +
+                    "p." + NOME_PSICOLOGO + " , " +
+                    "p." + COGNOME_PSICOLOGO + " , " +
+                    "pp." + NOME_PAZIENTE + " , " +
+                    "pp." + COGNOME_PAZIENTE + " , " +
+                    "a." + USERNAME_PAZIENTE + " , " +
+                    "a." + USERNAME_PSICOLOGO + " " +
+                    "FROM " + TABELLA_APPUNTAMENTO + " a " +
+                    "JOIN " + TABELLA_UTENTE + " p ON p." + USERNAME + " = a." + USERNAME_PSICOLOGO + " " +
+                    "JOIN " + TABELLA_UTENTE + " pp ON pp." + USERNAME + " = a." + USERNAME_PAZIENTE + " " +
+                    "WHERE a." + USERNAME_PAZIENTE + " = ? ";
 
-            String sql = "SELECT Data, Ora, Ps.Nome, Ps.Cognome, Pa.Nome, Pa.Cognome, Username_Paziente, Username_Psicologo " +
-                    "FROM Appuntamento " +
-                    "JOIN Utente AS Pa ON Pa.Username=Username_Paziente " +
-                    "JOIN Utente AS Ps ON Ps.Username=Username_Psicologo " +
-                    "WHERE Username_Paziente= ? AND Data>=NOW()";
-            // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+        if (selectedTabName.equals("IN PROGRAMMA")) {
+            sql += "AND a." + DATA + " >= NOW() ";
             stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, username);
+            stmt.setString(1, usernamePaziente);
         } else {
-            String sql = "SELECT Data, Ora, Ps.Nome, Ps.Cognome, Pa.Nome, Pa.Cognome, Username_Paziente, Username_Psicologo " +
-                    "FROM Appuntamento " +
-                    "JOIN Utente AS Pa ON Pa.Username=Username_Paziente " +
-                    "JOIN Utente AS Ps ON Ps.Username=Username_Psicologo " +
-                    "WHERE Username_Paziente= ? AND Data<NOW()";
-            // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+            sql += "AND a." + DATA + " < NOW() ";
             stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, username);
+            stmt.setString(1, usernamePaziente);
         }
 
         ResultSet rs = stmt.executeQuery();
@@ -112,18 +116,13 @@ public class AppuntamentoDAO {
 
             Appuntamento appuntamento = new Appuntamento( rs.getString(1),
                     rs.getString(2),
-                    rs.getString(3),
-                    rs.getString(4),
-                    rs.getString(5),
-                    rs.getString(6),
-                    rs.getString(7),
-                    rs.getString(8),
-                    " ");
+                    "",
+                    new Paziente(rs.getString(7),rs.getString(5), rs.getString(6)),
+                    new Psicologo(rs.getString(8), rs.getString(3), rs.getString(4)));
 
             appuntamentoList.add(appuntamento);
         }
 
-        // Closing ResultSet and freeing resources
         rs.close();
         stmt.close();
 

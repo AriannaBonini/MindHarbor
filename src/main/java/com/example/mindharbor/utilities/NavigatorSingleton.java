@@ -1,6 +1,7 @@
 package com.example.mindharbor.utilities;
 
 import com.example.mindharbor.Main;
+import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.graphic_controllers.AppuntamentiPsicologoGraphicController;
 import com.example.mindharbor.graphic_controllers.SchedaPersonalePazienteGraphicController;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +21,8 @@ public class NavigatorSingleton {
     protected Stage stg;
 
     private String parametro;
+
+    private AppuntamentiBean app;
 
     private Date data;
 
@@ -62,9 +65,11 @@ public class NavigatorSingleton {
         return parametro;
     }
 
-    public void eliminaParametro() {this.parametro = null;}
-
     public void setData(Date data) {this.data=data;}
     public Date getData() {return data;}
+
+    public void setAppuntamentoBean(AppuntamentiBean app) {this.app=app;}
+    public AppuntamentiBean getAppuntamentoBean() {return app;}
+    public void deleteAppuntamentoBean() {this.app=null;}
 
 }

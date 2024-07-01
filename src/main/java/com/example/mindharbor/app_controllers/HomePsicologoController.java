@@ -2,7 +2,8 @@ package com.example.mindharbor.app_controllers;
 
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
-import com.example.mindharbor.exceptions.SessionUserException;
+import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.setInfoUtente;
 
@@ -10,10 +11,8 @@ import java.sql.SQLException;
 
 public class HomePsicologoController extends setInfoUtente{
 
-    public HomeInfoUtenteBean getHomepageInfo() {
-
-        HomeInfoUtenteBean homeInfoUtente = new setInfoUtente().getInfo();
-        return homeInfoUtente;
+    public HomeInfoUtenteBean getInfoPsicologo() {
+        return new setInfoUtente().getInfo();
     }
 
     public void logout() {
@@ -21,8 +20,11 @@ public class HomePsicologoController extends setInfoUtente{
         sessionManager.logout();
     }
 
-    public Integer cercaNuoviTestSvolti() throws SQLException {
-        int count= new TestPsicologicoDAO().getTestSvolto(SessionManager.getInstance().getCurrentUser().getUsername(), "");
-        return count;
+    public Integer cercaNuoviTestSvolti() throws DAOException {
+        try {
+             return new TestPsicologicoDAO().getNumTestSvoltiDaNotificare(SessionManager.getInstance().getCurrentUser().getUsername(), "");
+        } catch (SQLException e ) {
+            throw new DAOException(e.getMessage());
+        }
     }
 }

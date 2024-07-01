@@ -5,8 +5,6 @@ public class LoginCredentialBean {
     private String username;
     private String password;
 
-    public LoginCredentialBean() {}
-
     public LoginCredentialBean(String username, String password) {
         this.username = username;
         this.password = password;
@@ -24,8 +22,5 @@ public class LoginCredentialBean {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
 }

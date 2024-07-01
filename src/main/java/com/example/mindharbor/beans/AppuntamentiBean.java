@@ -10,12 +10,13 @@ public class AppuntamentiBean {
         private String nomePaziente;
         private String cognomePaziente;
         private String IdAppuntamento;
+        private Integer età ;
 
     public AppuntamentiBean() {
     }
 
 
-    public AppuntamentiBean(String Data,String Ora,String nomePsicologo,String cognomePsicologo,String nomePaziente,String cognomePaziente,String usernamePaziente,String usernamePsicologo, String IdAppuntamento) {
+    public AppuntamentiBean(String Data,String Ora,String nomePsicologo,String cognomePsicologo,String nomePaziente,String cognomePaziente,String usernamePaziente,String usernamePsicologo, String IdAppuntamento,Integer età) {
             this.Data = Data;
             this.Ora= Ora;
             this.usernamePsicologo = usernamePsicologo;
@@ -25,6 +26,7 @@ public class AppuntamentiBean {
             this.nomePsicologo = nomePsicologo;
             this.cognomePsicologo = cognomePsicologo;
             this.IdAppuntamento=IdAppuntamento;
+            this.età=età;
         }
 
         public String getData() {
@@ -74,4 +76,12 @@ public class AppuntamentiBean {
         public String getCognomePaziente() {return cognomePaziente;}
 
         public void setCognomePaziente(String cognomePaziente) { this.cognomePaziente = cognomePaziente;}
+
+    public Integer getEtà() {return età;}
+
+    public void setEtà(Integer età) {this.età = età;}
+
+    public String getIdAppuntamento() {return IdAppuntamento;}
+
+    public void setIdAppuntamento(String idAppuntamento) {IdAppuntamento = idAppuntamento;}
 }

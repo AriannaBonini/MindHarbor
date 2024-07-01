@@ -8,7 +8,6 @@ public class PazientiBean {
     private String diagnosi;
     private String username;
 
-    public  PazientiBean() { }
 
     public PazientiBean(String nome, String cognome,String genere,Integer età,String diagnosi,String username) {
         this.nome = nome;
@@ -19,7 +18,6 @@ public class PazientiBean {
         this.username=username;
     }
 
-    // Metodi getter e setter per il nome e il cognome
     public String getNome() {
         return nome;
     }
