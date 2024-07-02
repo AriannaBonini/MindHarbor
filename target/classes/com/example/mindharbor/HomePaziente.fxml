@@ -85,5 +85,10 @@
             <Font name="System Bold" size="17.0" />
          </font>
       </Label>
+      <Label fx:id="NotificaAppuntamenti" layoutX="478.0" layoutY="203.0" prefHeight="26.0" prefWidth="14.0" textAlignment="CENTER" textFill="#8cff00">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

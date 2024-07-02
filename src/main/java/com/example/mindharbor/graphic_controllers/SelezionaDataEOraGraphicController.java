@@ -30,7 +30,7 @@ public class SelezionaDataEOraGraphicController {
     private static final Logger logger = LoggerFactory.getLogger(SelezionaDataEOraGraphicController.class);
     private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
     private final SelezionaDataEOraController selezionaDataEOraController= new SelezionaDataEOraController();
-    private AppuntamentiBean appuntamento=new AppuntamentiBean();
+    private AppuntamentiBean appuntamento;
 
     public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = selezionaDataEOraController.getInfoPaziente();

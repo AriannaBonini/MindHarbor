@@ -1,19 +1,13 @@
 package com.example.mindharbor.utilities;
 
-import com.example.mindharbor.Main;
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.graphic_controllers.AppuntamentiPsicologoGraphicController;
-import com.example.mindharbor.graphic_controllers.SchedaPersonalePazienteGraphicController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.Date;
-import java.util.Objects;
+
 
 public class NavigatorSingleton {
     private static NavigatorSingleton instance = null;

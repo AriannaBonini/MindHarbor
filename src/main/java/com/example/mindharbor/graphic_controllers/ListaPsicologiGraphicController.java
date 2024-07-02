@@ -2,6 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.ListaPsicologiController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.PazientiNumTestBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -27,7 +28,7 @@ import java.util.Objects;
 public class ListaPsicologiGraphicController {
 
     @FXML
-    private ListView ListViewPsicologo;
+    private ListView<Node> ListViewPsicologo;
     @FXML
     private ImageView TornaIndietro;
     @FXML
@@ -121,5 +122,22 @@ public class ListaPsicologiGraphicController {
 
     @FXML
     public void NodoSelezionato() {
+        try {
+            Node nodo = ListViewPsicologo.getSelectionModel().getSelectedItem();
+            if(nodo==null) {
+                return;
+            }
+
+            PsicologoBean psicologo =(PsicologoBean) nodo.getUserData();
+            Stage ListaPsicologi = (Stage) ListViewPsicologo.getScene().getWindow();
+            ListaPsicologi.close();
+
+            listaPsicologiController.setUsername(psicologo.getUsername());
+
+            navigator.gotoPage("/com/example/mindharbor/RichiediPrenotazione.fxml");
+        } catch (IOException e) {
+            logger.error("Impossibile caricare l'interfaccia", e);
+        }
+
     }
 }

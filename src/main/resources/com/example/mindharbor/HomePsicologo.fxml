@@ -25,7 +25,7 @@
             <Image url="@Img/icona_home.png" />
          </image>
       </ImageView>
-      <Label fx:id="RichiestaPrenotazione" layoutX="424.0" layoutY="77.0" text="RICHIESTA &#10;PRENOTAZIONE" textAlignment="CENTER" textFill="WHITE" />
+      <Label fx:id="RichiestaPrenotazione" layoutX="424.0" layoutY="77.0" onMouseClicked="#RichiestePrenotazioni" text="RICHIESTA &#10;PRENOTAZIONE" textAlignment="CENTER" textFill="WHITE" />
       <Label fx:id="VisualizzaAppuntamenti" layoutX="85.0" layoutY="132.0" onMouseClicked="#onVisualAppuntamentiClick" text="VISUALIZZA &#10;APPUNTAMENTI" textAlignment="CENTER" textFill="WHITE" />
       <Label fx:id="Home" layoutX="70.0" layoutY="22.0" text="HOME" textFill="WHITE" />
       <HBox layoutX="278.0" layoutY="22.0" prefHeight="42.0" prefWidth="317.0" spacing="33.0">
@@ -75,6 +75,11 @@
          </padding>
       </HBox>
       <Label fx:id="NotificaTest" layoutX="452.0" layoutY="190.0" prefHeight="26.0" prefWidth="14.0" textAlignment="CENTER" textFill="#8cff00">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="NotificaRichieste" layoutX="495.0" layoutY="62.0" prefHeight="26.0" prefWidth="14.0" textAlignment="CENTER" textFill="#8cff00">
          <font>
             <Font name="System Bold" size="17.0" />
          </font>

@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class HomePazienteGraphicController {
     @FXML
-    private Label ListaAppuntamenti, Terapia,Test, PrenotaAppuntamento, LabelNomePaziente, NotificaTest, logout, NotificaTerapie;
+    private Label ListaAppuntamenti, Terapia, PrenotaAppuntamento, LabelNomePaziente, NotificaTest, logout, NotificaTerapie, NotificaAppuntamenti;
     private final HomePazienteController homeController= new HomePazienteController();
     private static final Logger logger = LoggerFactory.getLogger(HomePazienteGraphicController.class);
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
@@ -25,6 +25,20 @@ public class HomePazienteGraphicController {
 
         NotificaNuoviTest();
         NotificaNuoveTerapie();
+        NotificaNuoviAppuntamenti();
+    }
+
+    private void NotificaNuoviAppuntamenti() {
+        try {
+            int count= homeController.cercaNuoviAppuntamenti();
+            if (count>0) {
+                NotificaAppuntamenti.setVisible(true);
+                NotificaAppuntamenti.setText(String.valueOf(count));
+            }
+
+        } catch (DAOException e) {
+            logger.info("Errore nella ricerca dei nuovi appuntamenti ", e);
+        }
     }
 
     private void NotificaNuoveTerapie() {

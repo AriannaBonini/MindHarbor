@@ -147,13 +147,13 @@ public class SvolgiTestGraphicController {
             TestResultBean testResult = controller.calcolaRisultato(punteggio, dataTest, nomeTest);
 
             if (testResult.getRisultatoTestPrecedente() == null) {
-                notificaProgresso("Risultato test: " + testResult.getRisultatoUltimoTest(), "Test Concluso", "Complimenti! Hai svolto il tuo primo test");
+                notificaProgresso("Risultato test: " + testResult.getRisultatoUltimoTest(), "Complimenti! Hai svolto il tuo primo test");
 
             } else {
                 if (testResult.getRisultatoTestPrecedente() > 0) {
-                    notificaProgresso("Progresso: " + testResult.getRisultatoTestPrecedente() + "%", "Test Concluso", "Complimenti!");
+                    notificaProgresso("Progresso: " + testResult.getRisultatoTestPrecedente() + "%", "Complimenti!");
                 } else {
-                    notificaProgresso("Regresso: " + testResult.getRisultatoTestPrecedente() + "%", "Test Concluso", "Mi dispiace!");
+                    notificaProgresso("Regresso: " + testResult.getRisultatoTestPrecedente() + "%", "Mi dispiace!");
                 }
             }
         }catch (DAOException e) {
@@ -163,8 +163,8 @@ public class SvolgiTestGraphicController {
         }
     }
 
-    private void notificaProgresso(String messaggio, String Titolo, String Header ) {
-        Alert alert= new AlertMessage().Informazione(Titolo, Header,messaggio);
+    private void notificaProgresso(String messaggio, String Header ) {
+        Alert alert= new AlertMessage().Informazione("Test Concluso", Header,messaggio);
 
         alert.getButtonTypes().setAll(ButtonType.OK);
         ButtonType result = alert.showAndWait().orElse(ButtonType.OK);

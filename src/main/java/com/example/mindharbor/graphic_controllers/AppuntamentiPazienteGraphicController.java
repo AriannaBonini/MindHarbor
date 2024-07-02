@@ -41,12 +41,22 @@ public class AppuntamentiPazienteGraphicController {
         LabelNomePazienteTab1.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         LabelNomePazienteTab2.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
+        ModificaStatoNotifica();
+
         try {
             tab1Selezionato();
         } catch (SQLException e) {
             logger.info("Problemi di connessione al database", e);
         }
 
+    }
+
+    private void ModificaStatoNotifica() {
+        try {
+            controllerAppuntamenti.modificaStatoNotificaAppuntamenti();
+        } catch (DAOException e ) {
+            logger.info("Errore durante la modifica dello stato dei test psicologici", e);
+        }
     }
 
 

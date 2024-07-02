@@ -20,6 +20,8 @@ public class PsicologoDAO {
     protected static final String UTENTE_GENERE = "Genere";
     protected static final String TABELLA_UTENTE = "utente";
     protected static final String UTENTE_USERNAME = "Username";
+    protected static final String COSTO_ORARIO="CostoOrario";
+    protected static final String NOME_STUDIO="Nome_Studio";
 
     public List<Psicologo> ListaPsicologi(String usernamePaziente) throws SQLException {
 
@@ -55,5 +57,38 @@ public class PsicologoDAO {
             rs.close();
             stmt.close();
             return listaPsicologi;
+    }
+
+
+    public Psicologo getInfoPsicologo(String username) throws SQLException {
+        Psicologo psicologo=null;
+
+        PreparedStatement stmt;
+        Connection conn;
+
+        conn = ConnectionFactory.getConnection();
+
+        String sql="SELECT " + UTENTE_NOME + " , " + UTENTE_COGNOME + " , " + UTENTE_GENERE + " , " + COSTO_ORARIO + " , " + NOME_STUDIO + " " +
+                "FROM " + TABELLA_PSICOLOGO + " " +
+                "JOIN " + TABELLA_UTENTE + " ON " +
+                TABELLA_UTENTE + "." + UTENTE_USERNAME + " = " + TABELLA_PSICOLOGO + "." + USERNAME + " " +
+                "WHERE " + USERNAME + " = ? ";
+        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        stmt.setString(1,username);
+
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            psicologo= new Psicologo(rs.getInt(4),
+                    rs.getString(5),
+                    "",
+                    rs.getString(1),
+                    rs.getString(2),
+                    UserType.PSICOLOGO,
+                    rs.getString(3),
+                    "");
+        }
+
+        return psicologo;
+
     }
 }

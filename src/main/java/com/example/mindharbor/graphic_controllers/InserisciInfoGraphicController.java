@@ -28,7 +28,7 @@ public class InserisciInfoGraphicController {
     private static final Logger logger = LoggerFactory.getLogger(InserisciInfoGraphicController.class);
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private final InserisciInfoController inserisciInfoController= new InserisciInfoController();
-    private AppuntamentiBean appuntamento=new AppuntamentiBean();
+    private AppuntamentiBean appuntamento;
 
     public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = inserisciInfoController.getInfoPaziente();
@@ -64,11 +64,7 @@ public class InserisciInfoGraphicController {
             appuntamento.setCognomePaziente(CampoCognome.getText());
             appuntamento.setEtà(Integer.valueOf(CampoAnni.getText()));
 
-            System.out.println(navigator.getAppuntamentoBean().getData()+ " " + navigator.getAppuntamentoBean().getOra() + " "  +navigator.getAppuntamentoBean().getNomePaziente() + " " + navigator.getAppuntamentoBean().getCognomePaziente() + " " + navigator.getAppuntamentoBean().getEtà());
-
             inserisciInfoController.setAppuntamento(appuntamento);
-            System.out.println(navigator.getAppuntamentoBean().getData()+ " " + navigator.getAppuntamentoBean().getOra() + " "  +navigator.getAppuntamentoBean().getNomePaziente() + " " + navigator.getAppuntamentoBean().getCognomePaziente() + " " + navigator.getAppuntamentoBean().getEtà());
-
 
             Stage inserisciInfo = (Stage) Conferma.getScene().getWindow();
             inserisciInfo.close();

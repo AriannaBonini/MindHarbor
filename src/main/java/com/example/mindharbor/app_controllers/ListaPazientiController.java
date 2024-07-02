@@ -5,7 +5,6 @@ import com.example.mindharbor.beans.PazientiNumTestBean;
 import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.PazientiNumTest;
-import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;

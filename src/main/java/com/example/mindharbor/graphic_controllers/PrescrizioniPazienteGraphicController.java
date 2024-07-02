@@ -22,9 +22,7 @@ public class PrescrizioniPazienteGraphicController {
     @FXML
     public Label ListaVuota, LabelNomePaziente, Prescrizione, DataPrescrizione, LabelNomePsicologo, Home;
     @FXML
-    public VBox BoxTerapia;
-    @FXML
-    public ListView ListViewTerapia;
+    public ListView<Node> ListViewTerapia;
 
     private static final Logger logger = LoggerFactory.getLogger(PrescrizioniPazienteGraphicController.class);
     private final PrescrizioniTerapiaPazienteController prescriviTerapiaController= new PrescrizioniTerapiaPazienteController();

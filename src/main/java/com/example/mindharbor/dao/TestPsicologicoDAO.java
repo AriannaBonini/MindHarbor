@@ -86,7 +86,7 @@ public class TestPsicologicoDAO {
                     "WHERE " +  PAZIENTE +  " = ? AND " +  STATO + " = 1";
 
             stmt = conn.prepareStatement(updateQuery);
-            stmt.setString(1, usernamePsicologo);
+            stmt.setString(1, usernamePaziente);
         } else {
             String updateQuery= "UPDATE " + TABELLA_TESTPSICOLOGICO + " " +
                                 "SET " + STATOPSICOLOGO +  " = 0 " +
@@ -175,7 +175,7 @@ public class TestPsicologicoDAO {
         conn = ConnectionFactory.getConnection();
 
         String updateQuery= "UPDATE " +  TABELLA_TESTPSICOLOGICO + " " +
-                "SET " + RISULTATO + " = ? , " +  SVOLTO + " = 1 , " +  STATOPSICOLOGO + " = 1 " +
+                "SET " + RISULTATO + " = ? , " +  SVOLTO + " = 1 , " +  STATOPSICOLOGO + " = 1 , " +
                 "WHERE " + PAZIENTE + " = ? AND " +  DATA + " = ? ";
 
         stmt = conn.prepareStatement(updateQuery);

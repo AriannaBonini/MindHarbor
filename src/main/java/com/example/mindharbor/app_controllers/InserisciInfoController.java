@@ -14,26 +14,19 @@ import com.example.mindharbor.utilities.setInfoUtente;
 import java.sql.SQLException;
 
 public class InserisciInfoController {
-    private  NavigatorSingleton navigator=NavigatorSingleton.getInstance();
+    private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
     public HomeInfoUtenteBean getInfoPaziente() {return new setInfoUtente().getInfo();}
 
     public boolean CheckDati(PazientiBean pazienteBean) throws DAOException {
         try {
-            if (new PazienteDAO().CheckPaziente(new Paziente(pazienteBean.getEtà(), "", SessionManager.getInstance().getCurrentUser().getUsername(), pazienteBean.getNome(), pazienteBean.getCognome(), UserType.PAZIENTE, "", "", "")) == true) {
-                return true;
-            } else {
-                return false;
-            }
+            return new PazienteDAO().CheckPaziente(new Paziente(pazienteBean.getEtà(), "", SessionManager.getInstance().getCurrentUser().getUsername(), pazienteBean.getNome(), pazienteBean.getCognome(), UserType.PAZIENTE, "", "", ""));
 
         }catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
-    public AppuntamentiBean CheckAppuntamento() {
-        AppuntamentiBean appuntamento=navigator.getAppuntamentoBean();
-        return appuntamento;
-    }
+    public AppuntamentiBean CheckAppuntamento() {return navigator.getAppuntamentoBean();}
 
     public void deleteAppuntamento() {navigator.deleteAppuntamentoBean();}
     public void setAppuntamento(AppuntamentiBean appuntamento) {navigator.setAppuntamentoBean(appuntamento);}
