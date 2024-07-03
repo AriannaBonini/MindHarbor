@@ -58,7 +58,7 @@ public class LoginGraphicController implements Observer{
 
 
         } catch (DAOException e){
-            logger.info("Credenziali errate per l'utente" + username, e);
+            logger.info("Credenziali errate per l'utente {}", username, e);
             new LabelDuration().Duration(msgLbl,"Credenziali errate");
         }
         catch (SQLException e) {
@@ -66,7 +66,7 @@ public class LoginGraphicController implements Observer{
             new LabelDuration().Duration(msgLbl,"Problema di connessione al database");
         }
         catch(SessionUserException e) {
-            logger.info(username + "già loggato", e);
+            logger.info("{} già loggato", username, e);
             new LabelDuration().Duration(msgLbl,"Utente già loggato");
         }
 

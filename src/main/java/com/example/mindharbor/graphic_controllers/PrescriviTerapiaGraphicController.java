@@ -33,13 +33,21 @@ import java.util.List;
 
 public class PrescriviTerapiaGraphicController {
     @FXML
-    private Label campoNome, campoCognome, campoData, Home, LabelNomePsicologo;
+    private Label campoNome;
+    @FXML
+    private Label campoCognome;
+    @FXML
+    private Label campoData;
+    @FXML
+    private Label home;
+    @FXML
+    private Label labelNomePsicologo;
     @FXML
     private TextArea campoPrescrizione;
     @FXML
     private ImageView tornaIndietro;
     @FXML
-    private ListView<Node> ListViewTest;
+    private ListView<Node> listViewTest;
     @FXML
     private Text campoInfoTest;
 
@@ -54,17 +62,17 @@ public class PrescriviTerapiaGraphicController {
 
     public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = prescriviController.getInfoPsicologo();
-        LabelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
         username=prescriviController.getUsername();
 
-        ModificaStatoNotifica();
-        TrovaPaziente();
-        PopolaListaTestSvoltiSenzaPrescrizione();
+        modificaStatoNotifica();
+        trovaPaziente();
+        popolaListaTestSvoltiSenzaPrescrizione();
 
     }
 
-    private void TrovaPaziente() {
+    private void trovaPaziente() {
         try{
             utentePaziente=prescriviController.ricercaNomeCognomePaziente(username);
         }catch (DAOException e) {
@@ -72,40 +80,40 @@ public class PrescriviTerapiaGraphicController {
         }
     }
 
-    private void PopolaListaTestSvoltiSenzaPrescrizione() {
+    private void popolaListaTestSvoltiSenzaPrescrizione() {
         try {
             List<TestBean> testSvoltiBean = prescriviController.getTestSvoltiSenzaPrescrizione(username);
-            PopolaAreaTest(testSvoltiBean);
+            popolaAreaTest(testSvoltiBean);
         } catch (DAOException e) {
             logger.info("Errore nella ricerca dei test svolti senza ancora prescrizioni ", e);
         }
     }
 
-    private void PopolaAreaTest(List<TestBean> testSvoltiBean) {
-        ListViewTest.getItems().clear();
+    private void popolaAreaTest(List<TestBean> testSvoltiBean) {
+        listViewTest.getItems().clear();
 
         ObservableList<Node> items = FXCollections.observableArrayList();
         for (TestBean testBean : testSvoltiBean) {
-            VBox AreaTest= new VBox();
+            VBox areaTest = new VBox();
 
             Label dataTest= new Label("DATA: " + testBean.getData());
             Label nomeTest= new Label("TEST: " + testBean.getNomeTest());
             Label risultatoTest= new Label("RISULTATO: "+ testBean.getRisultato());
 
-            AreaTest.getChildren().addAll(dataTest,nomeTest,risultatoTest);
-            AreaTest.setSpacing(5);
+            areaTest.getChildren().addAll(dataTest,nomeTest,risultatoTest);
+            areaTest.setSpacing(5);
 
-            items.add(AreaTest);
+            items.add(areaTest);
 
-            AreaTest.setUserData(testBean);
+            areaTest.setUserData(testBean);
         }
-        ListViewTest.setFixedCellSize(100);
-        ListViewTest.getItems().addAll(items);
+        listViewTest.setFixedCellSize(100);
+        listViewTest.getItems().addAll(items);
 
     }
 
 
-    private void ModificaStatoNotifica() {
+    private void modificaStatoNotifica() {
         try {
             prescriviController.modificaStatoTestSvolto(username);
         } catch (DAOException e ) {
@@ -116,7 +124,7 @@ public class PrescriviTerapiaGraphicController {
     @FXML
     public void goToHome() {
         try {
-            Stage prescriviTerapia = (Stage) Home.getScene().getWindow();
+            Stage prescriviTerapia = (Stage) home.getScene().getWindow();
             prescriviTerapia.close();
 
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
@@ -140,8 +148,8 @@ public class PrescriviTerapiaGraphicController {
     }
 
     @FXML
-    public void NodoSelezionato() {
-        Node nodo= ListViewTest.getSelectionModel().getSelectedItem();
+    public void nodoSelezionato() {
+        Node nodo= listViewTest.getSelectionModel().getSelectedItem();
         if (nodo == null) {
             return;
         }
@@ -153,7 +161,7 @@ public class PrescriviTerapiaGraphicController {
     }
 
     @FXML
-    public void Prescrivi() {
+    public void prescrivi() {
         String testoInserito= campoPrescrizione.getText();
         if (testoInserito.isEmpty()) {
             Alert alert= new AlertMessage().Errore("Inserisci la prescrizione");

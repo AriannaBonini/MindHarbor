@@ -4,8 +4,8 @@ import com.example.mindharbor.app_controllers.ScegliTestController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.exceptions.DAOException;
-import com.example.mindharbor.patterns.Decorator.GenereDecorator;
-import com.example.mindharbor.patterns.Decorator.ImageDecorator;
+import com.example.mindharbor.patterns.decorator.GenereDecorator;
+import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.animation.KeyFrame;
@@ -25,11 +25,28 @@ import java.util.List;
 public class ScegliTestGraphicController {
 
     @FXML
-    private Label NomePaziente, CognomePaziente, EtàPaziente, LabelNomePsicologo, Home;
+    private Label nomePaziente;
     @FXML
-    private ImageView ImmaginePaziente, TornaIndietro;
+    private Label cognomePaziente;
     @FXML
-    private CheckBox Test1, Test2, Test3, Test4;
+    private Label anniPaziente;
+    @FXML
+    private Label labelNomePsicologo;
+    @FXML
+    private Label home;
+    @FXML
+    private ImageView immaginePaziente;
+    @FXML
+    private ImageView tornaIndietro;
+    @FXML
+    private CheckBox test1;
+    @FXML
+    private CheckBox test2;
+    @FXML
+    private CheckBox test3;
+    @FXML
+    private CheckBox test4;
+
     private String username;
     private static final Logger logger = LoggerFactory.getLogger(ScegliTestGraphicController.class);
     private List<String> listaTestPsicologici;
@@ -39,7 +56,7 @@ public class ScegliTestGraphicController {
 
     public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = scegliTest.getInfoPsicologo();
-        LabelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         username=scegliTest.getUsername();
 
         getInfoPaziente();
@@ -51,28 +68,28 @@ public class ScegliTestGraphicController {
     private void getInfoPaziente() {
         try {
             PazientiBean paziente= scegliTest.getInfoPaziente(username);
-            AggiungiInformazioni(paziente);
+            aggiungiInformazioni(paziente);
         } catch (DAOException e) {
             logger.info("Non esistono informazioni relative al paziente", e);
         }
     }
 
-    private void AggiungiInformazioni(PazientiBean paziente) {
+    private void aggiungiInformazioni(PazientiBean paziente) {
 
-        NomePaziente.setText(paziente.getNome());
-        CognomePaziente.setText(paziente.getCognome());
+        nomePaziente.setText(paziente.getNome());
+        cognomePaziente.setText(paziente.getCognome());
 
-        EtàPaziente.setText(paziente.getAnni()+ " anni");
+        anniPaziente.setText(paziente.getAnni()+ " anni");
 
-        ImageDecorator imageDecorator= new GenereDecorator(ImmaginePaziente,paziente.getGenere());
+        ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,paziente.getGenere());
         imageDecorator.loadImage();
 
     }
     @FXML
     public void goToHome() {
         try {
-            Stage SchedaPersonale = (Stage) Home.getScene().getWindow();
-            SchedaPersonale.close();
+            Stage schedaPersonale = (Stage) home.getScene().getWindow();
+            schedaPersonale.close();
 
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
         }catch(IOException e) {
@@ -82,10 +99,10 @@ public class ScegliTestGraphicController {
     }
 
     @FXML
-    public void TornaIndietro() {
+    public void tornaIndietro() {
         try {
-            Stage SchedaPersonale = (Stage) TornaIndietro.getScene().getWindow();
-            SchedaPersonale.close();
+            Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
+            schedaPersonale.close();
 
             scegliTest.setUsername(username);
             navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
@@ -101,7 +118,7 @@ public class ScegliTestGraphicController {
          listaTestPsicologici=scegliTest.getListaTest();
 
         if (listaTestPsicologici != null) {
-            CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4};
+            CheckBox[] checkBoxes = {test1, test2, test3, test4};
             int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length);
             for (int i = 0; i < numCheckBoxes; i++) {
                 checkBoxes[i].setText(listaTestPsicologici.get(i));
@@ -114,8 +131,8 @@ public class ScegliTestGraphicController {
     }
 
     @FXML
-    public void AssegnaTest() {
-        CheckBox[] checkBoxes = {Test1, Test2, Test3, Test4};
+    public void assegnaTest() {
+        CheckBox[] checkBoxes = {test1, test2, test3, test4};
         int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length);
         int count=0;
         String nomeTest=null;

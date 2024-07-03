@@ -322,7 +322,7 @@ public class AppuntamentoDAO {
         stmt.close();
     }
 
-    public boolean getDisponibilità(Integer idAppuntamento, String usernamePsicologo) throws SQLException{
+    public boolean getDisp(Integer idAppuntamento, String usernamePsicologo) throws SQLException{
         PreparedStatement stmt;
         Connection conn;
 

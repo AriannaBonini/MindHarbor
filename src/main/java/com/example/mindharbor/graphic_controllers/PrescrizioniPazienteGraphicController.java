@@ -20,16 +20,26 @@ import java.util.List;
 
 public class PrescrizioniPazienteGraphicController {
     @FXML
-    public Label ListaVuota, LabelNomePaziente, Prescrizione, DataPrescrizione, LabelNomePsicologo, Home;
+    public Label listaVuota;
     @FXML
-    public ListView<Node> ListViewTerapia;
+    public Label labelNomePaziente;
+    @FXML
+    public Label prescrizione;
+    @FXML
+    public Label dataPrescrizione;
+    @FXML
+    public Label labelNomePsicologo;
+    @FXML
+    public Label home;
+    @FXML
+    public ListView<Node> listViewTerapia;
 
     private static final Logger logger = LoggerFactory.getLogger(PrescrizioniPazienteGraphicController.class);
     private final PrescrizioniTerapiaPazienteController prescriviTerapiaController= new PrescrizioniTerapiaPazienteController();
 
     public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoPaziente();
-        LabelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         getListaTerapie();
     }
 
@@ -37,9 +47,9 @@ public class PrescrizioniPazienteGraphicController {
         try {
             List<TerapiaBean> terapieBean= prescriviTerapiaController.trovaTerapie();
             if (terapieBean.isEmpty()) {
-                ListaVuota.setText("Non ci sono terapie");
+                listaVuota.setText("Non ci sono terapie");
             } else {
-                PopolaListaTerapia(terapieBean);
+                popolaListaTerapia(terapieBean);
             }
         }catch (DAOException e) {
             logger.info("Errore nel caricamento della Lista delle Terapie ", e );
@@ -47,19 +57,19 @@ public class PrescrizioniPazienteGraphicController {
 
     }
 
-    private void PopolaListaTerapia(List<TerapiaBean> terapieBean) {
-        ListViewTerapia.getItems().clear();
+    private void popolaListaTerapia(List<TerapiaBean> terapieBean) {
+        listViewTerapia.getItems().clear();
 
         ObservableList<Node> items = FXCollections.observableArrayList();
 
         for (TerapiaBean terapia : terapieBean) {
             VBox boxTerapia= new VBox();
 
-            Label DataPrescrizione= new Label("DATA: " + terapia.getDataTerapia());
-            Label Prescrizione= new Label("PRESCRIZIONE : \n " + terapia.getTerapia());
+            Label labelDataPrescrizione = new Label("DATA: " + terapia.getDataTerapia());
+            Label labelPrescrizione = new Label("PRESCRIZIONE : \n " + terapia.getTerapia());
 
 
-            boxTerapia.getChildren().addAll(DataPrescrizione,Prescrizione);
+            boxTerapia.getChildren().addAll(labelDataPrescrizione, labelPrescrizione);
             boxTerapia.setSpacing(5);
 
             items.add(boxTerapia);
@@ -67,15 +77,15 @@ public class PrescrizioniPazienteGraphicController {
 
             boxTerapia.setUserData(terapia);
         }
-        ListViewTerapia.setFixedCellSize(150);
-        ListViewTerapia.getItems().addAll(items);
+        listViewTerapia.setFixedCellSize(150);
+        listViewTerapia.getItems().addAll(items);
     }
 
     @FXML
     public void goToHome() {
         try {
-            Stage TerapiaPaziente = (Stage) Home.getScene().getWindow();
-            TerapiaPaziente.close();
+            Stage terapiaPaziente = (Stage) home.getScene().getWindow();
+            terapiaPaziente.close();
             NavigatorSingleton navigator= NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 

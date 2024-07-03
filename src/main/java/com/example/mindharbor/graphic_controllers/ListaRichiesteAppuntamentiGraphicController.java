@@ -4,8 +4,8 @@ import com.example.mindharbor.app_controllers.ListaRichiesteAppuntamentiControll
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.exceptions.DAOException;
-import com.example.mindharbor.patterns.Decorator.GenereDecorator;
-import com.example.mindharbor.patterns.Decorator.ImageDecorator;
+import com.example.mindharbor.patterns.decorator.GenereDecorator;
+import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

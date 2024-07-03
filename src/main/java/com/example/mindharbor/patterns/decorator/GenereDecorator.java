@@ -1,4 +1,4 @@
-package com.example.mindharbor.patterns.Decorator;
+package com.example.mindharbor.patterns.decorator;
 
 
 import javafx.scene.image.Image;

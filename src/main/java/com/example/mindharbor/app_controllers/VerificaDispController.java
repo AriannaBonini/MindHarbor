@@ -11,7 +11,7 @@ import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
 import java.sql.SQLException;
 
-public class VerificaDisponibilitàController {
+public class VerificaDispController {
 
     public HomeInfoUtenteBean getInfoPsicologo() {return new setInfoUtente().getInfo();}
 
@@ -49,9 +49,9 @@ public class VerificaDisponibilitàController {
         }
     }
 
-    public boolean verificaDisponibilità(Integer idAppuntamento) throws DAOException {
+    public boolean verificaDisp(Integer idAppuntamento) throws DAOException {
         try {
-            if(!new AppuntamentoDAO().getDisponibilità(idAppuntamento,SessionManager.getInstance().getCurrentUser().getUsername())) {
+            if(!new AppuntamentoDAO().getDisp(idAppuntamento,SessionManager.getInstance().getCurrentUser().getUsername())) {
                 return false;
             }
             return BoundaryMockAPICalendario.Calendario();

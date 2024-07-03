@@ -3,9 +3,10 @@ package com.example.mindharbor.graphic_controllers;
 import com.example.mindharbor.app_controllers.SchedaPersonalePazienteController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.constants.Constants;
 import com.example.mindharbor.exceptions.DAOException;
-import com.example.mindharbor.patterns.Decorator.GenereDecorator;
-import com.example.mindharbor.patterns.Decorator.ImageDecorator;
+import com.example.mindharbor.patterns.decorator.GenereDecorator;
+import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -19,41 +20,56 @@ import java.io.IOException;
 
 public class SchedaPersonalePazienteGraphicController {
     @FXML
-    private Label Home, NomePaziente, CognomePaziente, EtàPaziente, PrescriviTerapia, LabelNomePsicologo, NotificaTest;
+    private Label home;
     @FXML
-    private Text DiagnosiPaziente;
+    private Label nomePaziente;
     @FXML
-    private ImageView ImmaginePaziente, TornaIndietro;
+    private Label cognomePaziente;
+    @FXML
+    private Label anniPaziente;
+    @FXML
+    private Label prescriviTerapia;
+    @FXML
+    private Label labelNomePsicologo;
+    @FXML
+    private Label notificaTest;
+    @FXML
+    private Text diagnosiPaziente;
+    @FXML
+    private ImageView immaginePaziente;
+    @FXML
+    private ImageView tornaIndietro;
 
     private String username;
-    private final SchedaPersonalePazienteController SchedaPersonaleController = new SchedaPersonalePazienteController();
+    private final SchedaPersonalePazienteController schedaPersonaleController = new SchedaPersonalePazienteController();
     private static final Logger logger = LoggerFactory.getLogger(SchedaPersonalePazienteGraphicController.class);
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
-    public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = SchedaPersonaleController.getInfoPsicologo();
-        LabelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        username=SchedaPersonaleController.getUsername();
 
-        NotificaStatoTest();
-        PopolaSchedaPersonale();
-        AbilitaPrescriviTerapia();
+    public void initialize() {
+        HomeInfoUtenteBean infoUtenteBean = schedaPersonaleController.getInfoPsicologo();
+        labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        username= schedaPersonaleController.getUsername();
+
+        notificaStatoTest();
+        popolaSchedaPersonale();
+        abilitaPrescriviTerapia();
     }
 
-    private void AbilitaPrescriviTerapia() {
+    private void abilitaPrescriviTerapia() {
         try {
-            if (SchedaPersonaleController.NumTestSvoltiSenzaPrescrizione(username) > 0) {
-                PrescriviTerapia.setDisable(false);
+            if (schedaPersonaleController.NumTestSvoltiSenzaPrescrizione(username) > 0) {
+                prescriviTerapia.setDisable(false);
             }
         }catch (DAOException e) {
             logger.info("Errore nella ricerca dei test svolti dal paziente senza prescrizione" , e);
         }
     }
 
-    private void NotificaStatoTest() {
+    private void notificaStatoTest() {
         try {
-            int count = SchedaPersonaleController.cercaNuoviTestSvoltiPazienteDaNotificare(username);
+            int count = schedaPersonaleController.cercaNuoviTestSvoltiPazienteDaNotificare(username);
             if (count>0) {
-                NotificaTest.setText(String.valueOf(count));
+                notificaTest.setText(String.valueOf(count));
             }
         } catch (DAOException e) {
             logger.info("Errore durante la ricerca dei nuovi test svolti dal paziente " , e);
@@ -62,10 +78,10 @@ public class SchedaPersonalePazienteGraphicController {
     }
 
 
-    private void PopolaSchedaPersonale()  {
+    private void popolaSchedaPersonale()  {
         try {
-            PazientiBean paziente= SchedaPersonaleController.getSchedaPersonale(username);
-            CreaSchedaPersonale(paziente);
+            PazientiBean paziente= schedaPersonaleController.getSchedaPersonale(username);
+            creaSchedaPersonale(paziente);
 
         } catch (DAOException e) {
             logger.info("Non esistono informazioni relative al paziente", e);
@@ -74,73 +90,73 @@ public class SchedaPersonalePazienteGraphicController {
     }
 
 
-    private void CreaSchedaPersonale(PazientiBean paziente) {
+    private void creaSchedaPersonale(PazientiBean paziente) {
 
-        NomePaziente.setText(paziente.getNome());
-        CognomePaziente.setText(paziente.getCognome());
+        nomePaziente.setText(paziente.getNome());
+        cognomePaziente.setText(paziente.getCognome());
 
-        EtàPaziente.setText(paziente.getAnni()+ " anni");
+        anniPaziente.setText(paziente.getAnni()+ " anni");
 
         if(paziente.getDiagnosi()==null || paziente.getDiagnosi().isEmpty()) {
-            DiagnosiPaziente.setText("Diagnosi Sconosciuta");
+            diagnosiPaziente.setText("Diagnosi Sconosciuta");
         } else {
-            DiagnosiPaziente.setText(paziente.getDiagnosi());
+            diagnosiPaziente.setText(paziente.getDiagnosi());
         }
 
-        ImageDecorator imageDecorator= new GenereDecorator(ImmaginePaziente,paziente.getGenere());
+        ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,paziente.getGenere());
         imageDecorator.loadImage();
     }
 
     @FXML
     public void goToHome() {
         try {
-            Stage SchedaPersonale = (Stage) Home.getScene().getWindow();
-            SchedaPersonale.close();
+            Stage schedaPersonale = (Stage) home.getScene().getWindow();
+            schedaPersonale.close();
 
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
         }
 
     }
 
     @FXML
-    public void TornaIndietro() {
+    public void tornaIndietro() {
         try {
-            Stage SchedaPersonale = (Stage) TornaIndietro.getScene().getWindow();
-            SchedaPersonale.close();
+            Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
+            schedaPersonale.close();
 
             navigator.gotoPage("/com/example/mindharbor/ListaPazienti.fxml");
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
         }
 
     }
 
 
     @FXML
-    public void ScegliTest() {
+    public void scegliTest() {
         try {
-            Stage SchedaPersonale = (Stage) Home.getScene().getWindow();
-            SchedaPersonale.close();
+            Stage schedaPersonale = (Stage) home.getScene().getWindow();
+            schedaPersonale.close();
 
-            SchedaPersonaleController.setUsername(username);
+            schedaPersonaleController.setUsername(username);
 
             navigator.gotoPage("/com/example/mindharbor/ScegliTest.fxml");
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
         }
     }
     @FXML
-    public void PrescriviTerapia() {
+    public void prescriviTerapia() {
         try {
-            Stage SchedaPersonale = (Stage) PrescriviTerapia.getScene().getWindow();
-            SchedaPersonale.close();
+            Stage schedaPersonale = (Stage) prescriviTerapia.getScene().getWindow();
+            schedaPersonale.close();
 
-            SchedaPersonaleController.setUsername(username);
+            schedaPersonaleController.setUsername(username);
             navigator.gotoPage("/com/example/mindharbor/PrescrizioneTerapia.fxml");
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
         }
 
     }

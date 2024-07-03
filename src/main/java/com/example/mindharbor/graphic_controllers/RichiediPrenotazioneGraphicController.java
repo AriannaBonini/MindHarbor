@@ -5,8 +5,8 @@ import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.exceptions.DAOException;
-import com.example.mindharbor.patterns.Decorator.GenereDecorator;
-import com.example.mindharbor.patterns.Decorator.ImageDecorator;
+import com.example.mindharbor.patterns.decorator.GenereDecorator;
+import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.animation.KeyFrame;
@@ -24,26 +24,38 @@ import java.io.IOException;
 public class RichiediPrenotazioneGraphicController {
 
     @FXML
-    private ImageView ImmaginePsicologo, TornaIndietro;
+    private ImageView immaginePsicologo;
     @FXML
-    private Label NomePsicologo, CognomePsicologo, CostoOrario, NomeStudio, LabelNomePaziente, Home;
+    private ImageView tornaIndietro;
+    @FXML
+    private Label nomePsicologo;
+    @FXML
+    private Label cognomePsicologo;
+    @FXML
+    private Label costoOrario;
+    @FXML
+    private Label nomeStudio;
+    @FXML
+    private Label labelNomePaziente;
+    @FXML
+    private Label home;
 
     NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-    private static final Logger logger = LoggerFactory.getLogger(ListaPsicologiGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RichiediPrenotazioneGraphicController.class);
     private final RichiediPrenotazioneController prenotazioneController= new RichiediPrenotazioneController();
 
     public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = prenotazioneController.getPageRichPrenInfo();
 
-        LabelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        PopolaSchedaPsicologo(prenotazioneController.getUsername());
+        popolaSchedaPsicologo(prenotazioneController.getUsername());
     }
 
-    private void PopolaSchedaPsicologo(String usernamePsicologo) {
+    private void popolaSchedaPsicologo(String usernamePsicologo) {
         try {
-            PsicologoBean InfoPsicologo = prenotazioneController.getInfoPsicologo(usernamePsicologo);
-            CreaSchedaPsicologo(InfoPsicologo);
+            PsicologoBean infoPsicologo = prenotazioneController.getInfoPsicologo(usernamePsicologo);
+            creaSchedaPsicologo(infoPsicologo);
 
         }catch (DAOException e) {
             logger.info("Non esistono informazioni relative allo psicologo " ,e);
@@ -51,13 +63,13 @@ public class RichiediPrenotazioneGraphicController {
 
     }
 
-    private void CreaSchedaPsicologo(PsicologoBean infoPsicologo) {
-        NomePsicologo.setText(infoPsicologo.getNome());
-        CognomePsicologo.setText(infoPsicologo.getCognome());
-        CostoOrario.setText(infoPsicologo.getCostoOrario() + " €/h");
-        NomeStudio.setText(infoPsicologo.getNomeStudio());
+    private void creaSchedaPsicologo(PsicologoBean infoPsicologo) {
+        nomePsicologo.setText(infoPsicologo.getNome());
+        cognomePsicologo.setText(infoPsicologo.getCognome());
+        costoOrario.setText(infoPsicologo.getCostoOrario() + " €/h");
+        nomeStudio.setText(infoPsicologo.getNomeStudio());
 
-        ImageDecorator imageDecorator= new GenereDecorator(ImmaginePsicologo,infoPsicologo.getGenere());
+        ImageDecorator imageDecorator= new GenereDecorator(immaginePsicologo,infoPsicologo.getGenere());
         imageDecorator.loadImage();
 
     }
@@ -70,7 +82,7 @@ public class RichiediPrenotazioneGraphicController {
                 return;
             }
 
-            Stage richiediPrenotazione = (Stage) Home.getScene().getWindow();
+            Stage richiediPrenotazione = (Stage) home.getScene().getWindow();
             richiediPrenotazione.close();
 
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
@@ -81,9 +93,9 @@ public class RichiediPrenotazioneGraphicController {
     }
 
     @FXML
-    public void TornaIndietro() {
+    public void tornaIndietro() {
         try {
-            Stage richiediPrenotazione = (Stage) TornaIndietro.getScene().getWindow();
+            Stage richiediPrenotazione = (Stage) tornaIndietro.getScene().getWindow();
             richiediPrenotazione.close();
 
             navigator.gotoPage("/com/example/mindharbor/ListaPsicologi.fxml");
@@ -94,7 +106,7 @@ public class RichiediPrenotazioneGraphicController {
     }
 
     @FXML
-    public void RichiediPrenotazione() {
+    public void richiediPrenotazione() {
         try {
             AppuntamentiBean appuntamentoBean = prenotazioneController.getAppuntamento();
             appuntamentoBean.setusernamePsicologo(prenotazioneController.getUsername());
@@ -106,7 +118,7 @@ public class RichiediPrenotazioneGraphicController {
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             alert.showAndWait();
 
-            Stage richiediPrenotazione = (Stage) Home.getScene().getWindow();
+            Stage richiediPrenotazione = (Stage) home.getScene().getWindow();
             richiediPrenotazione.close();
 
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");

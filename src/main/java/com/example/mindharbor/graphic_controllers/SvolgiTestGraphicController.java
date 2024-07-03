@@ -4,6 +4,7 @@ import com.example.mindharbor.app_controllers.SvolgiTestController;
 import com.example.mindharbor.beans.DomandeTestBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.TestResultBean;
+import com.example.mindharbor.constants.Constants;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -26,21 +27,65 @@ import java.util.List;
 
 public class SvolgiTestGraphicController {
     @FXML
-    private Label Domanda1, Domanda2, Domanda3, Domanda4, Domanda5, Domanda6;
+    private Label domanda1;
+    @FXML
+    private Label domanda2;
+    @FXML
+    private Label domanda3;
+    @FXML
+    private Label domanda4;
+    @FXML
+    private Label domanda5;
+    @FXML
+    private Label domanda6;
 
     @FXML
-    private CheckBox Felice1, Felice2, Felice3,Felice4,Felice5,Felice6;
+    private CheckBox felice1;
+    @FXML
+    private CheckBox felice2;
+    @FXML
+    private CheckBox felice3;
+    @FXML
+    private CheckBox felice4;
+    @FXML
+    private CheckBox felice5;
+    @FXML
+    private CheckBox felice6;
 
     @FXML
-    private CheckBox Triste1, Triste2, Triste3, Triste4, Triste5, Triste6;
+    private CheckBox triste1;
     @FXML
-    private CheckBox Arrabbiata1, Arrabbiata2, Arrabbiata3, Arrabbiata4, Arrabbiata5, Arrabbiata6;
+    private CheckBox triste2;
+    @FXML
+    private CheckBox triste3;
+    @FXML
+    private CheckBox triste4;
+    @FXML
+    private CheckBox triste5;
+    @FXML
+    private CheckBox triste6;
 
     @FXML
-    private Label LabelNomePaziente, Home;
+    private CheckBox arrabbiata1;
+    @FXML
+    private CheckBox arrabbiata2;
+    @FXML
+    private CheckBox arrabbiata3;
+    @FXML
+    private CheckBox arrabbiata4;
+    @FXML
+    private CheckBox arrabbiata5;
+    @FXML
+    private CheckBox arrabbiata6;
 
     @FXML
-    private ImageView TornaIndietro;
+    private Label labelNomePaziente;
+    @FXML
+    private Label home;
+
+    @FXML
+    private ImageView tornaIndietro;
+
     private final SvolgiTestController controller= new SvolgiTestController();
     private DomandeTestBean domandeBean;
     private String nomeTest;
@@ -55,19 +100,19 @@ public class SvolgiTestGraphicController {
 
     public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = controller.getInfoPaziente();
-        LabelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         nomeTest=controller.getNomeTest();
         dataTest=controller.getData();
 
-        labels= new Label[]{Domanda1, Domanda2, Domanda3, Domanda4, Domanda5, Domanda6};
-        risposteTest= new CheckBox[][]{{Felice1,Triste1,Arrabbiata1}, {Felice2,Triste2,Arrabbiata2},{Felice3,Triste3,Arrabbiata3},
-                {Felice4,Triste4,Arrabbiata4}, {Felice5,Triste5,Arrabbiata5}, {Felice6,Triste6,Arrabbiata6}};
+        labels= new Label[]{domanda1, domanda2, domanda3, domanda4, domanda5, domanda6};
+        risposteTest= new CheckBox[][]{{felice1, triste1, arrabbiata1}, {felice2, triste2, arrabbiata2},{felice3, triste3, arrabbiata3},
+                {felice4, triste4, arrabbiata4}, {felice5, triste5, arrabbiata5}, {felice6, triste6, arrabbiata6}};
 
-        AggiungiDomande(nomeTest);
+        aggiungiDomande(nomeTest);
 
     }
 
-    private void AggiungiDomande(String nomeTest) {
+    private void aggiungiDomande(String nomeTest) {
         domandeBean= controller.CercaDomande(nomeTest);
 
         int numLabels = Math.min(domandeBean.getDomande().size(), labels.length);
@@ -90,35 +135,35 @@ public class SvolgiTestGraphicController {
             if (risposta==0) {
                 return;
             }
-            Stage SvolgiTest = (Stage) Home.getScene().getWindow();
-            SvolgiTest.close();
+            Stage svolgiTest = (Stage) home.getScene().getWindow();
+            svolgiTest.close();
 
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
         } catch (IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
         }
     }
 
     @FXML
-    public void TornaIndietro() {
+    public void tornaIndietro() {
         try {
             Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare indietro?");
             if (risposta==0) {
                 return;
             }
-            Stage SchedaPersonale = (Stage) TornaIndietro.getScene().getWindow();
-            SchedaPersonale.close();
+            Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
+            schedaPersonale.close();
 
             navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
         }
 
     }
 
     @FXML
-    public void ConcludiTest()  {
+    public void concludiTest()  {
         int numCheckBoxes = Math.min(domandeBean.getDomande().size(), labels.length);
         int count;
         List<Integer> punteggio=new ArrayList<>();
@@ -163,8 +208,8 @@ public class SvolgiTestGraphicController {
         }
     }
 
-    private void notificaProgresso(String messaggio, String Header ) {
-        Alert alert= new AlertMessage().Informazione("Test Concluso", Header,messaggio);
+    private void notificaProgresso(String messaggio, String header) {
+        Alert alert= new AlertMessage().Informazione("Test Concluso", header,messaggio);
 
         alert.getButtonTypes().setAll(ButtonType.OK);
         ButtonType result = alert.showAndWait().orElse(ButtonType.OK);
@@ -175,13 +220,13 @@ public class SvolgiTestGraphicController {
     }
 
     private void indirizzaAllaListaTest() {
-        Stage SchedaPersonale = (Stage) TornaIndietro.getScene().getWindow();
-        SchedaPersonale.close();
+        Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
+        schedaPersonale.close();
 
         try {
             navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
         } catch (IOException e) {
-            logger.info("Impossibile caricare l'interfaccia ", e);
+            logger.info(Constants.INTERFACE_LOAD_ERROR, e);
         }
     }
 }

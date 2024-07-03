@@ -3,6 +3,7 @@ package com.example.mindharbor.graphic_controllers;
 import com.example.mindharbor.app_controllers.SelezionaDataEOraController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.constants.Constants;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
@@ -21,11 +22,17 @@ import java.time.format.DateTimeParseException;
 
 public class SelezionaDataEOraGraphicController {
     @FXML
-    private Label LabelNomePaziente, Avanti, Home, Info;
+    private Label labelNomePaziente;
     @FXML
-    private TextField Orario;
+    private Label avanti;
     @FXML
-    private DatePicker Data;
+    private Label home;
+    @FXML
+    private Label info;
+    @FXML
+    private TextField orario;
+    @FXML
+    private DatePicker data;
 
     private static final Logger logger = LoggerFactory.getLogger(SelezionaDataEOraGraphicController.class);
     private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
@@ -34,19 +41,19 @@ public class SelezionaDataEOraGraphicController {
 
     public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = selezionaDataEOraController.getInfoPaziente();
-        LabelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        DataRules();
+        dataRules();
 
         if((appuntamento=selezionaDataEOraController.getAppuntamento())!=null) {
-            Orario.setText(appuntamento.getOra());
-            LocalDate data= LocalDate.parse(appuntamento.getData());
-            Data.setValue(data);
+            orario.setText(appuntamento.getOra());
+            LocalDate dataLocale = LocalDate.parse(appuntamento.getData());
+            this.data.setValue(dataLocale);
         }else {appuntamento=new AppuntamentiBean();}
     }
 
-    private void DataRules() {
-        Data.setDayCellFactory(picker -> new DateCell() {
+    private void dataRules() {
+        data.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
@@ -70,47 +77,47 @@ public class SelezionaDataEOraGraphicController {
     public void goToHome() {
         try {
             selezionaDataEOraController.deleteAppuntamento();
-            Stage SelezionaDataEOra = (Stage) Home.getScene().getWindow();
-            SelezionaDataEOra.close();
+            Stage selezionaDataEOra = (Stage) home.getScene().getWindow();
+            selezionaDataEOra.close();
 
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
         } catch (IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
         }
     }
 
     @FXML
-    public void ClickAvanti() {
-        if (Data.getValue() == null || Orario.getText().isEmpty()) {
-            new LabelDuration().Duration(Info, "Compilare tutti i campi");
+    public void clickAvanti() {
+        if (data.getValue() == null || orario.getText().isEmpty()) {
+            new LabelDuration().Duration(info, "Compilare tutti i campi");
         } else {
 
             try {
-                if (!selezionaDataEOraController.CheckTime(Orario.getText())) {
-                    new LabelDuration().Duration(Info, "Orario non valido");
+                if (!selezionaDataEOraController.CheckTime(orario.getText())) {
+                    new LabelDuration().Duration(info, "Orario non valido");
                 } else {
-                    appuntamento.setData(String.valueOf(Data.getValue()));
-                    appuntamento.setOra(Orario.getText());
+                    appuntamento.setData(String.valueOf(data.getValue()));
+                    appuntamento.setOra(orario.getText());
 
                     goToInfo(appuntamento);
                 }
             } catch (DateTimeParseException e) {
-                new LabelDuration().Duration(Info, "Il formato deve essere: HH:mm");
+                new LabelDuration().Duration(info, "Il formato deve essere: HH:mm");
             }
         }
     }
 
     private void goToInfo(AppuntamentiBean appuntamento) {
         try {
-            Stage SelezionaDataEOra = (Stage) Avanti.getScene().getWindow();
-            SelezionaDataEOra.close();
+            Stage selezionaDataEOra = (Stage) avanti.getScene().getWindow();
+            selezionaDataEOra.close();
 
             selezionaDataEOraController.setAppuntamento(appuntamento);
 
             navigator.gotoPage("/com/example/mindharbor/InserisciInfo.fxml");
         }catch (IOException e) {
-            logger.info("Impossibile caricare l'interfaccia ", e);
+            logger.info(Constants.INTERFACE_LOAD_ERROR, e);
         }
     }
 }
