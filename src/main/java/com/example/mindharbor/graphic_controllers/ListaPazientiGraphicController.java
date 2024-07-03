@@ -4,6 +4,8 @@ import com.example.mindharbor.app_controllers.ListaPazientiController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiNumTestBean;
 import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.patterns.Decorator.GenereDecorator;
+import com.example.mindharbor.patterns.Decorator.ImageDecorator;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,85 +23,79 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 public class ListaPazientiGraphicController {
     @FXML
-    private Label LabelNomePsicologo, Home;
+    private Label labelNomePsicologo;
     @FXML
-    private Text ListaVuota;
+    private Label home;
     @FXML
-    private ListView<Node> ListViewPazienti;
-    private final ListaPazientiController ListaPazientiController = new ListaPazientiController();
+    private Text listaVuota;
+    @FXML
+    private ListView<Node> listViewPazienti;
+    private final ListaPazientiController listaPazientiController = new ListaPazientiController();
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(ListaPazientiGraphicController.class);
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = ListaPazientiController.getInfoPsicologo();
-        LabelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        PopolaLista();
+        HomeInfoUtenteBean infoUtenteBean = listaPazientiController.getInfoPsicologo();
+        labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        popolaLista();
     }
 
-    private void PopolaLista() {
+    private void popolaLista() {
         try {
-            List<PazientiNumTestBean> listaPazienti = ListaPazientiController.getListaPazienti();
-            CreaVBoxListaPazienti(listaPazienti);
+            List<PazientiNumTestBean> listaPazienti = listaPazientiController.getListaPazienti();
+            creaVBoxListaPazienti(listaPazienti);
         }catch (DAOException e) {
             logger.info("Non non ci sono appuntamenti", e);
-            ListaVuota.setText("Non esistono appuntamenti");
+            listaVuota.setText("Non esistono appuntamenti");
         }
     }
 
-    private void CreaVBoxListaPazienti( List<PazientiNumTestBean> listaPazienti) {
-        ListViewPazienti.getItems().clear();
+    private void creaVBoxListaPazienti(List<PazientiNumTestBean> listaPazienti) {
+        listViewPazienti.getItems().clear();
 
         ObservableList<Node> items = FXCollections.observableArrayList();
 
         for (PazientiNumTestBean paz : listaPazienti) {
 
-            VBox BoxPaziente= new VBox();
-            HBox HBoxPaziente= new HBox();
-            ImageView ImmaginePaziente= new ImageView();
-            Image image;
+            VBox boxPaziente = new VBox();
+            HBox hBoxPaziente = new HBox();
+            ImageView immaginePaziente = new ImageView();
 
-            Label NomePaziente = new Label("\n     NOME:" + " " + paz.getNome());
-            Label CognomePaziente = new Label("     COGNOME:" + " " + paz.getCognome());
+            Label nomePaziente = new Label("\n     NOME:" + " " + paz.getNome());
+            Label cognomePaziente = new Label("     COGNOME:" + " " + paz.getCognome());
 
             if(paz.getNumTest()>0) {
-                NomePaziente.setStyle("-fx-font-weight: bold;");
-                CognomePaziente.setStyle("-fx-font-weight: bold;");
+                nomePaziente.setStyle("-fx-font-weight: bold;");
+                cognomePaziente.setStyle("-fx-font-weight: bold;");
 
             }
 
-            NomePaziente.setTextFill(Color.WHITE);
-            CognomePaziente.setTextFill(Color.WHITE);
+            nomePaziente.setTextFill(Color.WHITE);
+            cognomePaziente.setTextFill(Color.WHITE);
 
-            BoxPaziente.getChildren().addAll(NomePaziente,CognomePaziente);
+            boxPaziente.getChildren().addAll(nomePaziente, cognomePaziente);
 
-            if (paz.getGenere().equals("M")) {
-                image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaMaschio.png")));
-                ImmaginePaziente.setImage(image);
+            ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,paz.getGenere());
+            imageDecorator.loadImage();
 
-            } else {
-                image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaFemmina.png")));
-                ImmaginePaziente.setImage(image);
-            }
+            hBoxPaziente.getChildren().addAll(immaginePaziente, boxPaziente);
+            items.add(hBoxPaziente);
 
-            HBoxPaziente.getChildren().addAll(ImmaginePaziente,BoxPaziente);
-            items.add(HBoxPaziente);
-
-            HBoxPaziente.setUserData(paz);
+            hBoxPaziente.setUserData(paz);
 
         }
 
-        ListViewPazienti.setFixedCellSize(100);
-        ListViewPazienti.getItems().addAll(items);
+        listViewPazienti.setFixedCellSize(100);
+        listViewPazienti.getItems().addAll(items);
     }
     @FXML
     public void goToHome() {
         try {
-            Stage ListaPazienti = (Stage) Home.getScene().getWindow();
-            ListaPazienti.close();
+            Stage listaPazienti = (Stage) home.getScene().getWindow();
+            listaPazienti.close();
 
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
         }catch(IOException e) {
@@ -109,9 +104,9 @@ public class ListaPazientiGraphicController {
 
     }
     @FXML
-    public void NodoSelezionato() {
+    public void nodoSelezionato() {
         try {
-            Node nodo = ListViewPazienti.getSelectionModel().getSelectedItem();
+            Node nodo = listViewPazienti.getSelectionModel().getSelectedItem();
             if(nodo==null) {
                 return;
             }
@@ -119,10 +114,10 @@ public class ListaPazientiGraphicController {
             PazientiNumTestBean paziente =(PazientiNumTestBean) nodo.getUserData();
             String username=paziente.getUsername();
 
-            Stage ListaPazienti = (Stage) ListViewPazienti.getScene().getWindow();
-            ListaPazienti.close();
+            Stage listaPazienti = (Stage) listViewPazienti.getScene().getWindow();
+            listaPazienti.close();
 
-            ListaPazientiController.setUsername(username);
+            listaPazientiController.setUsername(username);
 
             navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
         } catch (IOException e) {

@@ -4,13 +4,9 @@ public class TestResultBean {
     private Integer risultatoUltimoTest;
     private Double risultatoTestPrecedente;
 
-    public TestResultBean() {}
-
-    public TestResultBean(Integer risultatoUltimoTest, Double risultatoTestPrecedente) {
-        this.risultatoUltimoTest=risultatoUltimoTest;
-        this.risultatoTestPrecedente=risultatoTestPrecedente;
+    public TestResultBean() {
+        // Questo costruttore è vuoto perché non sono necessarie operazioni iniziali specifiche.
     }
-
 
     public Integer getRisultatoUltimoTest() {
         return risultatoUltimoTest;

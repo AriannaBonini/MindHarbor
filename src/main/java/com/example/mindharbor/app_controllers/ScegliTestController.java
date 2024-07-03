@@ -1,25 +1,19 @@
 package com.example.mindharbor.app_controllers;
 
-import com.example.mindharbor.Enum.UserType;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.exceptions.DAOException;
-import com.example.mindharbor.graphic_controllers.HomePazienteGraphicController;
 import com.example.mindharbor.mockapi.BoundaryMockAPI;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.model.Utente;
-import com.example.mindharbor.patterns.ClassObserver;
-import com.example.mindharbor.patterns.Observer;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
-
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ScegliTestController {
@@ -53,7 +47,7 @@ public class ScegliTestController {
     public String getUsername() {return NavigatorSingleton.getInstance().getParametro();}
     public void setUsername(String username) {NavigatorSingleton.getInstance().setParametro(username);}
 
-    public void NotificaTest(String usernamePaziente, String nomeTest) throws DAOException {
+    public void notificaTest(String usernamePaziente, String nomeTest) throws DAOException {
         try {
             new TestPsicologicoDAO().assegnaTest(new TestPsicologico(null, null, (new Psicologo(SessionManager.getInstance().getCurrentUser().getUsername())), new Paziente(usernamePaziente), nomeTest, null));
         }catch (SQLException e) {

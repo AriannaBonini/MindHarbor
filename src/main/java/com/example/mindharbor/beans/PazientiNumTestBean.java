@@ -2,7 +2,7 @@ package com.example.mindharbor.beans;
 
 public class PazientiNumTestBean {
     private String username;
-    private Integer numTest;
+    private final Integer numTest;
     private String nome;
     private String cognome;
     private String genere;
@@ -26,10 +26,6 @@ public class PazientiNumTestBean {
 
     public Integer getNumTest() {
         return numTest;
-    }
-
-    public void setNumTest(Integer numTest) {
-        this.numTest = numTest;
     }
 
     public String getNome() {

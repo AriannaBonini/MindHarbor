@@ -39,6 +39,7 @@
                   <Label fx:id="NomePsicologo" prefHeight="18.0" prefWidth="116.0" textFill="WHITE" />
                   <Label fx:id="CognomePsicologo" prefHeight="18.0" prefWidth="116.0" textFill="WHITE" />
                   <Label fx:id="CostoOrario" prefHeight="18.0" prefWidth="116.0" textFill="WHITE" />
+                  <Label fx:id="NomeStudio" prefHeight="18.0" prefWidth="116.0" textFill="WHITE" />
                </children>
             </VBox>
          </children>

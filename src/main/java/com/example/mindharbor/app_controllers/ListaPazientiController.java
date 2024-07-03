@@ -5,7 +5,6 @@ import com.example.mindharbor.beans.PazientiNumTestBean;
 import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.PazientiNumTest;
-import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
@@ -21,12 +20,12 @@ public class ListaPazientiController {
         List<PazientiNumTestBean> result;
         try {
 
-            List<PazientiNumTest> ListaPazienti = new PazienteDAO().trovaPaziente(
+            List<PazientiNumTest> listaPazienti = new PazienteDAO().trovaPaziente(
                     SessionManager.getInstance().getCurrentUser().getUsername());
 
             List<PazientiNumTestBean> pazientiNumTestBeanList = new ArrayList<>();
 
-            for (PazientiNumTest paz : ListaPazienti) {
+            for (PazientiNumTest paz : listaPazienti) {
                 PazientiNumTestBean pazientiTestBean = new PazientiNumTestBean(
                         paz.getPaziente().getUsername(),
                         paz.getNumTest(),

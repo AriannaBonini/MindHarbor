@@ -1,6 +1,6 @@
 package com.example.mindharbor.model;
 
-import com.example.mindharbor.Enum.UserType;
+import com.example.mindharbor.user_type.UserType;
 
 
 

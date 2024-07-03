@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.Enum.UserType;
+import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.beans.LoginCredentialBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.exceptions.SessionUserException;
@@ -24,7 +24,9 @@ public class LoginGraphicController implements Observer{
     @FXML
     private Label msgLbl;
     @FXML
-    private TextField usernameTextField, enterPasswordField;
+    private TextField usernameTextField;
+    @FXML
+    private TextField enterPasswordField;
     @FXML
     private Button accediButton;
 

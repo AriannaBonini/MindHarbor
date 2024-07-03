@@ -32,7 +32,7 @@ public class AppuntamentiPazienteController {
                         app.getPaziente().getCognome(),
                         app.getPaziente().getUsername(),
                         app.getPsicologo().getUsername(),
-                        "",
+                        null,
                         0);
 
                 appuntamentiBeanList.add(appuntamentiBean);
@@ -41,5 +41,13 @@ public class AppuntamentiPazienteController {
             throw new DAOException(e.getMessage());
         }
         return appuntamentiBeanList;
+    }
+
+    public void modificaStatoNotificaAppuntamenti() throws DAOException{
+        try {
+            new  AppuntamentoDAO().updateStatoNotificaPaziente(SessionManager.getInstance().getCurrentUser().getUsername());
+        }catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
     }
 }

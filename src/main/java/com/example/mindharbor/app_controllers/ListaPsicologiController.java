@@ -34,6 +34,7 @@ public class ListaPsicologiController {
     }
 
     public HomeInfoUtenteBean getInfoPaziente() {return new setInfoUtente().getInfo();}
+    public void setUsername(String username) {navigator.setParametro(username);}
 
 
     public void deleteAppuntamento() {navigator.deleteAppuntamentoBean();}

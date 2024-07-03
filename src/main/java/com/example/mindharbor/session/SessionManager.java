@@ -1,9 +1,8 @@
 package com.example.mindharbor.session;
 
-import com.example.mindharbor.dao.UtenteDao;
+
 import com.example.mindharbor.exceptions.SessionUserException;
 import com.example.mindharbor.model.Utente;
-
 import java.util.ArrayList;
 import java.util.List;
 
