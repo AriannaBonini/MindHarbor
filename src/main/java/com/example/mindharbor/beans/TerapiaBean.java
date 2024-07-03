@@ -6,8 +6,8 @@ public class TerapiaBean {
     private String psicologo;
     private String paziente;
     private String terapia;
-    private Date dataTerapia;
-    private Date dataTest;
+    private final Date dataTerapia;
+    private final Date dataTest;
 
     public TerapiaBean(String psicologo, String paziente, String terapia, Date dataTerapia, Date dataTest) {
         this.psicologo=psicologo;
@@ -46,15 +46,8 @@ public class TerapiaBean {
         return dataTerapia;
     }
 
-    public void setDataTerapia(Date dataTerapia) {
-        this.dataTerapia = dataTerapia;
-    }
-
     public Date getDataTest() {
         return dataTest;
     }
 
-    public void setDataTest(Date dataTest) {
-        this.dataTest = dataTest;
-    }
 }

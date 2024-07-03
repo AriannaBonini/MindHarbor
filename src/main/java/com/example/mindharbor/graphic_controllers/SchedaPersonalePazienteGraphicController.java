@@ -4,17 +4,17 @@ import com.example.mindharbor.app_controllers.SchedaPersonalePazienteController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.patterns.Decorator.GenereDecorator;
+import com.example.mindharbor.patterns.Decorator.ImageDecorator;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
-import java.util.Objects;
 
 
 public class SchedaPersonalePazienteGraphicController {
@@ -75,12 +75,11 @@ public class SchedaPersonalePazienteGraphicController {
 
 
     private void CreaSchedaPersonale(PazientiBean paziente) {
-        Image image;
 
         NomePaziente.setText(paziente.getNome());
         CognomePaziente.setText(paziente.getCognome());
 
-        EtàPaziente.setText(paziente.getEtà()+ " anni");
+        EtàPaziente.setText(paziente.getAnni()+ " anni");
 
         if(paziente.getDiagnosi()==null || paziente.getDiagnosi().isEmpty()) {
             DiagnosiPaziente.setText("Diagnosi Sconosciuta");
@@ -88,15 +87,8 @@ public class SchedaPersonalePazienteGraphicController {
             DiagnosiPaziente.setText(paziente.getDiagnosi());
         }
 
-        if (paziente.getGenere().equals("M")) {
-            image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaMaschio.png")));
-            ImmaginePaziente.setImage(image);
-
-        } else {
-            image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaFemmina.png")));
-            ImmaginePaziente.setImage(image);
-        }
-
+        ImageDecorator imageDecorator= new GenereDecorator(ImmaginePaziente,paziente.getGenere());
+        imageDecorator.loadImage();
     }
 
     @FXML

@@ -1,12 +1,10 @@
 package com.example.mindharbor.dao;
 
-import com.example.mindharbor.Enum.UserType;
+import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.session.ConnectionFactory;
-import wiremock.com.github.jknack.handlebars.internal.antlr.atn.SemanticContext;
-import wiremock.org.checkerframework.checker.units.qual.A;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.example.mindharbor.dao;
 
-import com.example.mindharbor.Enum.UserType;
+import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.PazientiNumTest;
 import com.example.mindharbor.model.Utente;

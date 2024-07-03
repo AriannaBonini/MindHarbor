@@ -23,7 +23,7 @@ public class HomePazienteController {
         }
     }
 
-    public void Logout() {
+    public void logout() {
         SessionManager sessionManager = SessionManager.getInstance();
         sessionManager.logout();
     }

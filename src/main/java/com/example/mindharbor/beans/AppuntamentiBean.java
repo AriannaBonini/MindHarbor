@@ -1,16 +1,16 @@
 package com.example.mindharbor.beans;
 
 public class AppuntamentiBean {
-        private String Data;
-        private String Ora;
+        private String data;
+        private String ora;
         private String usernamePaziente;
         private String usernamePsicologo;
         private String nomePsicologo;
         private String cognomePsicologo;
         private String nomePaziente;
         private String cognomePaziente;
-        private Integer IdAppuntamento;
-        private Integer età;
+        private Integer idAppuntamento;
+        private Integer anni;
         private String genere;
         private Integer notificaRichiesta;
 
@@ -18,39 +18,39 @@ public class AppuntamentiBean {
     public AppuntamentiBean() {
     }
 
-    public AppuntamentiBean(String Data,String Ora,String nomePsicologo,String cognomePsicologo,String nomePaziente,String cognomePaziente,String usernamePaziente,String usernamePsicologo, Integer IdAppuntamento,Integer età,String genere, Integer notificaRichiesta) {
-            this.Data = Data;
-            this.Ora= Ora;
+    public AppuntamentiBean(String data, String ora, String nomePsicologo, String cognomePsicologo, String nomePaziente, String cognomePaziente, String usernamePaziente, String usernamePsicologo, Integer idAppuntamento, Integer anni, String genere, Integer notificaRichiesta) {
+            this.data = data;
+            this.ora = ora;
             this.usernamePsicologo = usernamePsicologo;
             this.usernamePaziente= usernamePaziente;
             this.nomePaziente = nomePaziente;
             this.cognomePaziente = cognomePaziente;
             this.nomePsicologo = nomePsicologo;
             this.cognomePsicologo = cognomePsicologo;
-            this.IdAppuntamento=IdAppuntamento;
-            this.età=età;
+            this.idAppuntamento = idAppuntamento;
+            this.anni = anni;
             this.genere=genere;
             this.notificaRichiesta=notificaRichiesta;
         }
 
-    public AppuntamentiBean(String Data,String Ora,String nomePsicologo,String cognomePsicologo,String nomePaziente,String cognomePaziente,String usernamePaziente,String usernamePsicologo, Integer IdAppuntamento,Integer età) {
-        this(Data, Ora, nomePsicologo, cognomePsicologo, nomePaziente, cognomePaziente, usernamePaziente, usernamePsicologo, IdAppuntamento, età, null,null);
+    public AppuntamentiBean(String data, String ora, String nomePsicologo, String cognomePsicologo, String nomePaziente, String cognomePaziente, String usernamePaziente, String usernamePsicologo, Integer idAppuntamento, Integer anni) {
+        this(data, ora, nomePsicologo, cognomePsicologo, nomePaziente, cognomePaziente, usernamePaziente, usernamePsicologo, idAppuntamento, anni, null,null);
     }
 
     public String getData() {
-        return Data;
+        return data;
     }
 
-        public void setData(String Data) {
-            this.Data = Data;
+        public void setData(String data) {
+            this.data = data;
         }
 
         public String getOra() {
-            return Ora;
+            return ora;
         }
 
-        public void setOra(String Ora) {
-            this.Ora = Ora;
+        public void setOra(String ora) {
+            this.ora = ora;
         }
 
         public String getusernamePaziente() {
@@ -70,12 +70,7 @@ public class AppuntamentiBean {
         }
 
         public String getNomePsicologo() {return nomePsicologo;}
-
-        public void setNomePsicologo(String nomePsicologo) {this.nomePsicologo = nomePsicologo;}
-
         public String getCognomePsicologo() {return cognomePsicologo;}
-
-        public void setCognomePsicologo(String cognomePsicologo) {this.cognomePsicologo = cognomePsicologo;}
 
         public String getNomePaziente() {return nomePaziente;}
 
@@ -85,19 +80,16 @@ public class AppuntamentiBean {
 
         public void setCognomePaziente(String cognomePaziente) { this.cognomePaziente = cognomePaziente;}
 
-    public Integer getEtà() {return età;}
+        public Integer getAnni() {return anni;}
 
-    public void setEtà(Integer età) {this.età = età;}
+        public void setAnni(Integer anni) {this.anni = anni;}
 
-    public Integer getIdAppuntamento() {return IdAppuntamento;}
+        public Integer getIdAppuntamento() {return idAppuntamento;}
 
-    public void setIdAppuntamento(Integer idAppuntamento) {IdAppuntamento = idAppuntamento;}
+        public String getGenere() {return genere;}
 
-    public String getGenere() {return genere;}
+        public void setGenere(String genere) {this.genere = genere;}
 
-    public void setGenere(String genere) {this.genere = genere;}
+        public Integer getNotificaRichiesta() {return notificaRichiesta;}
 
-    public Integer getNotificaRichiesta() {return notificaRichiesta;}
-
-    public void setNotificaRichiesta(Integer notificaRichiesta) {this.notificaRichiesta = notificaRichiesta;}
 }

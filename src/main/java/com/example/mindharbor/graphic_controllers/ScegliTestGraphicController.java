@@ -4,6 +4,8 @@ import com.example.mindharbor.app_controllers.ScegliTestController;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.patterns.Decorator.GenereDecorator;
+import com.example.mindharbor.patterns.Decorator.ImageDecorator;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.animation.KeyFrame;
@@ -12,7 +14,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -20,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 public class ScegliTestGraphicController {
 
@@ -58,21 +58,14 @@ public class ScegliTestGraphicController {
     }
 
     private void AggiungiInformazioni(PazientiBean paziente) {
-        Image image;
 
         NomePaziente.setText(paziente.getNome());
         CognomePaziente.setText(paziente.getCognome());
 
-        EtàPaziente.setText(paziente.getEtà()+ " anni");
+        EtàPaziente.setText(paziente.getAnni()+ " anni");
 
-        if (paziente.getGenere().equals("M")) {
-            image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaMaschio.png")));
-            ImmaginePaziente.setImage(image);
-
-        } else {
-            image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaFemmina.png")));
-            ImmaginePaziente.setImage(image);
-        }
+        ImageDecorator imageDecorator= new GenereDecorator(ImmaginePaziente,paziente.getGenere());
+        imageDecorator.loadImage();
 
     }
     @FXML
@@ -143,7 +136,7 @@ public class ScegliTestGraphicController {
             timeline.play();
         } else {
             try {
-                scegliTest.NotificaTest(username, nomeTest);
+                scegliTest.notificaTest(username, nomeTest);
 
                 Alert alert= new AlertMessage().Informazione("Operazione Completata","Esito Positivo", "Test assegnato con successo");
                 alert.show();

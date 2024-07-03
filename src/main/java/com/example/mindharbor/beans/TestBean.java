@@ -3,7 +3,6 @@ package com.example.mindharbor.beans;
 import java.util.Date;
 
 public class TestBean {
-
     private String nomeTest;
     private String psicologo;
     private String paziente;
@@ -26,9 +25,6 @@ public class TestBean {
     public String getNomeTest() {
         return nomeTest;
     }
-    public void setNomeTest(String nomeTest) {
-        this.nomeTest = nomeTest;
-    }
 
     public String getPsicologo() {
         return psicologo;
@@ -48,7 +44,6 @@ public class TestBean {
     public Integer getRisultato() {
         return risultato;
     }
-    public void setRisultato(Integer risultato) {this.risultato = risultato;}
 
     public Date getData() {
         return data;
@@ -58,8 +53,5 @@ public class TestBean {
 
     public Integer getSvolto() {
         return svolto;
-    }
-    public void setSvolto(Integer svolto) {
-        this.svolto = svolto;
     }
 }

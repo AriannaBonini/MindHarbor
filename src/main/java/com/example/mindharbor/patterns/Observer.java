@@ -1,6 +1,6 @@
 package com.example.mindharbor.patterns;
 
-import com.example.mindharbor.Enum.UserType;
+import com.example.mindharbor.user_type.UserType;
 
 public interface Observer {
 

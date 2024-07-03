@@ -19,11 +19,21 @@ import java.io.IOException;
 
 public class InserisciInfoGraphicController {
     @FXML
-    private TextField CampoNome, CampoCognome, CampoAnni;
+    private TextField campoNome;
     @FXML
-    private Label LabelNomePaziente,Home, Conferma, Info;
+    private TextField campoCognome;
     @FXML
-    private ImageView TornaIndietro;
+    private TextField campoAnni;
+    @FXML
+    private Label labelNomePaziente;
+    @FXML
+    private Label home;
+    @FXML
+    private Label conferma;
+    @FXML
+    private Label info;
+    @FXML
+    private ImageView tornaIndietro;
 
     private static final Logger logger = LoggerFactory.getLogger(InserisciInfoGraphicController.class);
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
@@ -32,26 +42,26 @@ public class InserisciInfoGraphicController {
 
     public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = inserisciInfoController.getInfoPaziente();
-        LabelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        appuntamento=inserisciInfoController.CheckAppuntamento();
+        appuntamento=inserisciInfoController.checkAppuntamento();
 
-        if(appuntamento.getNomePaziente()!=null && appuntamento.getCognomePaziente()!=null && appuntamento.getEtà()!=null) {
-            CampoNome.setText(appuntamento.getNomePaziente());
-            CampoCognome.setText(appuntamento.getCognomePaziente());
-            CampoAnni.setText(String.valueOf(appuntamento.getEtà()));
+        if(appuntamento.getNomePaziente()!=null && appuntamento.getCognomePaziente()!=null && appuntamento.getAnni()!=null) {
+            campoNome.setText(appuntamento.getNomePaziente());
+            campoCognome.setText(appuntamento.getCognomePaziente());
+            campoAnni.setText(String.valueOf(appuntamento.getAnni()));
         }
     }
     @FXML
-    public void ClickConferma() {
-        if(CampoNome.getText().isEmpty() || CampoCognome.getText().isEmpty() || CampoAnni.getText().isEmpty()) {
-            new LabelDuration().Duration(Info,"Compila tutti i campi");
+    public void clickConferma() {
+        if(campoNome.getText().isEmpty() || campoCognome.getText().isEmpty() || campoAnni.getText().isEmpty()) {
+            new LabelDuration().Duration(info,"Compila tutti i campi");
         } else {
             try {
-                if (inserisciInfoController.CheckDati(new PazientiBean(CampoNome.getText(), CampoCognome.getText(), null, Integer.valueOf(CampoAnni.getText()), "", ""))) {
+                if (inserisciInfoController.checkDati(new PazientiBean(campoNome.getText(), campoCognome.getText(), null, Integer.valueOf(campoAnni.getText()), "", ""))) {
                     goToListaPsicologi();
                 }else {
-                    new LabelDuration().Duration(Info,"Dati errati");
+                    new LabelDuration().Duration(info,"Dati errati");
                 }
             }catch (DAOException e) {
                 logger.info("Errore nel controllo dei dati del paziente");
@@ -60,13 +70,13 @@ public class InserisciInfoGraphicController {
     }
     private void goToListaPsicologi() {
         try {
-            appuntamento.setNomePaziente(CampoNome.getText());
-            appuntamento.setCognomePaziente(CampoCognome.getText());
-            appuntamento.setEtà(Integer.valueOf(CampoAnni.getText()));
+            appuntamento.setNomePaziente(campoNome.getText());
+            appuntamento.setCognomePaziente(campoCognome.getText());
+            appuntamento.setAnni(Integer.valueOf(campoAnni.getText()));
 
             inserisciInfoController.setAppuntamento(appuntamento);
 
-            Stage inserisciInfo = (Stage) Conferma.getScene().getWindow();
+            Stage inserisciInfo = (Stage) conferma.getScene().getWindow();
             inserisciInfo.close();
 
             navigator.gotoPage("/com/example/mindharbor/ListaPsicologi.fxml");
@@ -79,7 +89,7 @@ public class InserisciInfoGraphicController {
     public void goToHome() {
         try {
             inserisciInfoController.deleteAppuntamento();
-            Stage inserisciInfo = (Stage) Home.getScene().getWindow();
+            Stage inserisciInfo = (Stage) home.getScene().getWindow();
             inserisciInfo.close();
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
         }catch(IOException e) {
@@ -88,9 +98,9 @@ public class InserisciInfoGraphicController {
     }
 
     @FXML
-    public void TornaIndietro() {
+    public void tornaIndietro() {
         try {
-            Stage inserisciInfo = (Stage) TornaIndietro.getScene().getWindow();
+            Stage inserisciInfo = (Stage) tornaIndietro.getScene().getWindow();
             inserisciInfo.close();
             navigator.gotoPage("/com/example/mindharbor/SelezionaDataEOra.fxml");
         }catch(IOException e) {

@@ -3,7 +3,7 @@ package com.example.mindharbor.beans;
 
 public class LoginCredentialBean {
     private String username;
-    private String password;
+    private final String password;
 
     public LoginCredentialBean(String username, String password) {
         this.username = username;

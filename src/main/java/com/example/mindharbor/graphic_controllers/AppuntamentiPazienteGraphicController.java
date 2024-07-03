@@ -17,20 +17,26 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 public class AppuntamentiPazienteGraphicController {
     @FXML
-    private Text ListaVuotaInProgramma, ListaVuotaPassati;
+    private Text listaVuotaInProgramma;
     @FXML
-    private Label LabelNomePazienteTab2, LabelNomePazienteTab1;
+    private Text listaVuotaPassati;
     @FXML
-    private ListView<Node> ListViewInProgramma, ListViewPassati;
+    private Label labelNomePazienteTab2;
     @FXML
-    private Label HomeTab1, HomeTab2;
+    private Label labelNomePazienteTab1;
+    @FXML
+    private ListView<Node> listViewInProgramma;
+    @FXML
+    private ListView<Node> listViewPassati;
+    @FXML
+    private Label homeTab1;
+    @FXML
+    private Label homeTab2;
 
     private final AppuntamentiPazienteController controllerAppuntamenti= new AppuntamentiPazienteController();
 
@@ -38,20 +44,16 @@ public class AppuntamentiPazienteGraphicController {
 
     public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = controllerAppuntamenti.getInfoPaziente();
-        LabelNomePazienteTab1.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        LabelNomePazienteTab2.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        labelNomePazienteTab1.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        labelNomePazienteTab2.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        ModificaStatoNotifica();
+        modificaStatoNotifica();
 
-        try {
-            tab1Selezionato();
-        } catch (SQLException e) {
-            logger.info("Problemi di connessione al database", e);
-        }
+        tab1Selezionato();
 
     }
 
-    private void ModificaStatoNotifica() {
+    private void modificaStatoNotifica() {
         try {
             controllerAppuntamenti.modificaStatoNotificaAppuntamenti();
         } catch (DAOException e ) {
@@ -61,10 +63,10 @@ public class AppuntamentiPazienteGraphicController {
 
 
     @FXML
-    public void tab1Selezionato() throws SQLException {ricercaAppuntamentiPaziente("IN PROGRAMMA",ListaVuotaInProgramma,ListViewInProgramma);}
+    public void tab1Selezionato(){ricercaAppuntamentiPaziente("IN PROGRAMMA", listaVuotaInProgramma, listViewInProgramma);}
     @FXML
     public void tab2Selezionato() {
-        ricercaAppuntamentiPaziente("PASSATI",ListaVuotaPassati,ListViewPassati);
+        ricercaAppuntamentiPaziente("PASSATI", listaVuotaPassati, listViewPassati);
     }
 
     private void ricercaAppuntamentiPaziente(String selectedTabName, Text text, ListView<Node> listView) {
@@ -73,33 +75,33 @@ public class AppuntamentiPazienteGraphicController {
             if (appuntamenti.isEmpty()) {
                 text.setText("Non ci sono appuntamenti");
             }else {
-                CreaVBoxAppuntamentiPaziente(appuntamenti, listView);
+                creaVBoxAppuntamentiPaziente(appuntamenti, listView);
             }
         }catch (DAOException e) {
             logger.info("Non non ci sono appuntamenti", e);
         }
     }
 
-    private void CreaVBoxAppuntamentiPaziente(List<AppuntamentiBean> appuntamenti, ListView<Node> listView) {
+    private void creaVBoxAppuntamentiPaziente(List<AppuntamentiBean> appuntamenti, ListView<Node> listView) {
         listView.getItems().clear();
 
         ObservableList<Node> items = FXCollections.observableArrayList();
 
         for (AppuntamentiBean app : appuntamenti) {
-            VBox VBox = new VBox();
+            VBox vBox = new VBox();
 
-            Label DataAppuntamento = new Label("DATA:" + " " + app.getData());
-            Label OraAppuntamento = new Label("ORA:" + " " + app.getOra());
-            Label NomePsicologo = new Label("PSICOLOGO:" + " " + app.getNomePsicologo() + " " + app.getCognomePsicologo());
-            Label NomePaziente = new Label("PAZIENTE:" + " " + app.getNomePaziente() + " " + app.getCognomePaziente());
+            Label dataAppuntamento = new Label("DATA:" + " " + app.getData());
+            Label oraAppuntamento = new Label("ORA:" + " " + app.getOra());
+            Label nomePsicologo = new Label("PSICOLOGO:" + " " + app.getNomePsicologo() + " " + app.getCognomePsicologo());
+            Label nomePaziente = new Label("PAZIENTE:" + " " + app.getNomePaziente() + " " + app.getCognomePaziente());
 
-            DataAppuntamento.setTextFill(Color.WHITE);
-            OraAppuntamento.setTextFill(Color.WHITE);
-            NomePsicologo.setTextFill(Color.WHITE);
-            NomePaziente.setTextFill(Color.WHITE);
+            dataAppuntamento.setTextFill(Color.WHITE);
+            oraAppuntamento.setTextFill(Color.WHITE);
+            nomePsicologo.setTextFill(Color.WHITE);
+            nomePaziente.setTextFill(Color.WHITE);
 
-            VBox.getChildren().addAll(DataAppuntamento, OraAppuntamento, NomePsicologo, NomePaziente);
-            items.add(VBox);
+            vBox.getChildren().addAll(dataAppuntamento, oraAppuntamento, nomePsicologo, nomePaziente);
+            items.add(vBox);
         }
 
         listView.setFixedCellSize(100);
@@ -107,14 +109,14 @@ public class AppuntamentiPazienteGraphicController {
     }
 
     @FXML
-    public void goToHomeFromTab1() { goToHome(HomeTab1);}
+    public void goToHomeFromTab1() { goToHome(homeTab1);}
     @FXML
-    public void goToHomeFromTab2() { goToHome(HomeTab2);}
+    public void goToHomeFromTab2() { goToHome(homeTab2);}
 
     private void goToHome(Label label) {
         try {
-            Stage Appuntamenti = (Stage) label.getScene().getWindow();
-            Appuntamenti.close();
+            Stage appuntamenti = (Stage) label.getScene().getWindow();
+            appuntamenti.close();
 
             NavigatorSingleton navigator= NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");

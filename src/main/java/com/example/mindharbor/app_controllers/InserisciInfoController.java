@@ -1,6 +1,6 @@
 package com.example.mindharbor.app_controllers;
 
-import com.example.mindharbor.Enum.UserType;
+import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
@@ -17,16 +17,16 @@ public class InserisciInfoController {
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
     public HomeInfoUtenteBean getInfoPaziente() {return new setInfoUtente().getInfo();}
 
-    public boolean CheckDati(PazientiBean pazienteBean) throws DAOException {
+    public boolean checkDati(PazientiBean pazienteBean) throws DAOException {
         try {
-            return new PazienteDAO().CheckPaziente(new Paziente(pazienteBean.getEtà(), "", SessionManager.getInstance().getCurrentUser().getUsername(), pazienteBean.getNome(), pazienteBean.getCognome(), UserType.PAZIENTE, "", "", ""));
+            return new PazienteDAO().CheckPaziente(new Paziente(pazienteBean.getAnni(), "", SessionManager.getInstance().getCurrentUser().getUsername(), pazienteBean.getNome(), pazienteBean.getCognome(), UserType.PAZIENTE, "", "", ""));
 
         }catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
-    public AppuntamentiBean CheckAppuntamento() {return navigator.getAppuntamentoBean();}
+    public AppuntamentiBean checkAppuntamento() {return navigator.getAppuntamentoBean();}
 
     public void deleteAppuntamento() {navigator.deleteAppuntamentoBean();}
     public void setAppuntamento(AppuntamentiBean appuntamento) {navigator.setAppuntamentoBean(appuntamento);}

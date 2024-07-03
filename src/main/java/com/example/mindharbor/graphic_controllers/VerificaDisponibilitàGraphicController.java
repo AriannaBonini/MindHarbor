@@ -4,6 +4,10 @@ import com.example.mindharbor.app_controllers.VerificaDisponibilitàController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.patterns.Decorator.DisponibilitàDecorator;
+import com.example.mindharbor.patterns.Decorator.GenereDecorator;
+import com.example.mindharbor.patterns.Decorator.ImageDecorator;
+import com.example.mindharbor.patterns.Decorator.TestDecorator;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.animation.KeyFrame;
@@ -18,7 +22,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.Objects;
 
@@ -67,15 +70,9 @@ public class VerificaDisponibilitàGraphicController {
         LabelCognome.setText(richiestaBean.getCognomePaziente());
         LabelData.setText(richiestaBean.getData());
         LabelOra.setText(richiestaBean.getOra());
-        Image image;
 
-        if((richiestaBean.getGenere()).equals("F")) {
-            image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaFemmina.png")));
-            ImmaginePaziente.setImage(image);
-        }else {
-            image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaMaschio.png")));
-            ImmaginePaziente.setImage(image);
-        }
+        ImageDecorator imageDecorator= new GenereDecorator(ImmaginePaziente,richiestaBean.getGenere());
+        imageDecorator.loadImage();
     }
 
 
@@ -106,35 +103,25 @@ public class VerificaDisponibilitàGraphicController {
 
     @FXML
     public void VerificaDisponibilità() {
-        Image image;
+        VerificaDisp.setVisible(false);
+        VerificaDisp.setDisable(true);
+
+        Accetta.setVisible(true);
+        Rifiuta.setVisible(true);
+        Disponibilità.setVisible(true);
+        ImmagineDisponibilità.setVisible(true);
+
+        Rifiuta.setDisable(false);
+
         try {
             if(!verificaDisponibilitàController.verificaDisponibilità(idRichiesta)) {
-                VerificaDisp.setVisible(false);
-                VerificaDisp.setDisable(true);
+                ImageDecorator imageDecorator= new DisponibilitàDecorator(ImmagineDisponibilità,false);
+                imageDecorator.loadImage();
 
-                Accetta.setVisible(true);
-                Rifiuta.setVisible(true);
-                Disponibilità.setVisible(true);
-                Rifiuta.setDisable(false);
-
-                ImmagineDisponibilità.setVisible(true);
-                image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/casellaRossa.png")));
-                ImmagineDisponibilità.setImage(image);
             } else {
-                image= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/casellaVerde.png")));
-                ImmagineDisponibilità.setImage(image);
-                ImmagineDisponibilità.setVisible(true);
-
-                VerificaDisp.setVisible(false);
-                VerificaDisp.setDisable(true);
-
-                Accetta.setVisible(true);
-                Rifiuta.setVisible(true);
-                Disponibilità.setVisible(true);
-
-
+                ImageDecorator imageDecorator= new DisponibilitàDecorator(ImmagineDisponibilità,true);
+                imageDecorator.loadImage();
                 Accetta.setDisable(false);
-                Rifiuta.setDisable(false);
             }
 
         } catch (DAOException e) {
@@ -149,7 +136,7 @@ public class VerificaDisponibilitàGraphicController {
             verificaDisponibilitàController.richiestaAccettata(idRichiesta);
             Alert alert=new AlertMessage().Informazione("SUCCESSO", "Richiesta accettata","Hai un nuovo appuntamento");
 
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
+            new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             alert.showAndWait();
 
             TornaIndietro();
@@ -164,7 +151,7 @@ public class VerificaDisponibilitàGraphicController {
             verificaDisponibilitàController.richiestaRifiutata(idRichiesta);
             Alert alert=new AlertMessage().Informazione("SUCCESSO", "Richiesta rifiutata","appuntamento rifiutato");
 
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
+            new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             alert.showAndWait();
             TornaIndietro();
         } catch (DAOException e) {

@@ -3,7 +3,6 @@ package com.example.mindharbor.app_controllers;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.dao.AppuntamentoDAO;
-import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.session.SessionManager;

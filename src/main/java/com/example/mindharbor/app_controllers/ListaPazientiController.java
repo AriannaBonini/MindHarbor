@@ -20,12 +20,12 @@ public class ListaPazientiController {
         List<PazientiNumTestBean> result;
         try {
 
-            List<PazientiNumTest> ListaPazienti = new PazienteDAO().trovaPaziente(
+            List<PazientiNumTest> listaPazienti = new PazienteDAO().trovaPaziente(
                     SessionManager.getInstance().getCurrentUser().getUsername());
 
             List<PazientiNumTestBean> pazientiNumTestBeanList = new ArrayList<>();
 
-            for (PazientiNumTest paz : ListaPazienti) {
+            for (PazientiNumTest paz : listaPazienti) {
                 PazientiNumTestBean pazientiTestBean = new PazientiNumTestBean(
                         paz.getPaziente().getUsername(),
                         paz.getNumTest(),

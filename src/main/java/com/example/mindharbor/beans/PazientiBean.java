@@ -4,16 +4,16 @@ public class PazientiBean {
     private String nome;
     private String cognome;
     private String genere;
-    private Integer età;
-    private String diagnosi;
+    private final Integer anni;
+    private final String diagnosi;
     private String username;
 
 
-    public PazientiBean(String nome, String cognome,String genere,Integer età,String diagnosi,String username) {
+    public PazientiBean(String nome, String cognome, String genere, Integer anni, String diagnosi, String username) {
         this.nome = nome;
         this.cognome = cognome;
         this.genere= genere;
-        this.età=età;
+        this.anni = anni;
         this.diagnosi=diagnosi;
         this.username=username;
     }
@@ -42,20 +42,12 @@ public class PazientiBean {
         this.genere = genere;
     }
 
-    public Integer getEtà() {
-        return età;
-    }
-
-    public void setEtà(Integer età) {
-        this.età = età;
+    public Integer getAnni() {
+        return anni;
     }
 
     public String getDiagnosi() {
         return diagnosi;
-    }
-
-    public void setDiagnosi(String diagnosi) {
-        this.diagnosi = diagnosi;
     }
 
     public String getUsername() {

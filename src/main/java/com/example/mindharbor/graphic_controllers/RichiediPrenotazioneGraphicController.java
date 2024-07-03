@@ -5,6 +5,8 @@ import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.patterns.Decorator.GenereDecorator;
+import com.example.mindharbor.patterns.Decorator.ImageDecorator;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.animation.KeyFrame;
@@ -12,15 +14,12 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
-import java.util.Objects;
 
 public class RichiediPrenotazioneGraphicController {
 
@@ -31,7 +30,7 @@ public class RichiediPrenotazioneGraphicController {
 
     NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(ListaPsicologiGraphicController.class);
-    private RichiediPrenotazioneController prenotazioneController= new RichiediPrenotazioneController();
+    private final RichiediPrenotazioneController prenotazioneController= new RichiediPrenotazioneController();
 
     public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = prenotazioneController.getPageRichPrenInfo();
@@ -57,16 +56,10 @@ public class RichiediPrenotazioneGraphicController {
         CognomePsicologo.setText(infoPsicologo.getCognome());
         CostoOrario.setText(infoPsicologo.getCostoOrario() + " €/h");
         NomeStudio.setText(infoPsicologo.getNomeStudio());
-        Image image;
 
-        if (infoPsicologo.getGenere().equals("F")) {
-            image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaFemmina.png")));
-            ImmaginePsicologo.setImage(image);
+        ImageDecorator imageDecorator= new GenereDecorator(ImmaginePsicologo,infoPsicologo.getGenere());
+        imageDecorator.loadImage();
 
-        } else {
-            image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaMaschio.png")));
-            ImmaginePsicologo.setImage(image);
-        }
     }
 
     @FXML
@@ -110,7 +103,7 @@ public class RichiediPrenotazioneGraphicController {
 
             Alert alert=new AlertMessage().Informazione("OPERAZIONE COMPLETATA","SUCCESSO", "Richiesta inviata");
 
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
+            new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             alert.showAndWait();
 
             Stage richiediPrenotazione = (Stage) Home.getScene().getWindow();

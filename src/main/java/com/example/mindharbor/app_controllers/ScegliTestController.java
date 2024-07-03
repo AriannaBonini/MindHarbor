@@ -47,7 +47,7 @@ public class ScegliTestController {
     public String getUsername() {return NavigatorSingleton.getInstance().getParametro();}
     public void setUsername(String username) {NavigatorSingleton.getInstance().setParametro(username);}
 
-    public void NotificaTest(String usernamePaziente, String nomeTest) throws DAOException {
+    public void notificaTest(String usernamePaziente, String nomeTest) throws DAOException {
         try {
             new TestPsicologicoDAO().assegnaTest(new TestPsicologico(null, null, (new Psicologo(SessionManager.getInstance().getCurrentUser().getUsername())), new Paziente(usernamePaziente), nomeTest, null));
         }catch (SQLException e) {

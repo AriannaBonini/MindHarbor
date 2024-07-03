@@ -15,4 +15,5 @@ module com.example.mindharbor {
     exports com.example.mindharbor.dao;
     exports com.example.mindharbor.exceptions;
     exports com.example.mindharbor.model;
+    exports com.example.mindharbor.user_type;
 }

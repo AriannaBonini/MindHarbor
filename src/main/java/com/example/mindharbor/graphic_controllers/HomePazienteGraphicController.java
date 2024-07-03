@@ -10,30 +10,43 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class HomePazienteGraphicController {
     @FXML
-    private Label ListaAppuntamenti, Terapia, PrenotaAppuntamento, LabelNomePaziente, NotificaTest, logout, NotificaTerapie, NotificaAppuntamenti;
+    private Label listaAppuntamenti;
+    @FXML
+    private Label terapia;
+    @FXML
+    private Label prenotaAppuntamento;
+    @FXML
+    private Label labelNomePaziente;
+    @FXML
+    private Label notificaTest;
+    @FXML
+    private Label logout;
+    @FXML
+    private Label notificaTerapie;
+    @FXML
+    private Label notificaAppuntamenti;
     private final HomePazienteController homeController= new HomePazienteController();
     private static final Logger logger = LoggerFactory.getLogger(HomePazienteGraphicController.class);
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
 
-    public void initialize() throws SQLException {
+    public void initialize() {
         HomeInfoUtenteBean infoUtenteBean = homeController.getInfoPaziente();
-        LabelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        NotificaNuoviTest();
-        NotificaNuoveTerapie();
-        NotificaNuoviAppuntamenti();
+        notificaNuoviTest();
+        notificaNuoveTerapie();
+        notificaNuoviAppuntamenti();
     }
 
-    private void NotificaNuoviAppuntamenti() {
+    private void notificaNuoviAppuntamenti() {
         try {
             int count= homeController.cercaNuoviAppuntamenti();
             if (count>0) {
-                NotificaAppuntamenti.setVisible(true);
-                NotificaAppuntamenti.setText(String.valueOf(count));
+                notificaAppuntamenti.setVisible(true);
+                notificaAppuntamenti.setText(String.valueOf(count));
             }
 
         } catch (DAOException e) {
@@ -41,12 +54,12 @@ public class HomePazienteGraphicController {
         }
     }
 
-    private void NotificaNuoveTerapie() {
+    private void notificaNuoveTerapie() {
         try {
             int count= homeController.cercaNuoveTerapie();
             if (count>0) {
-                NotificaTerapie.setVisible(true);
-                NotificaTerapie.setText(String.valueOf(count));
+                notificaTerapie.setVisible(true);
+                notificaTerapie.setText(String.valueOf(count));
             }
 
         } catch (DAOException e) {
@@ -56,50 +69,50 @@ public class HomePazienteGraphicController {
     }
 
     @FXML
-    private void onVisualAppuntamentiClick() {
+    public void onVisualAppuntamentiClick() {
         try {
-            Stage HomePaziente = (Stage) ListaAppuntamenti.getScene().getWindow();
-            HomePaziente.close();
+            Stage homePaziente = (Stage) listaAppuntamenti.getScene().getWindow();
+            homePaziente.close();
             navigator.gotoPage("/com/example/mindharbor/ListaAppuntamentiPaziente.fxml");
 
         } catch (IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia appuntamenti", e);
         }
 
     }
 
     @FXML
-    private void onVisualTestClick() {
+    public void onVisualTestClick() {
         try {
-            Stage HomePaziente = (Stage) ListaAppuntamenti.getScene().getWindow();
-            HomePaziente.close();
+            Stage homePaziente = (Stage) listaAppuntamenti.getScene().getWindow();
+            homePaziente.close();
             navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
 
         } catch (IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia dei test", e);
         }
     }
 
 
     @FXML
-    private void clickPrenotaAppuntamento() {
+    public void clickPrenotaAppuntamento() {
         try {
-            Stage HomePaziente = (Stage) PrenotaAppuntamento.getScene().getWindow();
-            HomePaziente.close();
+            Stage homePaziente = (Stage) prenotaAppuntamento.getScene().getWindow();
+            homePaziente.close();
             navigator.gotoPage("/com/example/mindharbor/SelezionaDataEOra.fxml");
 
         } catch (IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia di prenotazione", e);
         }
 
     }
 
 
-    private void NotificaNuoviTest() {
+    private void notificaNuoviTest() {
         try {
             Integer count= homeController.cercaNuoviTestDaSvolgere();
             if (count>0) {
-                NotificaTest.setText(String.valueOf(count));
+                notificaTest.setText(String.valueOf(count));
             }
 
         } catch (DAOException e) {
@@ -108,12 +121,12 @@ public class HomePazienteGraphicController {
     }
 
     @FXML
-    private void Logout() {
+    public void logout() {
         try {
-            homeController.Logout();
+            homeController.logout();
 
-            Stage HomePsicologo= (Stage) logout.getScene().getWindow();
-            HomePsicologo.close();
+            Stage homePsicologo = (Stage) logout.getScene().getWindow();
+            homePsicologo.close();
 
             navigator.gotoPage("/com/example/mindharbor/Login.fxml");
 
@@ -123,10 +136,10 @@ public class HomePazienteGraphicController {
     }
 
     @FXML
-    public void Terapia() {
+    public void terapia() {
         try {
-            Stage HomePsicologo= (Stage) Terapia.getScene().getWindow();
-            HomePsicologo.close();
+            Stage homePsicologo = (Stage) terapia.getScene().getWindow();
+            homePsicologo.close();
 
             navigator.gotoPage("/com/example/mindharbor/PrescrizioniPaziente.fxml");
 

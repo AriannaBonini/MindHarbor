@@ -1,6 +1,6 @@
 package com.example.mindharbor.app_controllers;
 
-import com.example.mindharbor.Enum.UserType;
+import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.beans.LoginCredentialBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.dao.UtenteDao;
@@ -9,7 +9,7 @@ import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.patterns.ClassObserver;
 import java.sql.SQLException;
 
-public class LoginController extends abstractController{
+public class LoginController extends AbstractController {
 
     private ClassObserver observer= new ClassObserver();
 
@@ -25,7 +25,7 @@ public class LoginController extends abstractController{
 
             if (utente.getUserType()==UserType.PAZIENTE){
                 observer.notifyObservers(utente.getUserType());
-            }else if(utente.getUserType()==UserType.PSICOLOGO) {
+            }else{
                 observer.notifyObservers(utente.getUserType());
             }
         }

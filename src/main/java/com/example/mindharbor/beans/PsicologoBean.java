@@ -4,8 +4,8 @@ public class PsicologoBean {
     private String username;
     private String nome;
     private String cognome;
-    private Integer costoOrario;
-    private String nomeStudio;
+    private final Integer costoOrario;
+    private final String nomeStudio;
     private String genere;
 
 
@@ -30,14 +30,9 @@ public class PsicologoBean {
 
     public void setCognome(String cognome) {this.cognome = cognome;}
     public Integer getCostoOrario() {return costoOrario;}
-    public void setCostoOrario(Integer costoOrario) {this.costoOrario = costoOrario;}
 
     public String getNomeStudio() {
         return nomeStudio;
-    }
-
-    public void setNomeStudio(String nomeStudio) {
-        this.nomeStudio = nomeStudio;
     }
 
     public String getGenere() {
