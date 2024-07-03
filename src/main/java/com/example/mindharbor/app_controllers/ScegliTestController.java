@@ -27,7 +27,7 @@ public class ScegliTestController {
                     paziente.getNome(),
                     paziente.getCognome(),
                     paziente.getGenere(),
-                    paziente.getEtà(),
+                    paziente.getAnni(),
                     "",
                     ""
             );

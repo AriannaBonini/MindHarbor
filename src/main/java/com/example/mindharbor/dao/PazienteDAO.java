@@ -206,7 +206,7 @@ public class PazienteDAO {
                 "WHERE " + TABELLA_PAZIENTE + "." + ETA + " = ? AND " + TABELLA_UTENTE + "." + NOME + " = ? " +
                 "AND " + TABELLA_UTENTE + "." + COGNOME + " = ? AND " + TABELLA_UTENTE + "." + USERNAME + " = ? ";
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setInt(1,paziente.getEtà());
+        stmt.setInt(1,paziente.getAnni());
         stmt.setString(2,paziente.getNome());
         stmt.setString(3, paziente.getCognome());
         stmt.setString(4, paziente.getUsername());

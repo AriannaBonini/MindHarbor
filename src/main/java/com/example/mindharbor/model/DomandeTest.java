@@ -7,12 +7,10 @@ public class DomandeTest {
     private List<String> domande;
     private List<Integer> punteggi;
 
-    public DomandeTest() {}
-
-    public DomandeTest(List<String> domande, List<Integer> punteggi) {
-        this.domande= domande;
-        this.punteggi= punteggi;
+    public DomandeTest() {
+        // Costruttore pubblico vuoto
     }
+
     public List<String> getDomande() {
         return domande;
     }

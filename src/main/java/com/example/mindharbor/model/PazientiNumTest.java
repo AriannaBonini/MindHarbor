@@ -3,7 +3,6 @@ package com.example.mindharbor.model;
 public class PazientiNumTest {
         private Integer numTest;
         private Paziente paziente;
-        //nome, cognome, genere e username
 
         public PazientiNumTest() {}
 
@@ -14,9 +13,6 @@ public class PazientiNumTest {
 
         public Integer getNumTest() {
             return numTest;
-        }
-        public void setNumTest(Integer numTest) {
-            this.numTest = numTest;
         }
 
     public Paziente getPaziente() {

@@ -6,8 +6,6 @@ import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Paziente;
-import com.example.mindharbor.model.Psicologo;
-import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
@@ -31,7 +29,7 @@ public class SchedaPersonalePazienteController {
                     paziente.getNome(),
                     paziente.getCognome(),
                     paziente.getGenere(),
-                    paziente.getEtà(),
+                    paziente.getAnni(),
                     paziente.getDiagnosi(),
                     ""
             );

@@ -24,15 +24,7 @@ public class Psicologo extends Utente {
         return costoOrario;
     }
 
-    public void setCostoOrario(Integer costoOrario) {
-        this.costoOrario = costoOrario;
-    }
-
     public String getNomeStudio() {
         return nomeStudio;
-    }
-
-    public void setNomeStudio(String nomeStudio) {
-        this.nomeStudio = nomeStudio;
     }
 }
