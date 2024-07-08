@@ -9,7 +9,6 @@ import com.example.mindharbor.mockapi.BoundaryMockAPI;
 import com.example.mindharbor.model.DomandeTest;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.TestPsicologico;
-import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
@@ -26,7 +25,7 @@ public class SvolgiTestController {
     public Date getData(){return NavigatorSingleton.getInstance().getData();}
 
 
-    public DomandeTestBean CercaDomande(String nomeTest) {
+    public DomandeTestBean cercaDomande(String nomeTest) {
         DomandeTest domandeTest = BoundaryMockAPI.DomandeTest(nomeTest);
 
         return new DomandeTestBean(domandeTest.getDomande(), domandeTest.getPunteggi());
@@ -37,8 +36,8 @@ public class SvolgiTestController {
         try {
             Integer risultato = 0;
 
-            for (int i = 0; i < punteggi.size(); i++) {
-                risultato += punteggi.get(i);
+            for (Integer integer : punteggi) {
+                risultato += integer;
             }
             testResult.setRisultatoUltimoTest(risultato);
             Double progresso = calcolaProgresso(testResult, dataTest, nomeTest);
@@ -52,13 +51,13 @@ public class SvolgiTestController {
 
     public Double calcolaProgresso(TestResultBean testResult, Date dataTest, String nomeTest) throws DAOException {
 
-        Double progressi = null;
+        double progressi;
         try {
 
             Integer punteggioPassato = new TestPsicologicoDAO().trovaTestPassati(new TestPsicologico(dataTest, testResult.getRisultatoUltimoTest(), null, new Paziente(SessionManager.getInstance().getCurrentUser().getUsername()),nomeTest, null));
 
             if (punteggioPassato == null) {
-                return progressi;
+                return null;
 
             } else {
                 if (punteggioPassato == 0) {
@@ -74,7 +73,7 @@ public class SvolgiTestController {
 
                 }
 
-                progressi = (double) (testResult.getRisultatoUltimoTest() - punteggioPassato);
+                progressi = testResult.getRisultatoUltimoTest() - punteggioPassato;
                 progressi = (progressi / Math.abs(punteggioPassato)) * 100;
                 progressi = Math.round(progressi * 100.0) / 100.0;
 

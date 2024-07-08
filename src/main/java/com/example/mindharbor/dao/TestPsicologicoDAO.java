@@ -148,7 +148,7 @@ public class TestPsicologicoDAO {
                 "FROM " + TABELLA_TESTPSICOLOGICO + " " +
                 "WHERE " + DATA + " = (SELECT MAX( " + DATA + ") " +
                 "FROM " + TABELLA_TESTPSICOLOGICO + " "  +
-                "WHERE " + PAZIENTE + " = ? AND " +  SVOLTO + " = 1 AND " + TEST + " = ?) ";
+                "WHERE " + PAZIENTE + " = ? AND " +  SVOLTO + " = 1 AND " + TEST + " = ? ) ";
 
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         stmt.setString(2, testDaAggiungere.getTest());
@@ -175,7 +175,7 @@ public class TestPsicologicoDAO {
         conn = ConnectionFactory.getConnection();
 
         String updateQuery= "UPDATE " +  TABELLA_TESTPSICOLOGICO + " " +
-                "SET " + RISULTATO + " = ? , " +  SVOLTO + " = 1 , " +  STATOPSICOLOGO + " = 1 , " +
+                "SET " + RISULTATO + " = ? , " +  SVOLTO + " = 1 , " +  STATOPSICOLOGO + " = 1  " +
                 "WHERE " + PAZIENTE + " = ? AND " +  DATA + " = ? ";
 
         stmt = conn.prepareStatement(updateQuery);
@@ -237,9 +237,15 @@ public class TestPsicologicoDAO {
         conn = ConnectionFactory.getConnection();
 
         String sql = "SELECT COUNT(*) AS Total " +
-                    "FROM " + TABELLA_TESTPSICOLOGICO + " " +
-                    "WHERE " + SVOLTO + " = 1 AND " +  PSICOLOGO + " = ? AND " + PAZIENTE + " = ? ";
-
+                "FROM " + TABELLA_TESTPSICOLOGICO + " " +
+                "WHERE " + SVOLTO + " = 1 AND " + PSICOLOGO + " = ? AND " + PAZIENTE + " = ? AND " +
+                " NOT EXISTS ( " +
+                "   SELECT 1 " +
+                "   FROM " + TERAPIA + " " +
+                "   WHERE " + TERAPIA + "." + PAZIENTE + " = " + TABELLA_TESTPSICOLOGICO + "." + PAZIENTE + " " +
+                "     AND " + TERAPIA + "." + PSICOLOGO + " = " + TABELLA_TESTPSICOLOGICO + "." + PSICOLOGO + " " +
+                "     AND " + TERAPIA + "." + DATATEST + " = " + TABELLA_TESTPSICOLOGICO + "." + DATA +
+                ")";
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         stmt.setString(1, usernamePsicologo);
         stmt.setString(2, usernamePaziente);
@@ -249,6 +255,8 @@ public class TestPsicologicoDAO {
         if(rs.next()) {
             count = rs.getInt("Total");
         }
+
+        System.out.println(count);
         rs.close();
         stmt.close();
 

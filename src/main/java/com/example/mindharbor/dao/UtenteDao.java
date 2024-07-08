@@ -21,7 +21,7 @@ public class UtenteDao {
 
     protected static final String RUOLO = "Categoria";
 
-    public Utente TrovaUtente(Utente credenzialiUtenteLogin) throws SQLException, DAOException {
+    public Utente trovaUtente(Utente credenzialiUtenteLogin) throws SQLException, DAOException {
         PreparedStatement stmt;
         Connection conn;
         Utente utente;

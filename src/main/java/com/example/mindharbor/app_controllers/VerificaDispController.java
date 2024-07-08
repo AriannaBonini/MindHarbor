@@ -2,6 +2,7 @@ package com.example.mindharbor.app_controllers;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.dao.AppuntamentoDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.mockapi.BoundaryMockAPICalendario;
@@ -32,17 +33,10 @@ public class VerificaDispController {
 
             richiestaBean= new AppuntamentiBean(richiesta.getData(),
                     richiesta.getOra(),
-                    "",
-                    "",
-                    richiesta.getPaziente().getNome(),
-                    richiesta.getPaziente().getCognome(),
-                    "",
-                    "",
+                    new PazientiBean(richiesta.getPaziente().getNome(),richiesta.getPaziente().getCognome(),richiesta.getPaziente().getGenere(),0,"",""),
                     null,
-                    0,
-                    richiesta.getPaziente().getGenere(),
+                    null,
                     null);
-
             return richiestaBean;
         }catch (SQLException e) {
             throw new DAOException(e.getMessage());

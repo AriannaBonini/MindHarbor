@@ -15,10 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -50,6 +47,8 @@ public class PrescriviTerapiaGraphicController {
     private ListView<Node> listViewTest;
     @FXML
     private Text campoInfoTest;
+    @FXML
+    private Button prescrivi;
 
 
     private static final Logger logger = LoggerFactory.getLogger(PrescriviTerapiaGraphicController.class);
@@ -158,6 +157,7 @@ public class PrescriviTerapiaGraphicController {
         campoCognome.setText(utentePaziente.getCognome());
         campoData.setText(String.valueOf(LocalDate.now()));
         campoInfoTest.setText("Risultato Test: " + testbean.getRisultato());
+        prescrivi.setDisable(false);
     }
 
     @FXML
@@ -174,6 +174,9 @@ public class PrescriviTerapiaGraphicController {
             prescriviController.aggiungiTerapia(new TerapiaBean(SessionManager.getInstance().getCurrentUser().getUsername(),username,testoInserito,currentDate,testbean.getData()));
             Alert alert= new AlertMessage().Informazione("ESITO POSITIVO", "Operazione completata", "Terapia assegnata con successo");
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
+            alert.showAndWait();
+
+            tornaIndietro();
 
             } catch (DAOException e) {
             logger.info("Errore durante il salvataggio della terapia ", e );

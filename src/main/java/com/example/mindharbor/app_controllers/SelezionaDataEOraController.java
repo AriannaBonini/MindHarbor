@@ -8,11 +8,10 @@ import com.example.mindharbor.utilities.setInfoUtente;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 import java.util.List;
 
 public class SelezionaDataEOraController {
-    private final List<LocalTime> TimeRules = List.of(
+    private final List<LocalTime> timeRules = List.of(
             LocalTime.of(8, 30),
             LocalTime.of(18, 30),
             LocalTime.of(12, 0),
@@ -29,16 +28,16 @@ public class SelezionaDataEOraController {
     public void setAppuntamento(AppuntamentiBean appuntamento) {NavigatorSingleton.getInstance().setAppuntamentoBean(appuntamento);}
 
     public AppuntamentiBean getAppuntamento() {return NavigatorSingleton.getInstance().getAppuntamentoBean();}
-    public boolean CheckTime(String insertTime) throws DateTimeParseException {
+    public boolean checkTime(String insertTime) throws DateTimeParseException {
         try {
-            LocalTime Time = LocalTime.parse(insertTime, timeFormatter);
+            LocalTime time = LocalTime.parse(insertTime, timeFormatter);
 
-            if (Time.isAfter(TimeRules.get(0)) && Time.isBefore(TimeRules.get(1)) && (Time.isBefore(TimeRules.get(2)) || Time.isAfter(TimeRules.get(3)))) {
+            if (time.isAfter(timeRules.get(0)) && time.isBefore(timeRules.get(1)) && (time.isBefore(timeRules.get(2)) || time.isAfter(timeRules.get(3)))) {
                 return true;
             }
 
         }catch (DateTimeParseException e) {
-            throw e;
+            throw new IllegalArgumentException(e.getMessage());
         }
         return false;
     }

@@ -4,9 +4,11 @@ public class PazientiBean {
     private String nome;
     private String cognome;
     private String genere;
-    private final Integer anni;
-    private final String diagnosi;
+    private Integer anni;
+    private String diagnosi;
     private String username;
+
+    public PazientiBean() {}
 
 
     public PazientiBean(String nome, String cognome, String genere, Integer anni, String diagnosi, String username) {
@@ -45,6 +47,7 @@ public class PazientiBean {
     public Integer getAnni() {
         return anni;
     }
+    public void setAnni(Integer anni){this.anni=anni;}
 
     public String getDiagnosi() {
         return diagnosi;

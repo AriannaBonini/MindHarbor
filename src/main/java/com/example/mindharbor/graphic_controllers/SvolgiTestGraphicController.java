@@ -113,7 +113,7 @@ public class SvolgiTestGraphicController {
     }
 
     private void aggiungiDomande(String nomeTest) {
-        domandeBean= controller.CercaDomande(nomeTest);
+        domandeBean= controller.cercaDomande(nomeTest);
 
         int numLabels = Math.min(domandeBean.getDomande().size(), labels.length);
         for (int i = 0; i < numLabels; i++) {
@@ -190,6 +190,7 @@ public class SvolgiTestGraphicController {
         try {
 
             TestResultBean testResult = controller.calcolaRisultato(punteggio, dataTest, nomeTest);
+            System.out.println("sono qui");
 
             if (testResult.getRisultatoTestPrecedente() == null) {
                 notificaProgresso("Risultato test: " + testResult.getRisultatoUltimoTest(), "Complimenti! Hai svolto il tuo primo test");

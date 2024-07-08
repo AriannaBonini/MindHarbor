@@ -18,7 +18,7 @@ public class ListaPsicologiController {
     public static List<PsicologoBean> getListaPsicologi() throws DAOException {
         try {
             List<PsicologoBean> psicologiListBean = new ArrayList<>();
-            List<Psicologo> psicologiList = new PsicologoDAO().ListaPsicologi(SessionManager.getInstance().getCurrentUser().getUsername());
+            List<Psicologo> psicologiList = new PsicologoDAO().listaPsicologi(SessionManager.getInstance().getCurrentUser().getUsername());
 
             for(Psicologo psi : psicologiList) {
                 PsicologoBean psicologoBean=new PsicologoBean(psi.getUsername(),psi.getNome(),psi.getCognome(),0,"",psi.getGenere());

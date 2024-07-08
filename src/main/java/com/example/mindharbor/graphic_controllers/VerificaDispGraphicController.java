@@ -86,12 +86,12 @@ public class VerificaDispGraphicController {
     }
 
     private void popolaScheda(AppuntamentiBean richiestaBean) {
-        labelNome.setText(richiestaBean.getNomePaziente());
-        labelCognome.setText(richiestaBean.getCognomePaziente());
+        labelNome.setText(richiestaBean.getPaziente().getNome());
+        labelCognome.setText(richiestaBean.getPaziente().getCognome());
         labelData.setText(richiestaBean.getData());
         labelOra.setText(richiestaBean.getOra());
 
-        ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,richiestaBean.getGenere());
+        ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,richiestaBean.getPaziente().getGenere());
         imageDecorator.loadImage();
     }
 

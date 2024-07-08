@@ -109,7 +109,8 @@ public class RichiediPrenotazioneGraphicController {
     public void richiediPrenotazione() {
         try {
             AppuntamentiBean appuntamentoBean = prenotazioneController.getAppuntamento();
-            appuntamentoBean.setusernamePsicologo(prenotazioneController.getUsername());
+            appuntamentoBean.setPsicologo(new PsicologoBean());
+            appuntamentoBean.getPsicologo().setUsername(prenotazioneController.getUsername());
 
             prenotazioneController.salvaRichiestaAppuntamento(appuntamentoBean);
 

@@ -4,9 +4,11 @@ public class PsicologoBean {
     private String username;
     private String nome;
     private String cognome;
-    private final Integer costoOrario;
-    private final String nomeStudio;
+    private Integer costoOrario;
+    private String nomeStudio;
     private String genere;
+
+    public PsicologoBean(){}
 
 
     public PsicologoBean(String username, String nome, String cognome, Integer costoOrario, String nomeStudio,String genere) {

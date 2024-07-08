@@ -5,7 +5,6 @@ import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.PazientiNumTest;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.session.ConnectionFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,8 +29,8 @@ public class PazienteDAO {
 
         List<PazientiNumTest> pazienteList = new ArrayList<>();
 
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
@@ -51,7 +50,7 @@ public class PazienteDAO {
         while (rs.next()) {
 
             PazientiNumTest paziente = new PazientiNumTest(rs.getInt(2),
-                    new Paziente(0, "", rs.getString(1), rs.getString(3),rs.getString(4), UserType.PAZIENTE, rs.getString(5), "", "" ));
+                    new Paziente(rs.getString(1), rs.getString(3),rs.getString(4), UserType.PAZIENTE, rs.getString(5), "",null));
 
 
             pazienteList.add(paziente);
@@ -65,8 +64,8 @@ public class PazienteDAO {
     public Paziente getInfoSchedaPersonale(String paziente1) throws SQLException{
         Paziente paziente=null;
 
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
@@ -89,7 +88,12 @@ public class PazienteDAO {
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
-            paziente = new Paziente(rs.getInt(3),rs.getString(4), "", rs.getString(1), rs.getString(2),UserType.PAZIENTE, rs.getString(5),"","");
+            List<Object> parametri= new ArrayList<>();
+            parametri.add(rs.getString(4));
+            parametri.add("");
+            parametri.add(rs.getInt(3));
+
+            paziente = new Paziente("", rs.getString(1), rs.getString(2), UserType.PAZIENTE, rs.getString(5),"", parametri);
         }
 
         rs.close();
@@ -101,8 +105,8 @@ public class PazienteDAO {
     public Paziente getInfoPaziente(Utente utente) throws SQLException {
         Paziente paziente=null;
 
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
@@ -122,7 +126,11 @@ public class PazienteDAO {
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
-            paziente = new Paziente(rs.getInt(3),"","", rs.getString(1), rs.getString(2),UserType.PAZIENTE, rs.getString(4), "","");
+            List<Object> parametri=new ArrayList<>();
+            parametri.add("");
+            parametri.add("");
+            parametri.add( rs.getInt(3));
+            paziente = new Paziente("", rs.getString(1), rs.getString(2), UserType.PAZIENTE,  rs.getString(4),"",parametri);
         }
         rs.close();
         stmt.close();
@@ -133,8 +141,8 @@ public class PazienteDAO {
     public String TrovaNomeCognomePsicologo(String usernamePaziente) throws SQLException {
         String nomePsicologo=null;
 
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
@@ -165,8 +173,8 @@ public class PazienteDAO {
     public Utente trovaNomeCognomePaziente(Utente utente) throws SQLException {
         Utente utentePaziente=null;
 
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
@@ -193,9 +201,9 @@ public class PazienteDAO {
         return utentePaziente;
     }
 
-    public boolean CheckPaziente(Paziente paziente) throws SQLException {
-        PreparedStatement stmt = null;
-        Connection conn = null;
+    public boolean checkPaziente(Paziente paziente) throws SQLException {
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
 
@@ -206,7 +214,7 @@ public class PazienteDAO {
                 "WHERE " + TABELLA_PAZIENTE + "." + ETA + " = ? AND " + TABELLA_UTENTE + "." + NOME + " = ? " +
                 "AND " + TABELLA_UTENTE + "." + COGNOME + " = ? AND " + TABELLA_UTENTE + "." + USERNAME + " = ? ";
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setInt(1,paziente.getAnni());
+        stmt.setInt(1, (Integer) paziente.getParametri().get(2));
         stmt.setString(2,paziente.getNome());
         stmt.setString(3, paziente.getCognome());
         stmt.setString(4, paziente.getUsername());
@@ -227,8 +235,8 @@ public class PazienteDAO {
     public String getUsernamePsicologo(String usernamePaziente) throws SQLException{
         String usernamePsicologo=null;
 
-        PreparedStatement stmt = null;
-        Connection conn = null;
+        PreparedStatement stmt;
+        Connection conn;
 
         conn = ConnectionFactory.getConnection();
         String sql=" SELECT " + PSICOLOGO_USERNAME + " " +

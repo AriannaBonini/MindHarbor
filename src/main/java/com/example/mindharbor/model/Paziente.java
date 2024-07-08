@@ -2,17 +2,18 @@ package com.example.mindharbor.model;
 
 import com.example.mindharbor.user_type.UserType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Paziente extends Utente{
-    private Integer anni;
-    private String diagnosi;
-    private String usernamePsicologo;
+
+    private List<Object> parametri=new ArrayList<>();
+    //0 diagnosi e 1 usernamePsicologo e 2 anni
 
 
-    public Paziente(Integer anni, String diagnosi, String username, String nome, String cognome, UserType userType, String genere, String password, String usernamePsicologo) {
+    public Paziente(String username, String nome, String cognome, UserType userType, String genere, String password, List<Object> parametri) {
         super(username, nome, cognome, userType, genere, password);
-        this.anni = anni;
-        this.diagnosi = diagnosi;
-        this.usernamePsicologo = usernamePsicologo;
+        this.parametri=parametri;
     }
 
     public Paziente(String username, String nome, String cognome) {
@@ -21,12 +22,11 @@ public class Paziente extends Utente{
 
     public Paziente(String username) { super(username); }
 
-    public Integer getAnni() {return anni;}
-    public void setAnni(Integer anni) {
-        this.anni = anni;
-    }
-    public String getDiagnosi() {
-        return diagnosi;
+    public List<Object> getParametri() {
+        return parametri;
     }
 
+    public void setParametri(List<Object> parametri) {
+        this.parametri = parametri;
+    }
 }

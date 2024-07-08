@@ -65,7 +65,7 @@ public class PrescriviTerapiaController {
     public void aggiungiTerapia(TerapiaBean terapiaBean) throws DAOException {
         try {
             Terapia terapia = new Terapia(new TestPsicologico(terapiaBean.getDataTest(), null, new Psicologo(terapiaBean.getPsicologo()), new Paziente(terapiaBean.getPaziente()), "", null), terapiaBean.getTerapia(), terapiaBean.getDataTerapia());
-            new TerapiaDAO().InsertTerapia(terapia);
+            new TerapiaDAO().insertTerapia(terapia);
         }catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }

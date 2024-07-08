@@ -12,7 +12,6 @@ import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
-
 import java.sql.SQLException;
 
 public class RichiediPrenotazioneController {
@@ -21,12 +20,12 @@ public class RichiediPrenotazioneController {
     public String getUsername(){ return NavigatorSingleton.getInstance().getParametro();}
     public AppuntamentiBean getAppuntamento() {return NavigatorSingleton.getInstance().getAppuntamentoBean();}
     public void salvaRichiestaAppuntamento(AppuntamentiBean appuntamentiBean) throws DAOException {
-        appuntamentiBean.setusernamePaziente(SessionManager.getInstance().getCurrentUser().getUsername());
+        appuntamentiBean.getPaziente().setUsername(SessionManager.getInstance().getCurrentUser().getUsername());
         Appuntamento appuntamento= new Appuntamento(appuntamentiBean.getData(),
                 appuntamentiBean.getOra(),
                 null,
-                new Paziente(appuntamentiBean.getusernamePaziente()),
-                new Psicologo(appuntamentiBean.getusernamePsicologo()));
+                new Paziente(appuntamentiBean.getPaziente().getUsername()),
+                new Psicologo(appuntamentiBean.getPsicologo().getUsername()));
 
         try {
             new AppuntamentoDAO().insertRichiestaAppuntamento(appuntamento);
@@ -45,8 +44,8 @@ public class RichiediPrenotazioneController {
             psicologoBean=new PsicologoBean(username,
                     psicologo.getNome(),
                     psicologo.getCognome(),
-                    psicologo.getCostoOrario(),
-                    psicologo.getNomeStudio(),
+                    (Integer) psicologo.getParametri().get(0),
+                    (String) psicologo.getParametri().get(1),
                     psicologo.getGenere());
 
         }catch (SQLException e){

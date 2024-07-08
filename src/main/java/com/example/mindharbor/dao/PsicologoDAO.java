@@ -23,7 +23,7 @@ public class PsicologoDAO {
     protected static final String COSTO_ORARIO="CostoOrario";
     protected static final String NOME_STUDIO="Nome_Studio";
 
-    public List<Psicologo> ListaPsicologi(String usernamePaziente) throws SQLException {
+    public List<Psicologo> listaPsicologi(String usernamePaziente) throws SQLException {
 
         List<Psicologo> listaPsicologi = new ArrayList<>();
         String usernamePsicologo;
@@ -50,7 +50,7 @@ public class PsicologoDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Psicologo psicologo = new Psicologo(0, "", rs.getString(3), rs.getString(1), rs.getString(2), UserType.PSICOLOGO, rs.getString(4), " ");
+                Psicologo psicologo = new Psicologo(null, rs.getString(3), rs.getString(1), rs.getString(2), UserType.PSICOLOGO, rs.getString(4), " ");
 
                 listaPsicologi.add(psicologo);
             }
@@ -62,6 +62,7 @@ public class PsicologoDAO {
 
     public Psicologo getInfoPsicologo(String username) throws SQLException {
         Psicologo psicologo=null;
+        List<Object> parametri=new ArrayList<>();
 
         PreparedStatement stmt;
         Connection conn;
@@ -78,8 +79,12 @@ public class PsicologoDAO {
 
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
-            psicologo= new Psicologo(rs.getInt(4),
-                    rs.getString(5),
+
+            parametri.add(rs.getObject(4));
+            parametri.add(rs.getObject(5));
+
+            psicologo= new Psicologo(
+                    parametri,
                     "",
                     rs.getString(1),
                     rs.getString(2),

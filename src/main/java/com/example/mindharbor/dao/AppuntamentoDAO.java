@@ -29,7 +29,7 @@ public class AppuntamentoDAO {
     protected static final String STATO_NOTIFICA_PAZIENTE="statoNotificaPaziente";
 
 
-    public List<Appuntamento> trovaAppuntamentoPsicologo(String usernamePsicologo, String selectedTabName) throws SQLException {
+    public List<Appuntamento> trovaAppuntamento(String username, String selectedTabName, UserType userType) throws SQLException {
 
         List<Appuntamento> appuntamentoList = new ArrayList<>();
 
@@ -39,27 +39,33 @@ public class AppuntamentoDAO {
         conn = ConnectionFactory.getConnection();
 
         String sql = "SELECT " +
-                    "a." +  DATA + ", " +
-                    "a." + ORA + ", " +
-                    "p." + NOME_PSICOLOGO + ", " +
-                    "p." + COGNOME_PSICOLOGO + ", " +
-                    "pp." + NOME_PAZIENTE + ", " +
-                    "pp." + COGNOME_PAZIENTE + ", " +
-                    "a." + USERNAME_PAZIENTE + ", " +
-                    "a." + USERNAME_PSICOLOGO + " " +
-                    "FROM " + TABELLA_APPUNTAMENTO + " a " +
-                    "JOIN " + TABELLA_UTENTE + " p ON p." + USERNAME + " = a." + USERNAME_PSICOLOGO + " " +
-                    "JOIN " + TABELLA_UTENTE + " pp ON pp." + USERNAME + " = a." + USERNAME_PAZIENTE + " " +
-                    "WHERE a." + USERNAME_PSICOLOGO + " = ? AND " + STATO_APPUNTAMENTO + " = 1 ";
+                "a." +  DATA + ", " +
+                "a." + ORA + ", " +
+                "p." + NOME_PSICOLOGO + ", " +
+                "p." + COGNOME_PSICOLOGO + ", " +
+                "pp." + NOME_PAZIENTE + ", " +
+                "pp." + COGNOME_PAZIENTE + ", " +
+                "a." + USERNAME_PAZIENTE + ", " +
+                "a." + USERNAME_PSICOLOGO + " " +
+                "FROM " + TABELLA_APPUNTAMENTO + " a " +
+                "JOIN " + TABELLA_UTENTE + " p ON p." + USERNAME + " = a." + USERNAME_PSICOLOGO + " " +
+                "JOIN " + TABELLA_UTENTE + " pp ON pp." + USERNAME + " = a." + USERNAME_PAZIENTE + " " +
+                "WHERE a." + STATO_APPUNTAMENTO + " = 1 ";
 
         if (selectedTabName.equals("IN PROGRAMMA")) {
             sql += "AND a." + DATA + " >= NOW() ";
-            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, usernamePsicologo);
         } else {
             sql += "AND a." + DATA + " < NOW() " ;
+        }
+
+        if(userType.equals(UserType.PSICOLOGO)) {
+            sql +="AND a." + USERNAME_PSICOLOGO + " = ? ";
             stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, usernamePsicologo);
+            stmt.setString(1, username);
+        }else {
+            sql +="AND a." + USERNAME_PAZIENTE + " = ? ";
+            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt.setString(1, username);
         }
 
         ResultSet rs = stmt.executeQuery();
@@ -71,57 +77,6 @@ public class AppuntamentoDAO {
                     new Paziente(rs.getString(7), rs.getString(5), rs.getString(6)),
                     new Psicologo(rs.getString(8), rs.getString(3),rs.getString(4)));
 
-
-            appuntamentoList.add(appuntamento);
-        }
-
-        rs.close();
-        stmt.close();
-
-        return appuntamentoList;
-    }
-
-    public List<Appuntamento> trovaAppuntamentoPaziente(String usernamePaziente, String selectedTabName) throws SQLException {
-        List<Appuntamento> appuntamentoList = new ArrayList<>();
-
-        PreparedStatement stmt;
-        Connection conn;
-
-        conn = ConnectionFactory.getConnection();
-
-        String sql =  "SELECT " +
-                    "a." + DATA + " , " +
-                    "a." + ORA + " , " +
-                    "p." + NOME_PSICOLOGO + " , " +
-                    "p." + COGNOME_PSICOLOGO + " , " +
-                    "pp." + NOME_PAZIENTE + " , " +
-                    "pp." + COGNOME_PAZIENTE + " , " +
-                    "a." + USERNAME_PAZIENTE + " , " +
-                    "a." + USERNAME_PSICOLOGO + " " +
-                    "FROM " + TABELLA_APPUNTAMENTO + " a " +
-                    "JOIN " + TABELLA_UTENTE + " p ON p." + USERNAME + " = a." + USERNAME_PSICOLOGO + " " +
-                    "JOIN " + TABELLA_UTENTE + " pp ON pp." + USERNAME + " = a." + USERNAME_PAZIENTE + " " +
-                    "WHERE a." + USERNAME_PAZIENTE + " = ? AND " + STATO_APPUNTAMENTO + " = 1 ";
-
-        if (selectedTabName.equals("IN PROGRAMMA")) {
-            sql += "AND a." + DATA + " >= NOW() ";
-            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, usernamePaziente);
-        } else {
-            sql += "AND a." + DATA + " < NOW() ";
-            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, usernamePaziente);
-        }
-
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-
-            Appuntamento appuntamento = new Appuntamento( rs.getString(1),
-                    rs.getString(2),
-                    null,
-                    new Paziente(rs.getString(7),rs.getString(5), rs.getString(6)),
-                    new Psicologo(rs.getString(8), rs.getString(3), rs.getString(4)));
 
             appuntamentoList.add(appuntamento);
         }
@@ -147,7 +102,7 @@ public class AppuntamentoDAO {
                 STATO_APPUNTAMENTO + " , " +
                 STATO_NOTIFICA + " , " +
                 STATO_NOTIFICA_PAZIENTE + " ) " +
-            "VALUES (DEFAULT, ? , ? , ? , ? , DEFAULT, DEFAULT, DEFAULT ) ";
+                "VALUES (DEFAULT, ? , ? , ? , ? , DEFAULT, DEFAULT, DEFAULT ) ";
 
         stmt = conn.prepareStatement(sql);
         stmt.setDate(1, Date.valueOf(appuntamento.getData()));
@@ -221,7 +176,7 @@ public class AppuntamentoDAO {
             Appuntamento richiesta= new Appuntamento(null,
                     null,
                     rs.getInt(5),
-                    new Paziente(null,"","", rs.getString(1), rs.getString(2), UserType.PAZIENTE,rs.getString(4),"",""),
+                    new Paziente("", rs.getString(1), rs.getString(2), UserType.PAZIENTE,rs.getString(4),"",null),
                     null,
                     rs.getInt(3));
 
@@ -279,7 +234,7 @@ public class AppuntamentoDAO {
             richiesta= new Appuntamento(rs.getString(3),
                     rs.getString(4),
                     null,
-                    new Paziente(0,"","",rs.getString(1),rs.getString(2),UserType.PAZIENTE,rs.getString(5),"",""),
+                    new Paziente("",rs.getString(1),rs.getString(2),UserType.PAZIENTE,rs.getString(5),"",null),
                     null,
                     null);
         }

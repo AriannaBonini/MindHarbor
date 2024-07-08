@@ -115,9 +115,9 @@
             <Image url="@Img/LineaVerde.png"/>
          </ImageView>
          <TextArea fx:id="campoPrescrizione" layoutX="13.0" layoutY="102.0" prefHeight="136.0" prefWidth="386.0"/>
-         <Button layoutX="172.0" layoutY="273.0" mnemonicParsing="false"
+         <Button fx:id="prescrivi" layoutX="172.0" layoutY="273.0" mnemonicParsing="false"
                  onMouseClicked="#prescrivi" style="-fx-background-color: #234439; -fx-border-color: white;"
-                 text="PRESCRIVI" textFill="WHITE"/>
+                 text="PRESCRIVI" textFill="WHITE" disable="true"/>
          <Text fx:id="campoInfoTest" layoutX="15.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0"
                wrappingWidth="150.39999999999998">
             <font>

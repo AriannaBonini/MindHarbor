@@ -11,13 +11,13 @@ import java.sql.SQLException;
 
 public class LoginController extends AbstractController {
 
-    private ClassObserver observer= new ClassObserver();
+    private final ClassObserver observer= new ClassObserver();
 
 
     public void login(LoginCredentialBean credenziali) throws DAOException, SQLException, SessionUserException {
         Utente credenzialiUtenteLogin= new Utente(credenziali.getUsername(), credenziali.getPassword());
 
-        Utente utente= new UtenteDao().TrovaUtente(credenzialiUtenteLogin);
+        Utente utente= new UtenteDao().trovaUtente(credenzialiUtenteLogin);
 
 
         if (utente!= null) {

@@ -29,8 +29,8 @@ public class SchedaPersonalePazienteController {
                     paziente.getNome(),
                     paziente.getCognome(),
                     paziente.getGenere(),
-                    paziente.getAnni(),
-                    paziente.getDiagnosi(),
+                    (Integer) paziente.getParametri().get(2),
+                    (String) paziente.getParametri().get(0),
                     ""
             );
         }catch (SQLException e) {
@@ -49,7 +49,7 @@ public class SchedaPersonalePazienteController {
     }
 
 
-    public int NumTestSvoltiSenzaPrescrizione(String usernamePaziente) throws DAOException {
+    public int numTestSvoltiSenzaPrescrizione(String usernamePaziente) throws DAOException {
         try {
             return new TestPsicologicoDAO().getNumTestSvoltiSenzaPrescrizione(SessionManager.getInstance().getCurrentUser().getUsername(), usernamePaziente);
         }catch (SQLException e) {

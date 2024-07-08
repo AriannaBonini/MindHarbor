@@ -18,7 +18,7 @@ public class TerapiaDAO {
     protected static final String TABELLA_TERAPIA="terapia";
     protected static final String NOTIFICAPAZIENTE="NotificaPaziente";
 
-    public void InsertTerapia(Terapia terapia) throws SQLException {
+    public void insertTerapia(Terapia terapia) throws SQLException {
 
         PreparedStatement stmt;
         Connection conn;

@@ -71,8 +71,8 @@ public class ListaRichiesteAppuntamentiGraphicController {
             HBox hBoxPaziente = new HBox();
             ImageView immaginePaziente = new ImageView();
 
-            Label nomePaziente = new Label("\n     NOME:" + " " + appBean.getNomePaziente());
-            Label cognomePaziente = new Label("     COGNOME:" + " " + appBean.getCognomePaziente());
+            Label nomePaziente = new Label("\n     NOME:" + " " + appBean.getPaziente().getNome());
+            Label cognomePaziente = new Label("     COGNOME:" + " " + appBean.getPaziente().getCognome());
 
             if((appBean.getNotificaRichiesta())==1) {
                 nomePaziente.setStyle("-fx-font-weight: bold;");
@@ -84,7 +84,7 @@ public class ListaRichiesteAppuntamentiGraphicController {
 
             boxPaziente.getChildren().addAll(nomePaziente, cognomePaziente);
 
-            ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,appBean.getGenere());
+            ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,appBean.getPaziente().getGenere());
             imageDecorator.loadImage();
 
             hBoxPaziente.getChildren().addAll(immaginePaziente, boxPaziente);

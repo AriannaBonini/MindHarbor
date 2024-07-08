@@ -46,11 +46,11 @@ public class InserisciInfoGraphicController {
 
         appuntamento=inserisciInfoController.checkAppuntamento();
 
-        if(appuntamento.getNomePaziente()!=null && appuntamento.getCognomePaziente()!=null && appuntamento.getAnni()!=null) {
-            campoNome.setText(appuntamento.getNomePaziente());
-            campoCognome.setText(appuntamento.getCognomePaziente());
-            campoAnni.setText(String.valueOf(appuntamento.getAnni()));
-        }
+        if(appuntamento.getPaziente()!=null && appuntamento.getPaziente().getNome()!=null && appuntamento.getPaziente().getCognome()!=null && appuntamento.getPaziente().getAnni()!=null) {
+            campoNome.setText(appuntamento.getPaziente().getNome());
+            campoCognome.setText(appuntamento.getPaziente().getCognome());
+            campoAnni.setText(String.valueOf(appuntamento.getPaziente().getAnni()));
+        }else {appuntamento.setPaziente(new PazientiBean());}
     }
     @FXML
     public void clickConferma() {
@@ -70,9 +70,9 @@ public class InserisciInfoGraphicController {
     }
     private void goToListaPsicologi() {
         try {
-            appuntamento.setNomePaziente(campoNome.getText());
-            appuntamento.setCognomePaziente(campoCognome.getText());
-            appuntamento.setAnni(Integer.valueOf(campoAnni.getText()));
+            appuntamento.getPaziente().setNome(campoNome.getText());
+            appuntamento.getPaziente().setCognome(campoCognome.getText());
+            appuntamento.getPaziente().setAnni(Integer.valueOf(campoAnni.getText()));
 
             inserisciInfoController.setAppuntamento(appuntamento);
 

@@ -83,8 +83,8 @@ public class AppuntamentiPsicologoGraphicController {
 
             Label dataAppuntamento = new Label("DATA:" + " " + app.getData());
             Label oraAppuntamento = new Label("ORA:" + " " + app.getOra());
-            Label nomePsicologo = new Label("PSICOLOGO:" + " " + app.getNomePsicologo() + " " + app.getCognomePsicologo());
-            Label nomePaziente = new Label("PAZIENTE:" + " " + app.getNomePaziente() + " " + app.getCognomePaziente());
+            Label nomePsicologo = new Label("PSICOLOGO:" + " " + app.getPsicologo().getNome() + " " + app.getPsicologo().getCognome());
+            Label nomePaziente = new Label("PAZIENTE:" + " " + app.getPaziente().getNome()+ " " + app.getPaziente().getCognome());
 
             dataAppuntamento.setTextFill(Color.WHITE);
             oraAppuntamento.setTextFill(Color.WHITE);

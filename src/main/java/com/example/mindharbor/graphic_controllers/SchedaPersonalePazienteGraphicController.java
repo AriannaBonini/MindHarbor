@@ -57,7 +57,7 @@ public class SchedaPersonalePazienteGraphicController {
 
     private void abilitaPrescriviTerapia() {
         try {
-            if (schedaPersonaleController.NumTestSvoltiSenzaPrescrizione(username) > 0) {
+            if (schedaPersonaleController.numTestSvoltiSenzaPrescrizione(username) > 0) {
                 prescriviTerapia.setDisable(false);
             }
         }catch (DAOException e) {

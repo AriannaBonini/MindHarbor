@@ -2,6 +2,7 @@ package com.example.mindharbor.app_controllers;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.dao.AppuntamentoDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Appuntamento;
@@ -23,17 +24,11 @@ public class ListaRichiesteAppuntamentiController {
                     SessionManager.getInstance().getCurrentUser().getUsername());
 
             for(Appuntamento ric: listaRichieste) {
-                AppuntamentiBean ricBean= new AppuntamentiBean(null,
+                AppuntamentiBean ricBean= new AppuntamentiBean("",
+                        "",
+                        new PazientiBean(ric.getPaziente().getNome(),ric.getPaziente().getCognome(),ric.getPaziente().getGenere(),0,"",""),
                         null,
-                        "",
-                        "",
-                        ric.getPaziente().getNome(),
-                        ric.getPaziente().getCognome(),
-                        ric.getPaziente().getUsername(),
-                        "",
                         ric.getIdAppuntamento(),
-                        0,
-                        ric.getPaziente().getGenere(),
                         ric.getNotificaRichiesta());
 
                 listaRichiesteBean.add(ricBean);

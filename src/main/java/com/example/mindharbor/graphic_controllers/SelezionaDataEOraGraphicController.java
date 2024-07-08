@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 
 public class SelezionaDataEOraGraphicController {
@@ -94,7 +93,7 @@ public class SelezionaDataEOraGraphicController {
         } else {
 
             try {
-                if (!selezionaDataEOraController.CheckTime(orario.getText())) {
+                if (!selezionaDataEOraController.checkTime(orario.getText())) {
                     new LabelDuration().Duration(info, "Orario non valido");
                 } else {
                     appuntamento.setData(String.valueOf(data.getValue()));
@@ -102,7 +101,7 @@ public class SelezionaDataEOraGraphicController {
 
                     goToInfo(appuntamento);
                 }
-            } catch (DateTimeParseException e) {
+            } catch (IllegalArgumentException e) {
                 new LabelDuration().Duration(info, "Il formato deve essere: HH:mm");
             }
         }

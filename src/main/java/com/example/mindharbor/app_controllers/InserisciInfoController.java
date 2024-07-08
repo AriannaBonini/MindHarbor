@@ -12,6 +12,8 @@ import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class InserisciInfoController {
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
@@ -19,7 +21,12 @@ public class InserisciInfoController {
 
     public boolean checkDati(PazientiBean pazienteBean) throws DAOException {
         try {
-            return new PazienteDAO().CheckPaziente(new Paziente(pazienteBean.getAnni(), "", SessionManager.getInstance().getCurrentUser().getUsername(), pazienteBean.getNome(), pazienteBean.getCognome(), UserType.PAZIENTE, "", "", ""));
+            List<Object> parametri=new ArrayList<>();
+            parametri.add("");
+            parametri.add("");
+            parametri.add(pazienteBean.getAnni());
+
+            return new PazienteDAO().checkPaziente(new Paziente(SessionManager.getInstance().getCurrentUser().getUsername(),pazienteBean.getNome(), pazienteBean.getCognome(),UserType.PAZIENTE,"","",parametri));
 
         }catch (SQLException e) {
             throw new DAOException(e.getMessage());
