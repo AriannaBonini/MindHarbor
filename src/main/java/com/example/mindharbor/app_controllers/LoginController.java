@@ -1,5 +1,8 @@
 package com.example.mindharbor.app_controllers;
 
+import com.example.mindharbor.dao.PazienteDAO;
+import com.example.mindharbor.model.Paziente;
+import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.beans.LoginCredentialBean;
 import com.example.mindharbor.exceptions.DAOException;
@@ -18,11 +21,13 @@ public class LoginController extends AbstractController {
         Utente credenzialiUtenteLogin= new Utente(credenziali.getUsername(), credenziali.getPassword());
 
         Utente utente= new UtenteDao().trovaUtente(credenzialiUtenteLogin);
-
-
-        if (utente!= null) {
+        if(utente.getUserType().equals(UserType.PAZIENTE)) {
+            storeSessionUtente(utente.getUsername(), utente.getNome(), utente.getCognome(), utente.getUserType(), new PazienteDAO().getUsernamePsicologo(utente));
+        }else {
             storeSessionUtente(utente.getUsername(), utente.getNome(), utente.getCognome(), utente.getUserType());
+        }
 
+        if (utente != null) {
             if (utente.getUserType()==UserType.PAZIENTE){
                 observer.notifyObservers(utente.getUserType());
             }else{
@@ -30,4 +35,21 @@ public class LoginController extends AbstractController {
             }
         }
     }
+
+    @Override
+    protected void storeSessionUtente(String username, String nome, String cognome, UserType userType,String usernamePsicologo) throws SessionUserException {
+        SessionManager sessionManager = SessionManager.getInstance();
+        Utente currentUser = new Utente(username, nome, cognome, userType);
+        sessionManager.login(currentUser,usernamePsicologo);
+    }
+
+    @Override
+    protected void storeSessionUtente(String username, String nome, String cognome, UserType userType) throws SessionUserException {
+        SessionManager sessionManager = SessionManager.getInstance();
+        Utente currentUser = new Utente(username, nome, cognome, userType);
+        sessionManager.login(currentUser,null);
+    }
+
+
+
 }

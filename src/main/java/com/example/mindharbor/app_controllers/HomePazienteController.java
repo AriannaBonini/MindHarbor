@@ -38,8 +38,8 @@ public class HomePazienteController {
 
     public int cercaNuoviAppuntamenti() throws DAOException {
         try {
-            return new AppuntamentoDAO().getNumRicAppDaNotificare(null,SessionManager.getInstance().getCurrentUser().getUsername());
-        }catch (SQLException e) {
+            return new AppuntamentoDAO().getNumRicAppDaNotificare(SessionManager.getInstance().getCurrentUser());
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }

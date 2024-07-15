@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.AppuntamentiPsicologoController;
+import com.example.mindharbor.app_controllers.AppuntamentiController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.HomeInfoUtenteBean;
 import com.example.mindharbor.exceptions.DAOException;
@@ -37,12 +37,12 @@ public class AppuntamentiPsicologoGraphicController {
     private Label homeTab1;
     @FXML
     private Label homeTab2;
-    private final AppuntamentiPsicologoController appuntamentiController = new AppuntamentiPsicologoController();
+    private final AppuntamentiController appuntamentiController = new AppuntamentiController();
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
 
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = appuntamentiController.getInfoPsicologo();
+        HomeInfoUtenteBean infoUtenteBean = appuntamentiController.getInfoUtente();
         labelNomePsicologoTab1.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         labelNomePsicologoTab2.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
@@ -62,7 +62,7 @@ public class AppuntamentiPsicologoGraphicController {
 
     private void ricercaAppuntamenti(String selectedTabName, Text text, ListView<Node> listView){
         try {
-            List<AppuntamentiBean> appuntamenti = appuntamentiController.getAppuntamentiPsicologo(selectedTabName);
+            List<AppuntamentiBean> appuntamenti = appuntamentiController.getAppuntamenti(selectedTabName);
             if (appuntamenti.isEmpty()) {
                 text.setText("Non ci sono appuntamenti");
             }else {

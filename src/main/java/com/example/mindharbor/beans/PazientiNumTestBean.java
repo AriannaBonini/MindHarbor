@@ -8,13 +8,13 @@ public class PazientiNumTestBean {
     private String genere;
 
 
-    public PazientiNumTestBean(String username, Integer numTest, String nome, String cognome, String genere) {
+    /*public PazientiNumTestBean(String username, Integer numTest, String nome, String cognome, String genere) {
         this.username=username;
         this.numTest=numTest;
         this.nome=nome;
         this.cognome=cognome;
         this.genere=genere;
-    }
+    }*/
 
     public String getUsername() {
         return username;

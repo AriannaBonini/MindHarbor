@@ -1,327 +1,256 @@
 package com.example.mindharbor.dao;
 
+import com.example.mindharbor.dao.query_sql.QuerySQLAppuntamentoDAO;
+import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.session.ConnectionFactory;
-
+import com.example.mindharbor.utilities.HelperDAO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppuntamentoDAO {
-    protected static final String DATA = "Data";
-    protected static final String ORA = "Ora";
-    protected static final String USERNAME_PAZIENTE = "Username_Paziente";
-    protected static final String USERNAME_PSICOLOGO = "Username_Psicologo";
-    protected static final String NOME_PSICOLOGO = "Nome";
-    protected static final String NOME_PAZIENTE = "Nome";
-    protected static final String COGNOME_PSICOLOGO = "Cognome";
-    protected static final String COGNOME_PAZIENTE = "Cognome";
-    protected static final String USERNAME = "Username";
-    protected static final String TABELLA_UTENTE="utente";
-    protected static final String TABELLA_APPUNTAMENTO="Appuntamento";
-    protected static final String ID_APPUNTAMENTO="ID_Appuntamento";
-    protected static final String STATO_APPUNTAMENTO="StatoAppuntamento";
-    protected static final String STATO_NOTIFICA="statoNotificaRichiesta";
-    protected static final String GENERE= "Genere";
-    protected static final String STATO_NOTIFICA_PAZIENTE="statoNotificaPaziente";
-
-
-    public List<Appuntamento> trovaAppuntamento(String username, String selectedTabName, UserType userType) throws SQLException {
-
+public class AppuntamentoDAO extends QuerySQLAppuntamentoDAO implements HelperDAO {
+    public List<Appuntamento> trovaAppuntamenti(Utente utente, String selectedTabName)  throws DAOException {
         List<Appuntamento> appuntamentoList = new ArrayList<>();
 
-        PreparedStatement stmt;
-        Connection conn;
-
-        conn = ConnectionFactory.getConnection();
-
-        String sql = "SELECT " +
-                "a." +  DATA + ", " +
-                "a." + ORA + ", " +
-                "p." + NOME_PSICOLOGO + ", " +
-                "p." + COGNOME_PSICOLOGO + ", " +
-                "pp." + NOME_PAZIENTE + ", " +
-                "pp." + COGNOME_PAZIENTE + ", " +
-                "a." + USERNAME_PAZIENTE + ", " +
-                "a." + USERNAME_PSICOLOGO + " " +
-                "FROM " + TABELLA_APPUNTAMENTO + " a " +
-                "JOIN " + TABELLA_UTENTE + " p ON p." + USERNAME + " = a." + USERNAME_PSICOLOGO + " " +
-                "JOIN " + TABELLA_UTENTE + " pp ON pp." + USERNAME + " = a." + USERNAME_PAZIENTE + " " +
-                "WHERE a." + STATO_APPUNTAMENTO + " = 1 ";
+        String sql = QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI;
 
         if (selectedTabName.equals("IN PROGRAMMA")) {
-            sql += "AND a." + DATA + " >= NOW() ";
+            sql += QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI_IN_PROGRAMMA;
         } else {
-            sql += "AND a." + DATA + " < NOW() " ;
+            sql += QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI_PASSATI;
         }
 
-        if(userType.equals(UserType.PSICOLOGO)) {
-            sql +="AND a." + USERNAME_PSICOLOGO + " = ? ";
-            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, username);
-        }else {
-            sql +="AND a." + USERNAME_PAZIENTE + " = ? ";
-            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, username);
+        Connection conn = ConnectionFactory.getConnection();
+
+        try (PreparedStatement stmt = createPreparedStatement(conn, sql, utente);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Appuntamento appuntamento = new Appuntamento(
+                        rs.getString(1),
+                        rs.getString(2),
+                        null,
+                        new Paziente(rs.getString(7), rs.getString(5), rs.getString(6)),
+                        new Psicologo(rs.getString(8), rs.getString(3), rs.getString(4))
+                );
+
+                appuntamentoList.add(appuntamento);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
         }
-
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            Appuntamento appuntamento = new Appuntamento( rs.getString(1),
-                    rs.getString(2),
-                    null,
-                    new Paziente(rs.getString(7), rs.getString(5), rs.getString(6)),
-                    new Psicologo(rs.getString(8), rs.getString(3),rs.getString(4)));
-
-
-            appuntamentoList.add(appuntamento);
-        }
-
-        rs.close();
-        stmt.close();
 
         return appuntamentoList;
     }
 
-    public void insertRichiestaAppuntamento(Appuntamento appuntamento) throws SQLException{
-        PreparedStatement stmt;
-        Connection conn;
+    public void insertRichiestaAppuntamento(Appuntamento appuntamento) throws DAOException{
+        Connection conn = ConnectionFactory.getConnection();
 
-        conn = ConnectionFactory.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.INSERISCI_RICHIESTA_APPUNTAMENTO)) {
 
-        String sql= "INSERT INTO " + TABELLA_APPUNTAMENTO + " ( " +
-                ID_APPUNTAMENTO + ", " +
-                DATA + ", " +
-                ORA + " , " +
-                USERNAME_PAZIENTE + " , " +
-                USERNAME_PSICOLOGO + " , " +
-                STATO_APPUNTAMENTO + " , " +
-                STATO_NOTIFICA + " , " +
-                STATO_NOTIFICA_PAZIENTE + " ) " +
-                "VALUES (DEFAULT, ? , ? , ? , ? , DEFAULT, DEFAULT, DEFAULT ) ";
+            stmt.setDate(1, Date.valueOf(appuntamento.getData()));
+            stmt.setString(2, appuntamento.getOra());
+            stmt.setString(3, appuntamento.getPaziente().getUsername());
+            stmt.setString(4, appuntamento.getPsicologo().getUsername());
 
-        stmt = conn.prepareStatement(sql);
-        stmt.setDate(1, Date.valueOf(appuntamento.getData()));
-        stmt.setString(2, appuntamento.getOra());
-        stmt.setString(3,appuntamento.getPaziente().getUsername()) ;
-        stmt.setString(4, appuntamento.getPsicologo().getUsername());
+            stmt.executeUpdate();
 
-        stmt.executeUpdate();
-        stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
     }
 
-    public Integer getNumRicAppDaNotificare(String usernamePsicologo,String usernamePaziente) throws SQLException {
-        int count=0;
+    public Integer getNumRicAppDaNotificare(Utente utente) throws DAOException {
+        int count = 0;
+        Connection conn = ConnectionFactory.getConnection();
 
-        PreparedStatement stmt;
-        Connection conn;
+        try (PreparedStatement stmt = createPreparedStatement(conn,utente);
+             ResultSet rs = stmt.executeQuery()) {
 
-        conn = ConnectionFactory.getConnection();
-
-        if(usernamePaziente==null && usernamePsicologo!=null) {
-
-            String sql = "SELECT COUNT(*) AS Total " +
-                    "FROM " + TABELLA_APPUNTAMENTO + " " +
-                    "WHERE " + USERNAME_PSICOLOGO + " = ?  AND " + STATO_NOTIFICA + " = 1 ";
-            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, usernamePsicologo);
-
-        }else {
-            String sql = "SELECT COUNT(*) AS Total " +
-                    "FROM " + TABELLA_APPUNTAMENTO + " " +
-                    "WHERE " + USERNAME_PAZIENTE + " = ?  AND " + STATO_NOTIFICA_PAZIENTE + " = 1 ";
-            stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, usernamePaziente);
-
-
+            if (rs.next()) {
+                count = rs.getInt("Total");
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
         }
-
-        ResultSet rs = stmt.executeQuery();
-
-        if(rs.next()) {
-            count = rs.getInt("Total");
-        }
-        rs.close();
-        stmt.close();
 
         return count;
     }
 
-    public List<Appuntamento> trovaRichiesteAppuntamento(String usernamePsicologo) throws SQLException {
-        List<Appuntamento> richiesteAppuntamento=new ArrayList<>();
-        PreparedStatement stmt;
-        Connection conn;
+    public List<Appuntamento> trovaRichiesteAppuntamento(Utente utente) throws DAOException {
+        List<Appuntamento> richiesteAppuntamento = new ArrayList<>();
 
-        conn = ConnectionFactory.getConnection();
+        Connection conn = ConnectionFactory.getConnection();
 
-        String sql="SELECT " +
-                " u. " + NOME_PAZIENTE + " , " +
-                " u. " + COGNOME_PAZIENTE + " , " +
-                " a. " + STATO_NOTIFICA + " , " +
-                " u. " + GENERE + " , " +
-                " a. " + ID_APPUNTAMENTO + " " +
-                "FROM " + TABELLA_APPUNTAMENTO + " a " +
-                "JOIN " + TABELLA_UTENTE + " u ON u." + USERNAME + " = a." + USERNAME_PAZIENTE + " " +
-                "WHERE " + STATO_APPUNTAMENTO + " = 0 " + " AND " + USERNAME_PSICOLOGO + " = ? ";
-        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setString(1, usernamePsicologo);
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.TROVA_RICHIESTE_APPUNTAMENTI_PSICOLOGO, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 
-        ResultSet rs = stmt.executeQuery();
+            stmt.setString(1, utente.getUsername());
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Appuntamento richiesta = new Appuntamento(
+                            null,
+                            null,
+                            rs.getInt(5),
+                            new Paziente("", rs.getString(1), rs.getString(2), UserType.PAZIENTE, rs.getString(4), "", null),
+                            null,
+                            rs.getInt(3)
+                    );
 
-        while (rs.next()) {
-            Appuntamento richiesta= new Appuntamento(null,
-                    null,
-                    rs.getInt(5),
-                    new Paziente("", rs.getString(1), rs.getString(2), UserType.PAZIENTE,rs.getString(4),"",null),
-                    null,
-                    rs.getInt(3));
+                    richiesteAppuntamento.add(richiesta);
+                }
+            }
 
-            richiesteAppuntamento.add(richiesta);
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
         }
-
-        rs.close();
-        stmt.close();
-
         return richiesteAppuntamento;
-
     }
 
-    public void updateStatoNotifica(Integer idRichiesta) throws SQLException {
-        PreparedStatement stmt;
-        Connection conn;
+    public void updateStatoNotifica(Integer idRichiesta) throws DAOException {
 
-        conn = ConnectionFactory.getConnection();
+        Connection conn = ConnectionFactory.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.UPDATE_STATO_NOTIFICA_PSICOLOGO)) {
 
-        String updateQuery= "UPDATE " + TABELLA_APPUNTAMENTO + " " +
-                "SET " + STATO_NOTIFICA +  " = 0 " + " " +
-                "WHERE " + ID_APPUNTAMENTO + " = ? ";
-        stmt = conn.prepareStatement(updateQuery);
-        stmt.setInt(1, idRichiesta);
+            stmt.setInt(1, idRichiesta);
+            stmt.executeUpdate();
 
-        stmt.executeUpdate();
-
-        stmt.close();
-
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
     }
 
 
-    public Appuntamento getInfoRichiesta(Integer idAppuntamento) throws SQLException {
-        Appuntamento richiesta=null;
+    public Appuntamento getInfoRichiesta(Integer idAppuntamento) throws DAOException {
+        Appuntamento richiesta = null;
 
-        PreparedStatement stmt;
-        Connection conn;
+        Connection conn = ConnectionFactory.getConnection();
 
-        conn = ConnectionFactory.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.INFORMAZIONI_RICHIESTA_APPUNTAMENTO, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 
-        String sql="SELECT " +
-                " u. " + NOME_PAZIENTE + " , " +
-                " u. " + COGNOME_PAZIENTE + " , " +
-                " a. " + DATA + " , " +
-                " a. " + ORA + " , " +
-                " u. " + GENERE + " " +
-                "FROM " + TABELLA_APPUNTAMENTO + " a " +
-                "JOIN " + TABELLA_UTENTE + " u ON u. " + USERNAME + " = a. " + USERNAME_PAZIENTE + " " +
-                "WHERE " + ID_APPUNTAMENTO + " = ?";
-        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setInt(1, idAppuntamento);
+            stmt.setInt(1, idAppuntamento);
 
-        ResultSet rs = stmt.executeQuery();
-        if(rs.next()) {
-            richiesta= new Appuntamento(rs.getString(3),
-                    rs.getString(4),
-                    null,
-                    new Paziente("",rs.getString(1),rs.getString(2),UserType.PAZIENTE,rs.getString(5),"",null),
-                    null,
-                    null);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    richiesta = new Appuntamento(
+                            rs.getString(3),
+                            rs.getString(4),
+                            null,
+                            new Paziente(rs.getString(6), rs.getString(1), rs.getString(2), UserType.PAZIENTE, rs.getString(5), "", null),
+                            null,
+                            null
+                    );
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
         }
 
         return richiesta;
-
     }
 
-    public void updateRichiesta(Integer idAppuntamento) throws SQLException {
-        PreparedStatement stmt;
-        Connection conn;
+    public void updateRichiesta(Appuntamento appuntamento) throws DAOException {
 
-        conn = ConnectionFactory.getConnection();
+        Connection conn = ConnectionFactory.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.RICHIESTA_DI_APPPUNTAMENTO_ACCETTATA)) {
 
-        String updateQuery= "UPDATE " + TABELLA_APPUNTAMENTO + " " +
-                "SET " + STATO_APPUNTAMENTO +  " = 1 " + " , " + STATO_NOTIFICA_PAZIENTE + " = 1 " + " " +
-                "WHERE " + ID_APPUNTAMENTO + " = ? ";
-        stmt = conn.prepareStatement(updateQuery);
-        stmt.setInt(1, idAppuntamento);
+            stmt.setInt(1, appuntamento.getIdAppuntamento());
+            stmt.executeUpdate();
 
-        stmt.executeUpdate();
-
-        stmt.close();
-
-    }
-
-    public void deleteRichiesta(Integer idAppuntamento) throws SQLException {
-        PreparedStatement stmt;
-        Connection conn;
-
-        conn = ConnectionFactory.getConnection();
-
-        String deleteQuery= "DELETE FROM " + TABELLA_APPUNTAMENTO + " " +
-                "WHERE " + ID_APPUNTAMENTO + " = ? ";
-        stmt = conn.prepareStatement(deleteQuery);
-        stmt.setInt(1, idAppuntamento);
-
-        stmt.executeUpdate();
-
-        stmt.close();
-    }
-
-    public boolean getDisp(Integer idAppuntamento, String usernamePsicologo) throws SQLException{
-        PreparedStatement stmt;
-        Connection conn;
-
-        conn = ConnectionFactory.getConnection();
-        String sql="SELECT " + " a. " + ID_APPUNTAMENTO + " " +
-                "FROM " + TABELLA_APPUNTAMENTO + " a " +
-                "WHERE " + " a. " + ID_APPUNTAMENTO + " = ? AND " + USERNAME_PSICOLOGO + " = ? " + " AND " +
-                "NOT EXISTS ( SELECT 1 " +
-                "FROM " + TABELLA_APPUNTAMENTO + " a1 " +
-                "WHERE " + " a1. " + STATO_APPUNTAMENTO + " = 1 AND " +
-                " a1. " + DATA + " = a. " + DATA + " AND " + " a1. " + USERNAME_PSICOLOGO + " = a. " + USERNAME_PSICOLOGO + " AND " +
-                " a1. " + ORA + " = a. " + ORA + " ) ";
-        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setInt(1,idAppuntamento);
-        stmt.setString(2, usernamePsicologo);
-
-        ResultSet rs=stmt.executeQuery();
-
-        if(rs.next()) {
-            rs.close();
-            stmt.close();
-            return true;
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
         }
-        rs.close();
-        stmt.close();
-        return false;
+
+    // Chiamata al metodo per aggiungere lo psicologo al paziente fuori dal blocco try-with-resources
+        new PazienteDAO().aggiungiPsicologoAlPaziente(appuntamento);
     }
 
-    public void updateStatoNotificaPaziente(String usernamePaziente) throws SQLException {
-        PreparedStatement stmt;
-        Connection conn;
 
-        conn = ConnectionFactory.getConnection();
+    public void eliminaRichiesta(Appuntamento appuntamento) throws DAOException {
 
-        String updateQuery= "UPDATE " + TABELLA_APPUNTAMENTO + " " +
-                "SET " + STATO_NOTIFICA_PAZIENTE +  " = 0 " +
-                "WHERE " + USERNAME_PAZIENTE + " = ? AND " + STATO_NOTIFICA_PAZIENTE + " = 1 ";
-        stmt = conn.prepareStatement(updateQuery);
-        stmt.setString(1, usernamePaziente);
+        Connection conn = ConnectionFactory.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.ELIMINA_RICHIESTA_DI_APPUNTAMENTO)) {
 
-        stmt.executeUpdate();
+            stmt.setInt(1, appuntamento.getIdAppuntamento());
+            stmt.executeUpdate();
 
-        stmt.close();
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
+    }
 
+    public boolean getDisp(Integer idAppuntamento, Utente utente) throws DAOException{
+        boolean disponibile = false;
+
+        Connection conn = ConnectionFactory.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.CONTROLLA_DISPONIBILITA, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+
+            stmt.setInt(1, idAppuntamento);
+            stmt.setString(2, utente.getUsername());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    disponibile = true;
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
+        return disponibile;
+    }
+
+    public void updateStatoNotificaPaziente(Utente utente) throws DAOException {
+
+        Connection conn = ConnectionFactory.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.UPDATE_STATO_NOTIFICA_PAZIENTE)) {
+
+            stmt.setString(1, utente.getUsername());
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
+    }
+
+    @Override
+    public PreparedStatement createPreparedStatement(Connection conn, String sql, Utente utente) throws DAOException {
+        String sqlQuery;
+        if (utente.getUserType().equals(UserType.PSICOLOGO)) {
+            sqlQuery = sql + QuerySQLAppuntamentoDAO.CONFRONTO_USERNAME_PSICOLOGO;
+        } else {
+            sqlQuery = sql + QuerySQLAppuntamentoDAO.CONFRONTO_USERNAME_PAZIENTE;
+        }
+
+        try (PreparedStatement stmt = conn.prepareStatement(sqlQuery, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+                stmt.setString(1, utente.getUsername());
+                return stmt; // Restituisci il PreparedStatement preparato
+
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
+    }
+
+    @Override
+    public PreparedStatement createPreparedStatement(Connection conn, Utente utente) throws DAOException{
+        String sql;
+        if (utente.getUserType().equals(UserType.PSICOLOGO)) {
+            sql = QuerySQLAppuntamentoDAO.NUMERO_RICHIESTE_APPUNTAMENTI_DA_NOTIFICARE_PSICOLOGO;
+        } else {
+            sql = QuerySQLAppuntamentoDAO.NUMERO_NUOVI_APPUNTAMENTI_DA_NOTIFICARE_PAZIENTE;
+        }
+
+        try ( PreparedStatement stmt=conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            stmt.setString(1, utente.getUsername());
+            return stmt;
+
+        }catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
     }
 }
 

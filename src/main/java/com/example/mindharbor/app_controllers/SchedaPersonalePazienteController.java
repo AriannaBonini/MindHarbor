@@ -33,7 +33,7 @@ public class SchedaPersonalePazienteController {
                     (String) paziente.getParametri().get(0),
                     ""
             );
-        }catch (SQLException e) {
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
 

@@ -14,10 +14,10 @@ public class TestPsicologicoDAO {
     protected static final String PAZIENTE="Paziente";
     protected static final String TEST="Test";
     protected static final String SVOLTO="Svolto";
-    protected static final String STATOPSICOLOGO="StatoPsicologo";
+    protected static final String STATOPSICOLOGO="statoNotificaPsicologo";
     protected static final String TABELLA_TESTPSICOLOGICO= "testpsicologico";
     protected static final String TERAPIA= "terapia";
-    protected static final String STATO= "Stato";
+    protected static final String STATO= "statoNotificaPaziente";
     protected static final String DATATEST="DataTest";
 
 

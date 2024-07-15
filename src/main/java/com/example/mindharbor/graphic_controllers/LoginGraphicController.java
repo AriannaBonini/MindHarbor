@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class LoginGraphicController implements Observer{
-
     @FXML
     private Label msgLbl;
     @FXML

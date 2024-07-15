@@ -20,6 +20,8 @@ public class UtenteDao {
     protected static final String PSW = "Password";
 
     protected static final String RUOLO = "Categoria";
+    protected static final String TABELLA_UTENTE = "Utente";
+
 
     public Utente trovaUtente(Utente credenzialiUtenteLogin) throws SQLException, DAOException {
         PreparedStatement stmt;
@@ -63,6 +65,33 @@ public class UtenteDao {
                 rs.getString(NOME),
                 rs.getString(COGNOME),
                 type);
+        return utente;
+    }
+
+    public Utente trovaNomeCognome(Utente utente) throws SQLException {
+        Utente utente=null;
+
+        PreparedStatement stmt;
+        Connection conn;
+
+        conn = ConnectionFactory.getConnection();
+
+        String sql ="SELECT " + NOME + ", " + COGNOME + " " +
+                "FROM " + TABELLA_UTENTE + " " +
+                "WHERE " + USERNAME + " = ?";
+        // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
+        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        stmt.setString(1, utente.getUsername());
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            utente= new Utente("", rs.getString(1), rs.getString(2),null);
+
+        }
+        rs.close();
+        stmt.close();
+
         return utente;
     }
 }

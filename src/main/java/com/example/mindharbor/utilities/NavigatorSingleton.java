@@ -1,6 +1,7 @@
 package com.example.mindharbor.utilities;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
+import com.example.mindharbor.beans.PazientiBean;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,6 +18,7 @@ public class NavigatorSingleton {
     private String parametro;
 
     private AppuntamentiBean app;
+    private PazientiBean pazienteBean;
 
     private Date data;
 
@@ -65,5 +67,6 @@ public class NavigatorSingleton {
     public void setAppuntamentoBean(AppuntamentiBean app) {this.app=app;}
     public AppuntamentiBean getAppuntamentoBean() {return app;}
     public void deleteAppuntamentoBean() {this.app=null;}
-
+    public PazientiBean getPazienteBean() {return pazienteBean;}
+    public void setPazienteBean(PazientiBean pazienteBean) {this.pazienteBean = pazienteBean;}
 }

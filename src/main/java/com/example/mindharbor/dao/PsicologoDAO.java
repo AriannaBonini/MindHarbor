@@ -38,7 +38,7 @@ public class PsicologoDAO {
                     TABELLA_UTENTE + "." + UTENTE_USERNAME + " = " + TABELLA_PSICOLOGO + "." + USERNAME + " " +
                     "WHERE " + UTENTE_CATEGORIA + " = 'Psicologo' ";
 
-            if((usernamePsicologo=new PazienteDAO().getUsernamePsicologo(usernamePaziente))!=null) {
+            if((usernamePsicologo=new PazienteDAO().getUsernamePsicologo(null))!=null) {
                 sql += "AND " + TABELLA_UTENTE + "." + UTENTE_USERNAME + " = ?";
                 stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 stmt.setString(1,usernamePsicologo);

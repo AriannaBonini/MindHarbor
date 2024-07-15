@@ -1,5 +1,8 @@
 package com.example.mindharbor.dao;
 
+import com.example.mindharbor.dao.query_sql.QuerySQLPazienteDAO;
+import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.PazientiNumTest;
@@ -12,97 +15,62 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PazienteDAO {
-    protected static final String NOME= "Nome";
-    protected static final String COGNOME= "Cognome";
-    protected static final String GENERE= "Genere";
-    protected static final String ETA= "Età";
-    protected static final String DIAGNOSI= "Diagnosi";
-    protected static final String USERNAME= "Username";
-    private static final String TABELLA_UTENTE= "utente";
-    private static final String TABELLA_PAZIENTE= "paziente";
-    private static final String PAZIENTE_USERNAME= "Paziente_Username";
-    private static final String PSICOLOGO_USERNAME= "Username_Psicologo";
+public class PazienteDAO extends QuerySQLPazienteDAO {
 
+    public List<Paziente> trovaPaziente(String usernamePsicologo) throws DAOException {
+        List<Paziente> pazienteList = new ArrayList<>();
 
-    public List<PazientiNumTest> trovaPaziente(String usernamePsicologo) throws SQLException {
+        Connection conn = ConnectionFactory.getConnection();
 
-        List<PazientiNumTest> pazienteList = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLPazienteDAO.TROVA_PAZIENTE, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 
-        PreparedStatement stmt;
-        Connection conn;
+            stmt.setString(1, usernamePsicologo);
 
-        conn = ConnectionFactory.getConnection();
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Paziente paziente = new Paziente(rs.getString(1),
+                            rs.getString(3),
+                            rs.getString(4),
+                            rs.getString(5),
+                            rs.getInt(2));
 
-        String sql = "SELECT P." + PAZIENTE_USERNAME + ", SUM(T.StatoPsicologo), " +
-                "U." + NOME + ", U." + COGNOME + ", U." + GENERE + " " +
-                "FROM " + TABELLA_PAZIENTE + " P " +
-                "LEFT JOIN testpsicologico T ON P." + PAZIENTE_USERNAME + " = T.Paziente " +
-                "JOIN " + TABELLA_UTENTE + " U ON U." + USERNAME + " = P." + PAZIENTE_USERNAME + " " +
-                "WHERE P." + USERNAME + "_Psicologo = ? " +
-                "GROUP BY P." + PAZIENTE_USERNAME;
-        // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
-        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setString(1, usernamePsicologo);
+                    pazienteList.add(paziente);
+                }
+            }
 
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-
-            PazientiNumTest paziente = new PazientiNumTest(rs.getInt(2),
-                    new Paziente(rs.getString(1), rs.getString(3),rs.getString(4), UserType.PAZIENTE, rs.getString(5), "",null));
-
-
-            pazienteList.add(paziente);
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
         }
-        rs.close();
-        stmt.close();
-
         return pazienteList;
     }
 
-    public Paziente getInfoSchedaPersonale(String paziente1) throws SQLException{
-        Paziente paziente=null;
+    public Paziente getInfoSchedaPersonale(String username) throws DAOException{
+        Paziente paziente = null;
 
-        PreparedStatement stmt;
-        Connection conn;
+        Connection conn = ConnectionFactory.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLPazienteDAO.INFO_SCHEDA_PERSONALE, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 
-        conn = ConnectionFactory.getConnection();
+            stmt.setString(1, username);
 
-        String sql = "SELECT " +
-                TABELLA_UTENTE + "." + NOME + ", " +
-                TABELLA_UTENTE + "." + COGNOME + ", " +
-                TABELLA_PAZIENTE + "." + ETA + ", " +
-                TABELLA_PAZIENTE + "." + DIAGNOSI + ", " +
-                TABELLA_UTENTE + "." + GENERE + " " +
-                "FROM " + TABELLA_PAZIENTE + " " +
-                "JOIN " + TABELLA_UTENTE + " ON " +
-                TABELLA_UTENTE + "." + USERNAME + " = " + TABELLA_PAZIENTE + "." + PAZIENTE_USERNAME + " " +
-                "WHERE " + TABELLA_PAZIENTE + "." + PAZIENTE_USERNAME + " = ?";
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    List<Object> parametri = new ArrayList<>();
+                    parametri.add(rs.getString(4));
+                    parametri.add("");
+                    parametri.add(rs.getInt(3));
 
+                    paziente = new Paziente("", rs.getString(1), rs.getString(2), UserType.PAZIENTE, rs.getString(5), "", parametri);
+                }
+            }
 
-        // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
-        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setString(1, paziente1);
-
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            List<Object> parametri= new ArrayList<>();
-            parametri.add(rs.getString(4));
-            parametri.add("");
-            parametri.add(rs.getInt(3));
-
-            paziente = new Paziente("", rs.getString(1), rs.getString(2), UserType.PAZIENTE, rs.getString(5),"", parametri);
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
         }
-
-        rs.close();
-        stmt.close();
 
         return paziente;
     }
 
-    public Paziente getInfoPaziente(Utente utente) throws SQLException {
+    public Paziente getInfoPaziente(Utente utente) throws DAOException {
         Paziente paziente=null;
 
         PreparedStatement stmt;
@@ -232,7 +200,7 @@ public class PazienteDAO {
         }
     }
 
-    public String getUsernamePsicologo(String usernamePaziente) throws SQLException{
+    public String getUsernamePsicologo(Utente paziente) throws SQLException{
         String usernamePsicologo=null;
 
         PreparedStatement stmt;
@@ -243,7 +211,7 @@ public class PazienteDAO {
                 "FROM " + TABELLA_PAZIENTE + " " +
                 "WHERE " +  PAZIENTE_USERNAME + " = ? ";
         stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setString(1,usernamePaziente);
+        stmt.setString(1,paziente.getUsername());
 
         ResultSet rs= stmt.executeQuery();
 
@@ -254,6 +222,24 @@ public class PazienteDAO {
         rs.close();
         stmt.close();
         return usernamePsicologo;
+    }
+
+    public void aggiungiPsicologoAlPaziente(Appuntamento appuntamento) {
+        PreparedStatement stmt;
+        Connection conn;
+
+        conn = ConnectionFactory.getConnection();
+
+        String updateQuery= "UPDATE " + TABELLA_PAZIENTE + " " +
+                "SET " + PSICOLOGO_USERNAME +  " = ? " + " " +
+                "WHERE " + PAZIENTE_USERNAME + " = ? ";
+        stmt = conn.prepareStatement(updateQuery);
+        stmt.setString(1, appuntamento.getPsicologo().getUsername());
+        stmt.setString(2, appuntamento.getPaziente().getUsername());
+
+        stmt.executeUpdate();
+
+        stmt.close();
     }
  }
 

@@ -10,6 +10,13 @@ public class Paziente extends Utente{
     private List<Object> parametri=new ArrayList<>();
     //0 diagnosi e 1 usernamePsicologo e 2 anni
 
+    private Integer numeroTest;
+
+    public Paziente(String username, String nome, String cognome, String genere, Integer numTest) {
+        super(username, nome, cognome, genere);
+        this.numeroTest=numTest;
+    }
+
 
     public Paziente(String username, String nome, String cognome, UserType userType, String genere, String password, List<Object> parametri) {
         super(username, nome, cognome, userType, genere, password);

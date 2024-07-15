@@ -7,6 +7,15 @@ public class PazientiBean {
     private Integer anni;
     private String diagnosi;
     private String username;
+    private Integer numTest;
+
+    public PazientiBean(String username, Integer numTest, String nome, String cognome, String genere,  Integer anni, String diagnosi) {
+        this.username=username;
+        this.numTest=numTest;
+        this.nome=nome;
+        this.cognome=cognome;
+        this.genere=genere;
+    }
 
     public PazientiBean() {}
 
@@ -19,7 +28,6 @@ public class PazientiBean {
         this.diagnosi=diagnosi;
         this.username=username;
     }
-
     public String getNome() {
         return nome;
     }
@@ -60,5 +68,10 @@ public class PazientiBean {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public Integer getNumTest() {
+        return numTest;
+    }
+    public void setNumTest(Integer numTest) {this.numTest = numTest;}
 }
 

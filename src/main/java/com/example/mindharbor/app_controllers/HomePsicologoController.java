@@ -30,8 +30,8 @@ public class HomePsicologoController extends setInfoUtente{
 
     public Integer cercaRichiesteAppuntamenti() throws DAOException {
         try {
-            return new AppuntamentoDAO().getNumRicAppDaNotificare(SessionManager.getInstance().getCurrentUser().getUsername(),null);
-        } catch (SQLException e ) {
+            return new AppuntamentoDAO().getNumRicAppDaNotificare(SessionManager.getInstance().getCurrentUser());
+        } catch (DAOException e ) {
             throw new DAOException(e.getMessage());
         }
 

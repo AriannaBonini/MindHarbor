@@ -117,7 +117,7 @@ public class ListaPazientiGraphicController {
             Stage listaPazienti = (Stage) listViewPazienti.getScene().getWindow();
             listaPazienti.close();
 
-            listaPazientiController.setUsername(username);
+            listaPazientiController.setPaziente(username);
 
             navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
         } catch (IOException e) {

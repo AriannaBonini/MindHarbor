@@ -11,6 +11,7 @@ import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ListaRichiesteAppuntamentiController {
@@ -21,7 +22,7 @@ public class ListaRichiesteAppuntamentiController {
 
         try {
             List<Appuntamento> listaRichieste = new AppuntamentoDAO().trovaRichiesteAppuntamento(
-                    SessionManager.getInstance().getCurrentUser().getUsername());
+                    SessionManager.getInstance().getCurrentUser());
 
             for(Appuntamento ric: listaRichieste) {
                 AppuntamentiBean ricBean= new AppuntamentiBean("",
@@ -34,7 +35,7 @@ public class ListaRichiesteAppuntamentiController {
                 listaRichiesteBean.add(ricBean);
             }
             return listaRichiesteBean;
-        }catch (SQLException e) {
+        }catch (DAOException e) {
            throw new DAOException(e.getMessage());
         }
     }

@@ -10,9 +10,12 @@ import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
+
 import java.sql.SQLException;
 
 public class VerificaDispController {
+
+    private Appuntamento richiesta;
 
     public HomeInfoUtenteBean getInfoPsicologo() {return new setInfoUtente().getInfo();}
 
@@ -21,7 +24,7 @@ public class VerificaDispController {
     public void modificaStatoNotifica(Integer idRichiesta) throws DAOException {
         try {
             new AppuntamentoDAO().updateStatoNotifica(idRichiesta);
-        }catch (SQLException e) {
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }
@@ -29,46 +32,46 @@ public class VerificaDispController {
     public AppuntamentiBean getRichiestaAppuntamento(Integer idAppuntamento) throws DAOException {
         AppuntamentiBean richiestaBean;
         try {
-            Appuntamento richiesta = new AppuntamentoDAO().getInfoRichiesta(idAppuntamento);
+            richiesta = new AppuntamentoDAO().getInfoRichiesta(idAppuntamento);
 
             richiestaBean= new AppuntamentiBean(richiesta.getData(),
                     richiesta.getOra(),
-                    new PazientiBean(richiesta.getPaziente().getNome(),richiesta.getPaziente().getCognome(),richiesta.getPaziente().getGenere(),0,"",""),
+                    new PazientiBean(richiesta.getPaziente().getNome(),richiesta.getPaziente().getCognome(),richiesta.getPaziente().getGenere(),0,"",richiesta.getPaziente().getUsername()),
                     null,
                     null,
                     null);
             return richiestaBean;
-        }catch (SQLException e) {
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
     public boolean verificaDisp(Integer idAppuntamento) throws DAOException {
         try {
-            if(!new AppuntamentoDAO().getDisp(idAppuntamento,SessionManager.getInstance().getCurrentUser().getUsername())) {
+            if(!new AppuntamentoDAO().getDisp(idAppuntamento,SessionManager.getInstance().getCurrentUser())) {
                 return false;
             }
             return BoundaryMockAPICalendario.Calendario();
 
-        }catch (SQLException e) {
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
-    public void richiestaAccettata(Integer idAppuntamento) throws DAOException {
+    public void richiestaAccettata() throws DAOException {
         try {
-            new AppuntamentoDAO().updateRichiesta(idAppuntamento);
+            new AppuntamentoDAO().updateRichiesta(richiesta);
 
-        }catch (SQLException e) {
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
-    public void richiestaRifiutata(Integer idAppuntamento) throws DAOException {
+    public void richiestaRifiutata() throws DAOException {
         try {
-            new AppuntamentoDAO().deleteRichiesta(idAppuntamento);
+            new AppuntamentoDAO().eliminaRichiesta(richiesta);
 
-        }catch (SQLException e) {
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }

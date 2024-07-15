@@ -153,7 +153,7 @@ public class VerificaDispGraphicController {
     @FXML
     public void richiestaAccettata() {
         try {
-            verificaDispController.richiestaAccettata(idRichiesta);
+            verificaDispController.richiestaAccettata();
             Alert alert=new AlertMessage().Informazione("SUCCESSO", "Richiesta accettata","Hai un nuovo appuntamento");
 
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
@@ -168,7 +168,7 @@ public class VerificaDispGraphicController {
     @FXML
     public void richiestaRifiutata() {
         try {
-            verificaDispController.richiestaRifiutata(idRichiesta);
+            verificaDispController.richiestaRifiutata();
             Alert alert=new AlertMessage().Informazione("SUCCESSO", "Richiesta rifiutata","appuntamento rifiutato");
 
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));

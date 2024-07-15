@@ -13,24 +13,35 @@ import com.example.mindharbor.user_type.UserType;
         private String password;
 
         public Utente(String username, String nome, String cognome, UserType userType, String genere, String password ) {
-            setUsername(username);
-            setNome(nome);
-            setCognome(cognome);
-            setUserType(userType);
-            setGenere(genere);
-            setPassword(password);
+            this.username=username;
+            this.nome=nome;
+            this.cognome=cognome;
+            this.userType=userType;
+            this.genere=genere;
+            this.password=password;
         }
 
         public Utente(String username, String nome, String cognome, UserType userType) {
-            this(username, nome, cognome, userType, null, null);
+            this.username=username;
+            this.nome=nome;
+            this.cognome=cognome;
+            this.userType=userType;
         }
 
         public Utente(String username, String password) {
-            this(username, null, null, null, null, password);
+            this.username=username;
+            this.password=password;
         }
 
         public Utente(String username) {
-            this(username, null);
+            this.username=username;
+        }
+
+        public Utente(String username, String nome, String cognome, String genere) {
+            this.username=username;
+            this.nome=nome;
+            this.cognome=cognome;
+            this.genere=genere;
         }
 
 
