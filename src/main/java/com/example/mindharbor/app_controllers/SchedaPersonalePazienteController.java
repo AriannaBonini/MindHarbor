@@ -1,6 +1,6 @@
 package com.example.mindharbor.app_controllers;
 
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
@@ -10,49 +10,35 @@ import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
 
-import java.sql.SQLException;
-
 public class SchedaPersonalePazienteController {
+    private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
 
-    public HomeInfoUtenteBean getInfoPsicologo() {
+
+    public void deletePazienteSelezionato() {navigator.deletePazienteBean();}
+    public InfoUtenteBean getInfoPsicologo() {
         return new setInfoUtente().getInfo();
     }
-    public String getUsername(){return NavigatorSingleton.getInstance().getParametro();}
-    public void setUsername(String username) { NavigatorSingleton.getInstance().setParametro(username);}
+    public PazientiBean getPazienteSelezionato(){return navigator.getPazienteBean();}
+    public void setPazienteSelezionato(PazientiBean pazienteSelezionato) { navigator.setPazienteBean(pazienteSelezionato);}
 
-    public PazientiBean getSchedaPersonale(String username) throws DAOException {
-        PazientiBean pazienteBean;
+    public PazientiBean getSchedaPersonale(PazientiBean pazienteSelezionato) throws DAOException {
         try {
-            Paziente paziente = new PazienteDAO().getInfoSchedaPersonale(username);
+            Paziente paziente = new PazienteDAO().getInfoSchedaPersonale(new Paziente(pazienteSelezionato.getUsername()));
 
-            pazienteBean = new PazientiBean(
-                    paziente.getNome(),
-                    paziente.getCognome(),
-                    paziente.getGenere(),
-                    (Integer) paziente.getParametri().get(2),
-                    (String) paziente.getParametri().get(0),
-                    ""
-            );
+            pazienteSelezionato.setAnni(paziente.getAnni());
+            pazienteSelezionato.setDiagnosi(paziente.getDiagnosi());
+
         }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
 
-        return pazienteBean;
+        return pazienteSelezionato;
     }
 
-    public int cercaNuoviTestSvoltiPazienteDaNotificare(String usernamePaziente) throws DAOException {
+    public int numTestSvoltiSenzaPrescrizione(PazientiBean pazienteSelezionato) throws DAOException {
         try {
-            return new TestPsicologicoDAO().getNumTestSvoltiDaNotificare(SessionManager.getInstance().getCurrentUser().getUsername(), usernamePaziente);
-        }catch (SQLException e) {
-            throw new DAOException(e.getMessage());
-        }
-    }
-
-
-    public int numTestSvoltiSenzaPrescrizione(String usernamePaziente) throws DAOException {
-        try {
-            return new TestPsicologicoDAO().getNumTestSvoltiSenzaPrescrizione(SessionManager.getInstance().getCurrentUser().getUsername(), usernamePaziente);
-        }catch (SQLException e) {
+            return new TestPsicologicoDAO().getNumTestSvoltiSenzaPrescrizione(SessionManager.getInstance().getCurrentUser(), new Paziente(pazienteSelezionato.getUsername()));
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }

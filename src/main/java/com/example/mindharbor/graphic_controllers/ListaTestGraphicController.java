@@ -1,7 +1,7 @@
 package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.ListaTestController;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.ImageDecorator;
@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 public class ListaTestGraphicController {
@@ -40,9 +39,10 @@ public class ListaTestGraphicController {
     private final ListaTestController listaTestController= new ListaTestController();
     private static final Logger logger = LoggerFactory.getLogger(ListaTestGraphicController.class);
     private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
+    private InfoUtenteBean infoUtenteBean;
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = listaTestController.getInfoPaziente();
+        infoUtenteBean = listaTestController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
         modificaStatoNotifica();
@@ -53,8 +53,8 @@ public class ListaTestGraphicController {
 
     private void trovaPsicologo() {
         try {
-            String nomePsicologo= listaTestController.ricercaPsicologo();
-            labelPsicologo.setText(nomePsicologo);
+            infoUtenteBean= listaTestController.infoPsicologo();
+            labelPsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         } catch (DAOException e) {
             logger.info("Errore durante la ricerca dello psicologo: ", e);
         }
@@ -151,13 +151,11 @@ public class ListaTestGraphicController {
                 new LabelDuration().Duration(info,"test già effettuato");
                 return;
             }
-            String nomeTest = test.getNomeTest();
-            Date dataTest=test.getData();
 
             Stage listaTest = (Stage) listViewTest.getScene().getWindow();
             listaTest.close();
 
-            listaTestController.setNomeTestData(nomeTest,dataTest);
+            listaTestController.setTestSelezionato(test);
             navigator.gotoPage("/com/example/mindharbor/SvolgiTest.fxml");
 
         } catch (IOException e) {

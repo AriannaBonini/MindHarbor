@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.AppuntamentiController;
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.collections.FXCollections;
@@ -43,7 +43,7 @@ public class AppuntamentiPazienteGraphicController {
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPazienteGraphicController.class);
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = controllerAppuntamenti.getInfoUtente();
+        InfoUtenteBean infoUtenteBean = controllerAppuntamenti.getInfoUtente();
         labelNomePazienteTab1.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         labelNomePazienteTab2.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 

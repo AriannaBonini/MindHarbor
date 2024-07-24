@@ -1,7 +1,7 @@
 package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.PrescrizioniTerapiaPazienteController;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.TerapiaBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -38,7 +38,7 @@ public class PrescrizioniPazienteGraphicController {
     private final PrescrizioniTerapiaPazienteController prescriviTerapiaController= new PrescrizioniTerapiaPazienteController();
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         getListaTerapie();
     }

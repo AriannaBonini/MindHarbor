@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.AppuntamentiController;
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.collections.FXCollections;
@@ -42,7 +42,7 @@ public class AppuntamentiPsicologoGraphicController {
 
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = appuntamentiController.getInfoUtente();
+        InfoUtenteBean infoUtenteBean = appuntamentiController.getInfoUtente();
         labelNomePsicologoTab1.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         labelNomePsicologoTab2.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 

@@ -1,7 +1,7 @@
 package com.example.mindharbor.app_controllers;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.dao.AppuntamentoDAO;
@@ -10,13 +10,12 @@ import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.setInfoUtente;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AppuntamentiController {
 
-    public HomeInfoUtenteBean getInfoUtente() {return new setInfoUtente().getInfo();}
+    public InfoUtenteBean getInfoUtente() {return new setInfoUtente().getInfo();}
 
     public void modificaStatoNotificaAppuntamenti() throws DAOException {
         //Questo metodo viene utilizzato per modificare lo stato della notifica del paziente.

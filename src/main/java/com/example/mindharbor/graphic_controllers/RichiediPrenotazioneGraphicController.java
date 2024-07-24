@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.RichiediPrenotazioneController;
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
@@ -43,19 +43,21 @@ public class RichiediPrenotazioneGraphicController {
     NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(RichiediPrenotazioneGraphicController.class);
     private final RichiediPrenotazioneController prenotazioneController= new RichiediPrenotazioneController();
+    private PsicologoBean psicologoSelezionato;
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = prenotazioneController.getPageRichPrenInfo();
+        InfoUtenteBean infoUtenteBean = prenotazioneController.getPageRichPrenInfo();
 
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+        psicologoSelezionato=prenotazioneController.getPsicologoSelezionato();
 
-        popolaSchedaPsicologo(prenotazioneController.getUsername());
+        popolaSchedaPsicologo();
     }
 
-    private void popolaSchedaPsicologo(String usernamePsicologo) {
+    private void popolaSchedaPsicologo() {
         try {
-            PsicologoBean infoPsicologo = prenotazioneController.getInfoPsicologo(usernamePsicologo);
-            creaSchedaPsicologo(infoPsicologo);
+            psicologoSelezionato = prenotazioneController.getInfoPsicologo(psicologoSelezionato);
+            creaSchedaPsicologo();
 
         }catch (DAOException e) {
             logger.info("Non esistono informazioni relative allo psicologo " ,e);
@@ -63,13 +65,13 @@ public class RichiediPrenotazioneGraphicController {
 
     }
 
-    private void creaSchedaPsicologo(PsicologoBean infoPsicologo) {
-        nomePsicologo.setText(infoPsicologo.getNome());
-        cognomePsicologo.setText(infoPsicologo.getCognome());
-        costoOrario.setText(infoPsicologo.getCostoOrario() + " €/h");
-        nomeStudio.setText(infoPsicologo.getNomeStudio());
+    private void creaSchedaPsicologo() {
+        nomePsicologo.setText(psicologoSelezionato.getNome());
+        cognomePsicologo.setText(psicologoSelezionato.getCognome());
+        costoOrario.setText(psicologoSelezionato.getCostoOrario() + " €/h");
+        nomeStudio.setText(psicologoSelezionato.getNomeStudio());
 
-        ImageDecorator imageDecorator= new GenereDecorator(immaginePsicologo,infoPsicologo.getGenere());
+        ImageDecorator imageDecorator= new GenereDecorator(immaginePsicologo,psicologoSelezionato.getGenere());
         imageDecorator.loadImage();
 
     }
@@ -81,6 +83,8 @@ public class RichiediPrenotazioneGraphicController {
             if(risposta==0) {
                 return;
             }
+
+            prenotazioneController.deleteAppuntamentoSelezionato();
 
             Stage richiediPrenotazione = (Stage) home.getScene().getWindow();
             richiediPrenotazione.close();
@@ -98,6 +102,8 @@ public class RichiediPrenotazioneGraphicController {
             Stage richiediPrenotazione = (Stage) tornaIndietro.getScene().getWindow();
             richiediPrenotazione.close();
 
+            prenotazioneController.deletePsicologoSelezionato();
+
             navigator.gotoPage("/com/example/mindharbor/ListaPsicologi.fxml");
 
         } catch (IOException e) {
@@ -108,9 +114,8 @@ public class RichiediPrenotazioneGraphicController {
     @FXML
     public void richiediPrenotazione() {
         try {
-            AppuntamentiBean appuntamentoBean = prenotazioneController.getAppuntamento();
-            appuntamentoBean.setPsicologo(new PsicologoBean());
-            appuntamentoBean.getPsicologo().setUsername(prenotazioneController.getUsername());
+            AppuntamentiBean appuntamentoBean = prenotazioneController.getAppuntamentoSelezionato();
+            appuntamentoBean.setPsicologo(psicologoSelezionato);
 
             prenotazioneController.salvaRichiestaAppuntamento(appuntamentoBean);
 

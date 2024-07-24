@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.SelezionaDataEOraController;
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.constants.Constants;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -39,7 +39,7 @@ public class SelezionaDataEOraGraphicController {
     private AppuntamentiBean appuntamento;
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = selezionaDataEOraController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = selezionaDataEOraController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
         dataRules();
@@ -52,6 +52,10 @@ public class SelezionaDataEOraGraphicController {
     }
 
     private void dataRules() {
+        // Disabilito la possibilità di inserimento manuale da parte del paziente.
+        data.getEditor().setDisable(true);
+        data.getEditor().setFocusTraversable(false);
+
         data.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {

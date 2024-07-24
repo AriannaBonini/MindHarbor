@@ -1,7 +1,7 @@
 package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.ListaPsicologiController;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
@@ -42,7 +42,7 @@ public class ListaPsicologiGraphicController {
     private final ListaPsicologiController listaPsicologiController= new ListaPsicologiController();
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = listaPsicologiController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = listaPsicologiController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         popolaLista();
     }
@@ -127,7 +127,7 @@ public class ListaPsicologiGraphicController {
             Stage listaPsicologi = (Stage) listViewPsicologo.getScene().getWindow();
             listaPsicologi.close();
 
-            listaPsicologiController.setUsername(psicologo.getUsername());
+            listaPsicologiController.setPsicologoSelezionato(psicologo);
 
             navigator.gotoPage("/com/example/mindharbor/RichiediPrenotazione.fxml");
         } catch (IOException e) {

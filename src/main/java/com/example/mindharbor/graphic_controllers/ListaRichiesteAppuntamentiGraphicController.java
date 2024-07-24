@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.ListaRichiesteAppuntamentiController;
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImageDecorator;
@@ -41,7 +41,7 @@ public class ListaRichiesteAppuntamentiGraphicController {
     private static final Logger logger = LoggerFactory.getLogger(ListaRichiesteAppuntamentiGraphicController.class);
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = listaRichiesteController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = listaRichiesteController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         popolaLista();
     }
@@ -120,8 +120,8 @@ public class ListaRichiesteAppuntamentiGraphicController {
                 return;
             }
 
-            AppuntamentiBean appBea =(AppuntamentiBean) nodo.getUserData();
-            listaRichiesteController.setIdRichiesta(appBea.getIdAppuntamento());
+            AppuntamentiBean richiestaAppuntamentoSelezionato =(AppuntamentiBean) nodo.getUserData();
+            listaRichiesteController.setRichiestaAppuntamentoSelezionato(richiestaAppuntamentoSelezionato);
 
             Stage listaRichieste = (Stage) listViewPazienti.getScene().getWindow();
             listaRichieste.close();

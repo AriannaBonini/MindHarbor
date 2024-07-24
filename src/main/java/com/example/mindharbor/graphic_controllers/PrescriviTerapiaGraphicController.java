@@ -1,11 +1,11 @@
 package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.PrescriviTerapiaController;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
+import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.beans.TerapiaBean;
 import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.exceptions.DAOException;
-import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -53,35 +53,25 @@ public class PrescriviTerapiaGraphicController {
 
     private static final Logger logger = LoggerFactory.getLogger(PrescriviTerapiaGraphicController.class);
     private final   NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-    private String username;
-    private Utente utentePaziente;
+    private PazientiBean pazienteSelezionato;
     private TestBean testbean;
     private final PrescriviTerapiaController prescriviController= new PrescriviTerapiaController();
 
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = prescriviController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = prescriviController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        username=prescriviController.getUsername();
+        pazienteSelezionato=prescriviController.getPazienteSelezionato();
 
         modificaStatoNotifica();
-        trovaPaziente();
         popolaListaTestSvoltiSenzaPrescrizione();
 
     }
 
-    private void trovaPaziente() {
-        try{
-            utentePaziente=prescriviController.ricercaNomeCognomePaziente(username);
-        }catch (DAOException e) {
-            logger.info("Errore nella ricerca del nome e cognome del paziente ", e);
-        }
-    }
-
     private void popolaListaTestSvoltiSenzaPrescrizione() {
         try {
-            List<TestBean> testSvoltiBean = prescriviController.getTestSvoltiSenzaPrescrizione(username);
+            List<TestBean> testSvoltiBean = prescriviController.getTestSvoltiSenzaPrescrizione(pazienteSelezionato);
             popolaAreaTest(testSvoltiBean);
         } catch (DAOException e) {
             logger.info("Errore nella ricerca dei test svolti senza ancora prescrizioni ", e);
@@ -114,7 +104,7 @@ public class PrescriviTerapiaGraphicController {
 
     private void modificaStatoNotifica() {
         try {
-            prescriviController.modificaStatoTestSvolto(username);
+            prescriviController.modificaStatoTestSvolto(pazienteSelezionato);
         } catch (DAOException e ) {
             logger.info("Errore durante la modifica dello stato dei test psicologici", e);
         }
@@ -126,6 +116,7 @@ public class PrescriviTerapiaGraphicController {
             Stage prescriviTerapia = (Stage) home.getScene().getWindow();
             prescriviTerapia.close();
 
+            prescriviController.deletePazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
 
         }catch(IOException e) {
@@ -153,8 +144,8 @@ public class PrescriviTerapiaGraphicController {
             return;
         }
         testbean=(TestBean) nodo.getUserData();
-        campoNome.setText(utentePaziente.getNome());
-        campoCognome.setText(utentePaziente.getCognome());
+        campoNome.setText(pazienteSelezionato.getNome());
+        campoCognome.setText(pazienteSelezionato.getCognome());
         campoData.setText(String.valueOf(LocalDate.now()));
         campoInfoTest.setText("Risultato Test: " + testbean.getRisultato());
         prescrivi.setDisable(false);
@@ -171,7 +162,7 @@ public class PrescriviTerapiaGraphicController {
         } else {
             try {
             Date currentDate= new Date();
-            prescriviController.aggiungiTerapia(new TerapiaBean(SessionManager.getInstance().getCurrentUser().getUsername(),username,testoInserito,currentDate,testbean.getData()));
+            prescriviController.aggiungiTerapia(new TerapiaBean(SessionManager.getInstance().getCurrentUser().getUsername(), pazienteSelezionato.getUsername(), testoInserito,currentDate,testbean.getData()));
             Alert alert= new AlertMessage().Informazione("ESITO POSITIVO", "Operazione completata", "Terapia assegnata con successo");
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             alert.showAndWait();

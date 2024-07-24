@@ -1,13 +1,13 @@
 package com.example.mindharbor.utilities;
 
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.session.SessionManager;
 
 public class setInfoUtente {
-    public HomeInfoUtenteBean getInfo() {
+    public InfoUtenteBean getInfo() {
         SessionManager sessionManager = SessionManager.getInstance();
 
-        return new HomeInfoUtenteBean(
+        return new InfoUtenteBean(
                 sessionManager.getCurrentUser().getNome(),
                 sessionManager.getCurrentUser().getCognome()
         );

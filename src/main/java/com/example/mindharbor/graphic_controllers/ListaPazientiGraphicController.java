@@ -1,8 +1,8 @@
 package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.ListaPazientiController;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
-import com.example.mindharbor.beans.PazientiNumTestBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
+import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImageDecorator;
@@ -38,27 +38,27 @@ public class ListaPazientiGraphicController {
     private static final Logger logger = LoggerFactory.getLogger(ListaPazientiGraphicController.class);
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = listaPazientiController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = listaPazientiController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         popolaLista();
     }
 
     private void popolaLista() {
         try {
-            List<PazientiNumTestBean> listaPazienti = listaPazientiController.getListaPazienti();
+            List<PazientiBean> listaPazienti = listaPazientiController.getListaPazienti();
             creaVBoxListaPazienti(listaPazienti);
         }catch (DAOException e) {
-            logger.info("Non non ci sono appuntamenti", e);
-            listaVuota.setText("Non esistono appuntamenti");
+            logger.info("Non non ci sono pazienti", e);
+            listaVuota.setText("Non esistono pazienti");
         }
     }
 
-    private void creaVBoxListaPazienti(List<PazientiNumTestBean> listaPazienti) {
+    private void creaVBoxListaPazienti(List<PazientiBean> listaPazienti) {
         listViewPazienti.getItems().clear();
 
         ObservableList<Node> items = FXCollections.observableArrayList();
 
-        for (PazientiNumTestBean paz : listaPazienti) {
+        for (PazientiBean paz : listaPazienti) {
 
             VBox boxPaziente = new VBox();
             HBox hBoxPaziente = new HBox();
@@ -111,13 +111,12 @@ public class ListaPazientiGraphicController {
                 return;
             }
 
-            PazientiNumTestBean paziente =(PazientiNumTestBean) nodo.getUserData();
-            String username=paziente.getUsername();
+            PazientiBean paziente =(PazientiBean) nodo.getUserData();
 
             Stage listaPazienti = (Stage) listViewPazienti.getScene().getWindow();
             listaPazienti.close();
 
-            listaPazientiController.setPaziente(username);
+            listaPazientiController.setPazienteSelezionato(paziente);
 
             navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
         } catch (IOException e) {

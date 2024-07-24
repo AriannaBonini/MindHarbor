@@ -32,10 +32,12 @@ public class PsicologoBean {
 
     public void setCognome(String cognome) {this.cognome = cognome;}
     public Integer getCostoOrario() {return costoOrario;}
+    public void setCostoOrario(Integer costoOrario) {this.costoOrario= costoOrario;}
 
     public String getNomeStudio() {
         return nomeStudio;
     }
+    public void setNomeStudio(String nomeStudio) {this.nomeStudio = nomeStudio;}
 
     public String getGenere() {
         return genere;

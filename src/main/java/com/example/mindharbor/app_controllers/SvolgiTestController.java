@@ -1,7 +1,8 @@
 package com.example.mindharbor.app_controllers;
 
 import com.example.mindharbor.beans.DomandeTestBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
+import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.beans.TestResultBean;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.exceptions.DAOException;
@@ -13,25 +14,26 @@ import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
 public class SvolgiTestController {
-    public HomeInfoUtenteBean getInfoPaziente() {
+    private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+    public InfoUtenteBean getInfoPaziente() {
         return new setInfoUtente().getInfo();
     }
-    public String getNomeTest(){return NavigatorSingleton.getInstance().getParametro();}
-    public Date getData(){return NavigatorSingleton.getInstance().getData();}
+    public TestBean getTestSelezionato(){return navigator.getTestBean();}
+    public void deleteTestSelezionato(){navigator.deleteTestBean();}
 
 
-    public DomandeTestBean cercaDomande(String nomeTest) {
-        DomandeTest domandeTest = BoundaryMockAPI.DomandeTest(nomeTest);
+
+    public DomandeTestBean cercaDomande(TestBean testSelezionato) {
+        DomandeTest domandeTest = BoundaryMockAPI.DomandeTest(testSelezionato.getNomeTest());
 
         return new DomandeTestBean(domandeTest.getDomande(), domandeTest.getPunteggi());
     }
 
-    public TestResultBean calcolaRisultato(List<Integer> punteggi, Date dataTest, String nomeTest) throws DAOException {
+    public TestResultBean calcolaRisultato(List<Integer> punteggi, TestBean testSelezionato) throws DAOException {
         TestResultBean testResult= new TestResultBean();
         try {
             Integer risultato = 0;
@@ -40,7 +42,7 @@ public class SvolgiTestController {
                 risultato += integer;
             }
             testResult.setRisultatoUltimoTest(risultato);
-            Double progresso = calcolaProgresso(testResult, dataTest, nomeTest);
+            Double progresso = calcolaProgresso(testResult,testSelezionato.getData(),testSelezionato.getNomeTest());
 
             testResult.setRisultatoTestPrecedente(progresso);
         }catch (DAOException e) {
@@ -78,7 +80,7 @@ public class SvolgiTestController {
                 progressi = Math.round(progressi * 100.0) / 100.0;
 
             }
-        }catch (SQLException e) {
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
 

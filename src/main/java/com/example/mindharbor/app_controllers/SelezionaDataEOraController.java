@@ -1,7 +1,7 @@
 package com.example.mindharbor.app_controllers;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
 
@@ -20,7 +20,7 @@ public class SelezionaDataEOraController {
 
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-    public HomeInfoUtenteBean getInfoPaziente() {
+    public InfoUtenteBean getInfoPaziente() {
         return new setInfoUtente().getInfo();
     }
     public void deleteAppuntamento() {NavigatorSingleton.getInstance().deleteAppuntamentoBean();}

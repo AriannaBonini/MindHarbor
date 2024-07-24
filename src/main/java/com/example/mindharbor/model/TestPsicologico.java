@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class TestPsicologico {
     private Date data;
-    private final Integer risultato;
+    private Integer risultato;
     private Psicologo psicologo;
     private Paziente paziente;
     private String test;
-    private final Integer svolto;
+    private Integer svolto;
 
     public TestPsicologico(Date data, Integer risultato, Psicologo psicologo, Paziente paziente, String test, Integer svolto) {
         this.data = data;
@@ -17,6 +17,28 @@ public class TestPsicologico {
         this.paziente=paziente;
         this.test=test;
         this.svolto=svolto;
+    }
+
+    public TestPsicologico(Psicologo psicologo, Paziente paziente, String test) {
+        this.psicologo= psicologo;
+        this.paziente=paziente;
+        this.test=test;
+    }
+
+    public TestPsicologico(Psicologo psicologo) {
+        this.psicologo= psicologo;
+    }
+    public TestPsicologico(Date data, Integer risultato, String test, Integer svolto) {
+        this.data = data;
+        this.risultato = risultato;
+        this.test=test;
+        this.svolto=svolto;
+    }
+
+    public TestPsicologico(Date data, Integer risultato, String test) {
+        this.data = data;
+        this.risultato = risultato;
+        this.test=test;
     }
 
     public Date getData() {

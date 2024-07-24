@@ -1,11 +1,10 @@
 package com.example.mindharbor.graphic_controllers;
 
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.beans.LoginCredentialBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.exceptions.SessionUserException;
-import com.example.mindharbor.patterns.ClassObserver;
-import com.example.mindharbor.patterns.Observer;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
@@ -19,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class LoginGraphicController implements Observer{
+public class LoginGraphicController {
     @FXML
     private Label msgLbl;
     @FXML
@@ -31,12 +30,11 @@ public class LoginGraphicController implements Observer{
 
     private final LoginController loginController= new LoginController();
     private static final Logger logger = LoggerFactory.getLogger(LoginGraphicController.class);
-    private final ClassObserver observer= new ClassObserver();
+    private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
 
 
     public void initialize() {
        //possiamo aggiungere la registrazione
-        observer.addObserver(this);
         msgLbl.setText("Benvenuto");
     }
 
@@ -53,7 +51,13 @@ public class LoginGraphicController implements Observer{
         }
         try {
             LoginCredentialBean credenziali = new LoginCredentialBean(username, password);
-            loginController.login(credenziali);
+            InfoUtenteBean infoUtenteLoggato=loginController.login(credenziali);
+
+            if(infoUtenteLoggato.getUserType().equals(UserType.PAZIENTE)) {
+                homePaziente();
+            }else {
+                homePsicologo();
+            }
 
 
         } catch (DAOException e){
@@ -71,28 +75,28 @@ public class LoginGraphicController implements Observer{
 
     }
 
-    @Override
-    public void updateUserStatus(UserType userType) {
-
-        NavigatorSingleton navigator= NavigatorSingleton.getInstance();
+    public void homePaziente() {
         try {
-            if (userType == UserType.PAZIENTE) {
+            Stage loginstage = (Stage) accediButton.getScene().getWindow();
+            loginstage.close();
 
-                Stage loginstage = (Stage) accediButton.getScene().getWindow();
-                loginstage.close();
-
-                navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
-
-            } else if (userType == UserType.PSICOLOGO) {
-
-                Stage loginstage = (Stage) accediButton.getScene().getWindow();
-                loginstage.close();
-
-                navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
-            }
-        }catch (IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
+        }catch (IOException e){
+            logger.error("Impossibile caricare la Home del paziente", e);
         }
+
+    }
+
+    public void homePsicologo() {
+        try {
+            Stage loginstage = (Stage) accediButton.getScene().getWindow();
+            loginstage.close();
+
+            navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
+        }catch (IOException e) {
+            logger.error("Impossibile caricare la Home dello psicologo", e);
+        }
+
     }
 
 }

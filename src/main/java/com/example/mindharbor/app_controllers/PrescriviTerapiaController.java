@@ -1,41 +1,43 @@
 package com.example.mindharbor.app_controllers;
 
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
+import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.beans.TerapiaBean;
 import com.example.mindharbor.beans.TestBean;
-import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.dao.TerapiaDAO;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
+import com.example.mindharbor.dao.UtenteDao;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.*;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PrescriviTerapiaController {
+    private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
 
-    public HomeInfoUtenteBean getInfoPsicologo() {
+    public void deletePazienteSelezionato() {navigator.deletePazienteBean();}
+    public InfoUtenteBean getInfoPsicologo() {
         return new setInfoUtente().getInfo();
     }
-    public String getUsername() {return NavigatorSingleton.getInstance().getParametro();}
+    public PazientiBean getPazienteSelezionato() {return navigator.getPazienteBean();}
 
-    public void modificaStatoTestSvolto(String usernamePaziente) throws DAOException {
+    public void modificaStatoTestSvolto(PazientiBean pazienteSelezionato) throws DAOException {
         try {
-            new TestPsicologicoDAO().modificaStatoNotificaTest(SessionManager.getInstance().getCurrentUser().getUsername(), "psicologo", usernamePaziente);
-        }catch (SQLException e) {
+            new TestPsicologicoDAO().modificaStatoNotificaTest(SessionManager.getInstance().getCurrentUser(), new Paziente(pazienteSelezionato.getUsername()));
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
             }
     }
 
-    public List<TestBean> getTestSvoltiSenzaPrescrizione(String username) throws DAOException {
+    public List<TestBean> getTestSvoltiSenzaPrescrizione(PazientiBean pazienteSelezionato) throws DAOException {
         List<TestBean> testSvoltiBean= new ArrayList<>();
         try {
 
-            List<TestPsicologico> testSvolti = new TestPsicologicoDAO().ListaTestSvoltiSenzaPrescrizione(username, SessionManager.getInstance().getCurrentUser().getUsername());
+            List<TestPsicologico> testSvolti = new TestPsicologicoDAO().ListaTestSvoltiSenzaPrescrizione(pazienteSelezionato.getUsername(), SessionManager.getInstance().getCurrentUser().getUsername());
 
             for (TestPsicologico test : testSvolti) {
                 TestBean testSvoltoBean = new TestBean(test.getTest(),
@@ -47,7 +49,7 @@ public class PrescriviTerapiaController {
 
                 testSvoltiBean.add(testSvoltoBean);
             }
-        }catch (SQLException e) {
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
         return testSvoltiBean;
@@ -56,8 +58,8 @@ public class PrescriviTerapiaController {
 
     public Utente ricercaNomeCognomePaziente(String username) throws DAOException {
         try {
-            return new PazienteDAO().trovaNomeCognomePaziente(new Utente(username));
-        }catch (SQLException e) {
+            return new UtenteDao().trovaNomeCognome(new Utente(username));
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }
@@ -66,7 +68,7 @@ public class PrescriviTerapiaController {
         try {
             Terapia terapia = new Terapia(new TestPsicologico(terapiaBean.getDataTest(), null, new Psicologo(terapiaBean.getPsicologo()), new Paziente(terapiaBean.getPaziente()), "", null), terapiaBean.getTerapia(), terapiaBean.getDataTerapia());
             new TerapiaDAO().insertTerapia(terapia);
-        }catch (SQLException e) {
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }

@@ -1,7 +1,7 @@
 package com.example.mindharbor.app_controllers;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.dao.AppuntamentoDAO;
 import com.example.mindharbor.dao.PsicologoDAO;
@@ -12,13 +12,20 @@ import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
-import java.sql.SQLException;
 
 public class RichiediPrenotazioneController {
-    public HomeInfoUtenteBean getPageRichPrenInfo() {return new setInfoUtente().getInfo();}
+    private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
+    public InfoUtenteBean getPageRichPrenInfo() {return new setInfoUtente().getInfo();}
 
-    public String getUsername(){ return NavigatorSingleton.getInstance().getParametro();}
-    public AppuntamentiBean getAppuntamento() {return NavigatorSingleton.getInstance().getAppuntamentoBean();}
+    public PsicologoBean getPsicologoSelezionato(){ return navigator.getPsicologoBean();}
+    public void deleteAppuntamentoSelezionato(){
+        navigator.deleteAppuntamentoBean();
+        deletePsicologoSelezionato();
+    }
+    public void deletePsicologoSelezionato(){navigator.deletePsicologoBean();}
+
+
+    public AppuntamentiBean getAppuntamentoSelezionato() {return navigator.getAppuntamentoBean();}
     public void salvaRichiestaAppuntamento(AppuntamentiBean appuntamentiBean) throws DAOException {
         appuntamentiBean.getPaziente().setUsername(SessionManager.getInstance().getCurrentUser().getUsername());
         Appuntamento appuntamento= new Appuntamento(appuntamentiBean.getData(),
@@ -29,30 +36,26 @@ public class RichiediPrenotazioneController {
 
         try {
             new AppuntamentoDAO().insertRichiestaAppuntamento(appuntamento);
+            deleteAppuntamentoSelezionato();
 
-        }catch (SQLException e) {
+        }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
-        NavigatorSingleton.getInstance().deleteAppuntamentoBean();
+
     }
 
-    public PsicologoBean getInfoPsicologo(String username) throws DAOException {
-        PsicologoBean psicologoBean;
+    public PsicologoBean getInfoPsicologo(PsicologoBean psicologoSelezionato) throws DAOException {
         try {
-            Psicologo psicologo= new PsicologoDAO().getInfoPsicologo(username);
+            Psicologo psicologo= new PsicologoDAO().getInfoPsicologo(new Psicologo(psicologoSelezionato.getUsername()));
 
-            psicologoBean=new PsicologoBean(username,
-                    psicologo.getNome(),
-                    psicologo.getCognome(),
-                    (Integer) psicologo.getParametri().get(0),
-                    (String) psicologo.getParametri().get(1),
-                    psicologo.getGenere());
+            psicologoSelezionato.setCostoOrario(psicologo.getCostoOrario());
+            psicologoSelezionato.setNomeStudio(psicologo.getNomeStudio());
 
-        }catch (SQLException e){
+        }catch (DAOException e){
             throw new DAOException(e.getMessage());
         }
 
-        return psicologoBean;
+        return psicologoSelezionato;
 
     }
 }

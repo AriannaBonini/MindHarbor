@@ -9,7 +9,7 @@ public class PazientiBean {
     private String username;
     private Integer numTest;
 
-    public PazientiBean(String username, Integer numTest, String nome, String cognome, String genere,  Integer anni, String diagnosi) {
+    public PazientiBean(String username, Integer numTest, String nome, String cognome, String genere) {
         this.username=username;
         this.numTest=numTest;
         this.nome=nome;
@@ -17,7 +17,12 @@ public class PazientiBean {
         this.genere=genere;
     }
 
-    public PazientiBean() {}
+    public PazientiBean(String nome, String cognome, String genere, Integer anni) {
+        this.nome = nome;
+        this.cognome = cognome;
+        this.genere= genere;
+        this.anni = anni;
+    }
 
 
     public PazientiBean(String nome, String cognome, String genere, Integer anni, String diagnosi, String username) {
@@ -60,6 +65,7 @@ public class PazientiBean {
     public String getDiagnosi() {
         return diagnosi;
     }
+    public void setDiagnosi(String diagnosi){this.diagnosi=diagnosi;}
 
     public String getUsername() {
         return username;

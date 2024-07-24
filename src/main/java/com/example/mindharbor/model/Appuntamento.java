@@ -1,12 +1,12 @@
 package com.example.mindharbor.model;
 
 public class Appuntamento {
-    private final Integer idAppuntamento;
+    private Integer idAppuntamento;
     private String data;
-    private final String ora;
+    private String ora;
     private Paziente paziente;
     private Psicologo psicologo;
-    private final Integer notificaRichiesta;
+    private Integer notificaRichiesta;
 
 
     public Appuntamento(String data, String ora, Integer idAppuntamento, Paziente paziente, Psicologo psicologo, Integer notificaRichiesta) {
@@ -18,8 +18,28 @@ public class Appuntamento {
         this.notificaRichiesta=notificaRichiesta;
     }
 
+    public Appuntamento(String data, String ora) {
+        this.data = data;
+        this.ora = ora;
+    }
+
+    public Appuntamento(Integer idAppuntamento, Paziente paziente, Integer notificaRichiesta) {
+        this.idAppuntamento = idAppuntamento;
+        this.paziente = paziente;
+        this.notificaRichiesta=notificaRichiesta;
+    }
+
     public Appuntamento(String data, String ora, Integer idAppuntamento, Paziente paziente, Psicologo psicologo) {
         this(data, ora, idAppuntamento, paziente, psicologo, null);
+    }
+
+    public Appuntamento(Paziente paziente, Psicologo psicologo) {
+        this.paziente=paziente;
+        this.psicologo=psicologo;
+    }
+
+    public Appuntamento(Integer idAppuntamento) {
+        this.idAppuntamento=idAppuntamento;
     }
 
     public Integer getIdAppuntamento() {

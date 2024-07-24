@@ -92,7 +92,7 @@
                <Image url="@Img/Sfondo.png"/>
             </ImageView>
             <ListView fx:id="listViewPassati" layoutX="142.0" layoutY="78.0" prefHeight="258.0"
-                      prefWidth="321.0"
+                      prefWidth="563.0"
                       style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-background-insets: 0; -fx-padding: 10px; -fx-selection-bar: #48635a; -fx-selection-bar-border: white;"/>
             <VBox layoutX="184.0" layoutY="104.0" prefHeight="118.0" prefWidth="232.0">
                <Label prefHeight="18.0" prefWidth="146.0" textFill="WHITE">

@@ -1,52 +1,40 @@
 package com.example.mindharbor.dao;
+
+import com.example.mindharbor.dao.query_sql.QuerySQLUtenteDAO;
+import com.example.mindharbor.model.Appuntamento;
+import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.session.ConnectionFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class UtenteDao {
-    protected static final String USERNAME = "Username";
+public class UtenteDao extends QuerySQLUtenteDAO {
 
-    protected static final String NOME = "Nome";
-
-    protected static final String COGNOME = "Cognome";
-
-    protected static final String PSW = "Password";
-
-    protected static final String RUOLO = "Categoria";
-    protected static final String TABELLA_UTENTE = "Utente";
-
-
-    public Utente trovaUtente(Utente credenzialiUtenteLogin) throws SQLException, DAOException {
-        PreparedStatement stmt;
-        Connection conn;
+    public Utente trovaUtente(Utente credenzialiUtenteLogin) throws DAOException {
         Utente utente;
-        conn = ConnectionFactory.getConnection();
+        Connection conn = ConnectionFactory.getConnection();
 
-        String sql = "SELECT * FROM utente WHERE " + USERNAME + " = ? AND " + PSW + " = ?;";
-        // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
-        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setString(1, credenzialiUtenteLogin.getUsername());
-        stmt.setString(2, credenzialiUtenteLogin.getPassword());
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLUtenteDAO.CONTROLLO_CREDENZIALI, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 
-        ResultSet rs = stmt.executeQuery();
+            stmt.setString(1, credenzialiUtenteLogin.getUsername());
+            stmt.setString(2, credenzialiUtenteLogin.getPassword());
 
-        if(!rs.first()) {
-            throw new DAOException("Utente non trovato");
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.first()) {
+                    throw new DAOException("Utente non trovato");
+                }
+                utente = getUser(rs);
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
         }
-
-        rs.first();
-
-        utente = getUser(rs);
-
-        rs.close();
-        stmt.close();
 
         return utente;
     }
@@ -68,30 +56,77 @@ public class UtenteDao {
         return utente;
     }
 
-    public Utente trovaNomeCognome(Utente utente) throws SQLException {
-        Utente utente=null;
+    public Utente trovaNomeCognome(Utente utente) throws DAOException {
+        Utente infoUtente = null;
 
-        PreparedStatement stmt;
-        Connection conn;
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(QuerySQLUtenteDAO.TROVA_NOME_COGNOME, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 
-        conn = ConnectionFactory.getConnection();
+            stmt.setString(1, utente.getUsername());
 
-        String sql ="SELECT " + NOME + ", " + COGNOME + " " +
-                "FROM " + TABELLA_UTENTE + " " +
-                "WHERE " + USERNAME + " = ?";
-        // TYPE_SCROLL_INSENSITIVE: ResultSet can be slided but is sensible to db data variations
-        stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        stmt.setString(1, utente.getUsername());
-
-        ResultSet rs = stmt.executeQuery();
-
-        if (rs.next()) {
-            utente= new Utente("", rs.getString(1), rs.getString(2),null);
-
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    infoUtente = new Utente("", rs.getString(1), rs.getString(2), "");
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
         }
-        rs.close();
-        stmt.close();
 
-        return utente;
+        return infoUtente;
+    }
+
+    public List<Psicologo> listaUtentiDiTipoPsicologo(String usernamePsicologo) throws DAOException {
+        //Questo metodo viene utilizzato nella prenotazione dell'appuntamento, quando il paziente deve visualizzare la lista degli psicologi, oppure, nel caso in cui
+        //lui abbia già uno psicologo, solo quest'ultimo.
+        //Il metodo ci ritorna il nome, il cognome, lo username e il genere dello psicologo o degli psicologi.
+
+        List<Psicologo> listaPsicologi = new ArrayList<>();
+        String sql = QuerySQLUtenteDAO.LISTA_PSICOLOGI;
+
+        Connection conn = ConnectionFactory.getConnection();
+
+        try (PreparedStatement stmt = (usernamePsicologo != null)
+                ? conn.prepareStatement(sql + " AND " + USERNAME + " = ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+                : conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+
+            if (usernamePsicologo != null) {
+                stmt.setString(1, usernamePsicologo);
+            }
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Psicologo psicologo = new Psicologo(rs.getString(3), rs.getString(1), rs.getString(2), rs.getString(4));
+                    listaPsicologi.add(psicologo);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
+
+        return listaPsicologi;
+    }
+
+    public List<Appuntamento> richiestaAppuntamentiInfoPaziente(List<Appuntamento> richiesteAppuntamenti) throws DAOException {
+        Connection conn = ConnectionFactory.getConnection();
+        try {
+            for (Appuntamento appuntamento : richiesteAppuntamenti) {
+                try (PreparedStatement stmt = conn.prepareStatement(QuerySQLUtenteDAO.TROVA_INFO_PAZIENTE, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+
+                    stmt.setString(1, appuntamento.getPaziente().getUsername());
+
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            appuntamento.getPaziente().setNome(rs.getString(1));
+                            appuntamento.getPaziente().setCognome(rs.getString(2));
+                            appuntamento.getPaziente().setGenere(rs.getString(3));
+                        }
+                    }
+                }
+            }
+        }catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
+        return richiesteAppuntamenti;
     }
 }

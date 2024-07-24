@@ -1,7 +1,7 @@
 package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.HomePsicologoController;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
@@ -32,7 +32,7 @@ public class HomePsicologoGraphicController {
     private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = homeController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = homeController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         notificaTestEffettuati();
         notificaRichiesteAppuntamenti();

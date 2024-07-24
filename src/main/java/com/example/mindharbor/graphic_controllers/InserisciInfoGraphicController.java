@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.InserisciInfoController;
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.LabelDuration;
@@ -38,27 +38,30 @@ public class InserisciInfoGraphicController {
     private static final Logger logger = LoggerFactory.getLogger(InserisciInfoGraphicController.class);
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private final InserisciInfoController inserisciInfoController= new InserisciInfoController();
-    private AppuntamentiBean appuntamento;
+    private AppuntamentiBean appuntamentoBean;
+    private PazientiBean pazienteBean;
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = inserisciInfoController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = inserisciInfoController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        appuntamento=inserisciInfoController.checkAppuntamento();
+        appuntamentoBean =inserisciInfoController.getAppuntamentoSelezionato();
 
-        if(appuntamento.getPaziente()!=null && appuntamento.getPaziente().getNome()!=null && appuntamento.getPaziente().getCognome()!=null && appuntamento.getPaziente().getAnni()!=null) {
-            campoNome.setText(appuntamento.getPaziente().getNome());
-            campoCognome.setText(appuntamento.getPaziente().getCognome());
-            campoAnni.setText(String.valueOf(appuntamento.getPaziente().getAnni()));
-        }else {appuntamento.setPaziente(new PazientiBean());}
+        if(appuntamentoBean.getPaziente()!=null && appuntamentoBean.getPaziente().getNome()!=null && appuntamentoBean.getPaziente().getCognome()!=null && appuntamentoBean.getPaziente().getAnni()!=null) {
+            campoNome.setText(appuntamentoBean.getPaziente().getNome());
+            campoCognome.setText(appuntamentoBean.getPaziente().getCognome());
+            campoAnni.setText(String.valueOf(appuntamentoBean.getPaziente().getAnni()));
+        }
     }
+
     @FXML
     public void clickConferma() {
         if(campoNome.getText().isEmpty() || campoCognome.getText().isEmpty() || campoAnni.getText().isEmpty()) {
             new LabelDuration().Duration(info,"Compila tutti i campi");
         } else {
             try {
-                if (inserisciInfoController.checkDati(new PazientiBean(campoNome.getText(), campoCognome.getText(), null, Integer.valueOf(campoAnni.getText()), "", ""))) {
+                pazienteBean=new PazientiBean(campoNome.getText(), campoCognome.getText(), null, Integer.valueOf(campoAnni.getText()));
+                if (inserisciInfoController.controllaInformazioniPaziente(pazienteBean)) {
                     goToListaPsicologi();
                 }else {
                     new LabelDuration().Duration(info,"Dati errati");
@@ -70,11 +73,8 @@ public class InserisciInfoGraphicController {
     }
     private void goToListaPsicologi() {
         try {
-            appuntamento.getPaziente().setNome(campoNome.getText());
-            appuntamento.getPaziente().setCognome(campoCognome.getText());
-            appuntamento.getPaziente().setAnni(Integer.valueOf(campoAnni.getText()));
-
-            inserisciInfoController.setAppuntamento(appuntamento);
+            appuntamentoBean.setPaziente(pazienteBean);
+            inserisciInfoController.setAppuntamento(appuntamentoBean);
 
             Stage inserisciInfo = (Stage) conferma.getScene().getWindow();
             inserisciInfo.close();

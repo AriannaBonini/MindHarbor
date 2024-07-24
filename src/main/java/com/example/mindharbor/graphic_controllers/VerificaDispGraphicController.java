@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.VerificaDispController;
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.constants.Constants;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.DispDecorator;
@@ -56,13 +56,13 @@ public class VerificaDispGraphicController {
     private final VerificaDispController verificaDispController = new VerificaDispController();
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(VerificaDispGraphicController.class);
-    private Integer idRichiesta;
+    private AppuntamentiBean richiestaAppuntamentoSelezionato;
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = verificaDispController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = verificaDispController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        idRichiesta= verificaDispController.getRichiesta();
+        richiestaAppuntamentoSelezionato = verificaDispController.getRichiestaAppuntamentoSelezionato();
 
         modificaStatoNotifica();
         schedaAppuntamento();
@@ -70,7 +70,7 @@ public class VerificaDispGraphicController {
 
     private void modificaStatoNotifica() {
         try {
-            verificaDispController.modificaStatoNotifica(idRichiesta);
+            verificaDispController.modificaStatoNotifica(richiestaAppuntamentoSelezionato);
         }catch (DAOException e) {
             logger.info("Errore nella modifica dello stato della notifica della richiesta ", e);
         }
@@ -78,20 +78,20 @@ public class VerificaDispGraphicController {
 
     private void schedaAppuntamento() {
         try {
-            AppuntamentiBean richiestaBean = verificaDispController.getRichiestaAppuntamento(idRichiesta);
-            popolaScheda(richiestaBean);
+            richiestaAppuntamentoSelezionato = verificaDispController.getRichiestaAppuntamento(richiestaAppuntamentoSelezionato);
+            popolaScheda();
         }catch (DAOException e) {
             logger.info("Errore nella ricerca delle informazioni della richiesta ", e);
         }
     }
 
-    private void popolaScheda(AppuntamentiBean richiestaBean) {
-        labelNome.setText(richiestaBean.getPaziente().getNome());
-        labelCognome.setText(richiestaBean.getPaziente().getCognome());
-        labelData.setText(richiestaBean.getData());
-        labelOra.setText(richiestaBean.getOra());
+    private void popolaScheda() {
+        labelNome.setText(richiestaAppuntamentoSelezionato.getPaziente().getNome());
+        labelCognome.setText(richiestaAppuntamentoSelezionato.getPaziente().getCognome());
+        labelData.setText(richiestaAppuntamentoSelezionato.getData());
+        labelOra.setText(richiestaAppuntamentoSelezionato.getOra());
 
-        ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,richiestaBean.getPaziente().getGenere());
+        ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,richiestaAppuntamentoSelezionato.getPaziente().getGenere());
         imageDecorator.loadImage();
     }
 
@@ -99,6 +99,8 @@ public class VerificaDispGraphicController {
     @FXML
     public void goToHome() {
         try {
+            verificaDispController.deleteRichiestaAppuntamentoSelezionato();
+
             Stage verificaDispStage = (Stage) home.getScene().getWindow();
             verificaDispStage.close();
 
@@ -111,6 +113,8 @@ public class VerificaDispGraphicController {
     @FXML
     public void tornaIndietro() {
         try {
+            verificaDispController.deleteRichiestaAppuntamentoSelezionato();
+
             Stage verificaDispStage = (Stage) tornaIndietro.getScene().getWindow();
             verificaDispStage.close();
 
@@ -134,7 +138,7 @@ public class VerificaDispGraphicController {
         rifiuta.setDisable(false);
 
         try {
-            if(!verificaDispController.verificaDisp(idRichiesta)) {
+            if(!verificaDispController.verificaDisp(richiestaAppuntamentoSelezionato.getIdAppuntamento())) {
                 ImageDecorator imageDecorator= new DispDecorator(immagineDisp,false);
                 imageDecorator.loadImage();
 
@@ -153,7 +157,7 @@ public class VerificaDispGraphicController {
     @FXML
     public void richiestaAccettata() {
         try {
-            verificaDispController.richiestaAccettata();
+            verificaDispController.richiestaAccettata(richiestaAppuntamentoSelezionato);
             Alert alert=new AlertMessage().Informazione("SUCCESSO", "Richiesta accettata","Hai un nuovo appuntamento");
 
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
@@ -168,7 +172,7 @@ public class VerificaDispGraphicController {
     @FXML
     public void richiestaRifiutata() {
         try {
-            verificaDispController.richiestaRifiutata();
+            verificaDispController.richiestaRifiutata(richiestaAppuntamentoSelezionato);
             Alert alert=new AlertMessage().Informazione("SUCCESSO", "Richiesta rifiutata","appuntamento rifiutato");
 
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));

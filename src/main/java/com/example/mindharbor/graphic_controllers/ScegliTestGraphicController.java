@@ -1,7 +1,7 @@
 package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.ScegliTestController;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
@@ -47,7 +47,7 @@ public class ScegliTestGraphicController {
     @FXML
     private CheckBox test4;
 
-    private String username;
+    private PazientiBean pazienteSelezionato;
     private static final Logger logger = LoggerFactory.getLogger(ScegliTestGraphicController.class);
     private List<String> listaTestPsicologici;
     private final  ScegliTestController scegliTest= new ScegliTestController();
@@ -55,33 +55,24 @@ public class ScegliTestGraphicController {
 
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = scegliTest.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = scegliTest.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        username=scegliTest.getUsername();
+        pazienteSelezionato=scegliTest.getPazienteSelezionato();
 
-        getInfoPaziente();
+        aggiungiInformazioni();
         getTest();
 
 
     }
 
-    private void getInfoPaziente() {
-        try {
-            PazientiBean paziente= scegliTest.getInfoPaziente(username);
-            aggiungiInformazioni(paziente);
-        } catch (DAOException e) {
-            logger.info("Non esistono informazioni relative al paziente", e);
-        }
-    }
+    private void aggiungiInformazioni() {
 
-    private void aggiungiInformazioni(PazientiBean paziente) {
+        nomePaziente.setText(pazienteSelezionato.getNome());
+        cognomePaziente.setText(pazienteSelezionato.getCognome());
 
-        nomePaziente.setText(paziente.getNome());
-        cognomePaziente.setText(paziente.getCognome());
+        anniPaziente.setText(pazienteSelezionato.getAnni()+ " anni");
 
-        anniPaziente.setText(paziente.getAnni()+ " anni");
-
-        ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,paziente.getGenere());
+        ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,pazienteSelezionato.getGenere());
         imageDecorator.loadImage();
 
     }
@@ -91,6 +82,7 @@ public class ScegliTestGraphicController {
             Stage schedaPersonale = (Stage) home.getScene().getWindow();
             schedaPersonale.close();
 
+            scegliTest.eliminaPazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
         }catch(IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
@@ -104,7 +96,6 @@ public class ScegliTestGraphicController {
             Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
             schedaPersonale.close();
 
-            scegliTest.setUsername(username);
             navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
 
         }catch(IOException e) {
@@ -134,42 +125,40 @@ public class ScegliTestGraphicController {
     public void assegnaTest() {
         CheckBox[] checkBoxes = {test1, test2, test3, test4};
         int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length);
-        int count=0;
-        String nomeTest=null;
+        int contatore = 0;
+        String nomeTest = null;
 
-        for(int i=0; i<numCheckBoxes;i++) {
-            if(checkBoxes[i].isSelected()) {
-                count++;
-                nomeTest= checkBoxes[i].getText();
-
+        for (int i = 0; i < numCheckBoxes; i++) {
+            if (checkBoxes[i].isSelected()) {
+                contatore++;
+                nomeTest = checkBoxes[i].getText();
             }
         }
-        if (count!=1) {
-            Alert alert= new AlertMessage().Errore("Selezionare uno ed un solo test");
-            alert.show();
-
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
-
-            timeline.play();
-        } else {
-            try {
-                scegliTest.notificaTest(username, nomeTest);
-
-                Alert alert= new AlertMessage().Informazione("Operazione Completata","Esito Positivo", "Test assegnato con successo");
-                alert.show();
-
-                Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
-
-                timeline.play();
-            } catch (DAOException e) {
-                logger.info("Errore assegnazione Test");
-                Alert alert= new AlertMessage().Errore("Limite test raggiunto per questo paziente");
-                alert.show();
-
-                 Timeline timeline= new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
-                 timeline.play();
+        try {
+            if(!scegliTest.controlloNumTest(contatore,nomeTest)){
+                controlloFallito();
+            }else {
+                controlloSuperato();
             }
-
+        } catch (DAOException e) {
+            logger.error("Errore nell'assegnazione del test", e);
         }
+
+    }
+
+    public void controlloFallito(){
+        Alert alert = new AlertMessage().Errore("Selezionare uno ed un solo test");
+        alert.show();
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
+        timeline.play();
+    }
+
+    public void controlloSuperato() {
+        Alert alert= new AlertMessage().Informazione("Operazione Completata","Esito Positivo", "Test assegnato con successo");
+        alert.show();
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
+        timeline.play();
+
     }
 }
+

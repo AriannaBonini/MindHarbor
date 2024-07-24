@@ -21,24 +21,12 @@ public class AppuntamentiBean {
         this.notificaRichiesta=notificaRichiesta;
     }
 
-    /*public AppuntamentiBean(String data, String ora, String nomePsicologo, String cognomePsicologo, String nomePaziente, String cognomePaziente, String usernamePaziente, String usernamePsicologo, Integer idAppuntamento, Integer anni, String genere, Integer notificaRichiesta) {
-            this.data = data;
-            this.ora = ora;
-            this.usernamePsicologo = usernamePsicologo;
-            this.usernamePaziente= usernamePaziente;
-            this.nomePaziente = nomePaziente;
-            this.cognomePaziente = cognomePaziente;
-            this.nomePsicologo = nomePsicologo;
-            this.cognomePsicologo = cognomePsicologo;
-            this.idAppuntamento = idAppuntamento;
-            this.anni = anni;
-            this.genere=genere;
-            this.notificaRichiesta=notificaRichiesta;
-        }*/
+    public AppuntamentiBean(PazientiBean paziente, Integer idAppuntamento, Integer notificaRichiesta) {
+        this.paziente=paziente;
+        this.idAppuntamento=idAppuntamento;
+        this.notificaRichiesta=notificaRichiesta;
+    }
 
-    /*public AppuntamentiBean(String data, String ora, String nomePsicologo, String cognomePsicologo, String nomePaziente, String cognomePaziente, String usernamePaziente, String usernamePsicologo, Integer idAppuntamento, Integer anni) {
-        this(data, ora, nomePsicologo, cognomePsicologo, nomePaziente, cognomePaziente, usernamePaziente, usernamePsicologo, idAppuntamento, anni, null,null);
-    }*/
 
     public String getData() {
         return data;

@@ -1,46 +1,44 @@
 package com.example.mindharbor.app_controllers;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.dao.AppuntamentoDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.mockapi.BoundaryMockAPICalendario;
 import com.example.mindharbor.model.Appuntamento;
+import com.example.mindharbor.model.Paziente;
+import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.setInfoUtente;
-
-import java.sql.SQLException;
+import wiremock.org.checkerframework.checker.units.qual.A;
 
 public class VerificaDispController {
+    private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
 
-    private Appuntamento richiesta;
+    public InfoUtenteBean getInfoPsicologo() {return new setInfoUtente().getInfo();}
 
-    public HomeInfoUtenteBean getInfoPsicologo() {return new setInfoUtente().getInfo();}
+    public AppuntamentiBean getRichiestaAppuntamentoSelezionato() {return navigator.getAppuntamentoBean();}
+    public void deleteRichiestaAppuntamentoSelezionato() {navigator.deleteAppuntamentoBean();}
 
-    public Integer getRichiesta() {return Integer.valueOf(NavigatorSingleton.getInstance().getParametro());}
-
-    public void modificaStatoNotifica(Integer idRichiesta) throws DAOException {
+    public void modificaStatoNotifica(AppuntamentiBean richiestaAppuntamento) throws DAOException {
         try {
-            new AppuntamentoDAO().updateStatoNotifica(idRichiesta);
+            new AppuntamentoDAO().updateStatoNotifica(new Appuntamento(richiestaAppuntamento.getIdAppuntamento()));
         }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
-    public AppuntamentiBean getRichiestaAppuntamento(Integer idAppuntamento) throws DAOException {
-        AppuntamentiBean richiestaBean;
+    public AppuntamentiBean getRichiestaAppuntamento(AppuntamentiBean richiestaAppuntamento) throws DAOException {
+        Appuntamento richiesta;
         try {
-            richiesta = new AppuntamentoDAO().getInfoRichiesta(idAppuntamento);
+            richiesta = new AppuntamentoDAO().getInfoRichiesta(new Appuntamento(richiestaAppuntamento.getIdAppuntamento()));
 
-            richiestaBean= new AppuntamentiBean(richiesta.getData(),
-                    richiesta.getOra(),
-                    new PazientiBean(richiesta.getPaziente().getNome(),richiesta.getPaziente().getCognome(),richiesta.getPaziente().getGenere(),0,"",richiesta.getPaziente().getUsername()),
-                    null,
-                    null,
-                    null);
-            return richiestaBean;
+            richiestaAppuntamento.setOra(richiesta.getOra());
+            richiestaAppuntamento.setData(richiesta.getData());
+
+            return richiestaAppuntamento;
         }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
@@ -58,18 +56,21 @@ public class VerificaDispController {
         }
     }
 
-    public void richiestaAccettata() throws DAOException {
+    public void richiestaAccettata(AppuntamentiBean richiestaAppuntamento) throws DAOException {
         try {
-            new AppuntamentoDAO().updateRichiesta(richiesta);
+            new AppuntamentoDAO().updateRichiesta(new Appuntamento(richiestaAppuntamento.getIdAppuntamento()));
+
+            //eliminiamo tutte le altre richieste di appuntamento del paziente ad altri psicologi.
+            new AppuntamentoDAO().eliminaRichiesteDiAppuntamentoPerAltriPsicologi(new Appuntamento(new Paziente(richiestaAppuntamento.getPaziente().getUsername()),new Psicologo(richiestaAppuntamento.getPsicologo().getUsername())));
 
         }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
-    public void richiestaRifiutata() throws DAOException {
+    public void richiestaRifiutata(AppuntamentiBean richiestaAppuntamento) throws DAOException {
         try {
-            new AppuntamentoDAO().eliminaRichiesta(richiesta);
+            new AppuntamentoDAO().eliminaRichiesta(new Appuntamento(richiestaAppuntamento.getIdAppuntamento()));
 
         }catch (DAOException e) {
             throw new DAOException(e.getMessage());

@@ -1,7 +1,7 @@
 package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.SchedaPersonalePazienteController;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.constants.Constants;
 import com.example.mindharbor.exceptions.DAOException;
@@ -40,24 +40,31 @@ public class SchedaPersonalePazienteGraphicController {
     @FXML
     private ImageView tornaIndietro;
 
-    private String username;
+    private PazientiBean pazienteSelezionato;
     private final SchedaPersonalePazienteController schedaPersonaleController = new SchedaPersonalePazienteController();
     private static final Logger logger = LoggerFactory.getLogger(SchedaPersonalePazienteGraphicController.class);
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = schedaPersonaleController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = schedaPersonaleController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        username= schedaPersonaleController.getUsername();
+        pazienteSelezionato = schedaPersonaleController.getPazienteSelezionato();
 
         notificaStatoTest();
-        popolaSchedaPersonale();
         abilitaPrescriviTerapia();
+
+        if (pazienteSelezionato.getAnni() == null && pazienteSelezionato.getDiagnosi() == null) {
+            //questo if controlla se c'è già stato un accesso alla DAO precedentemente.
+            // Ci permette di gestire la possibilità che lo psicologo, abbia selezionato il "Torna Indietro" dall'interfaccia immediatamente successiva a questa.
+            popolaSchedaPersonale();
+        } else {
+            creaSchedaPersonale();
+        }
     }
 
     private void abilitaPrescriviTerapia() {
         try {
-            if (schedaPersonaleController.numTestSvoltiSenzaPrescrizione(username) > 0) {
+            if (schedaPersonaleController.numTestSvoltiSenzaPrescrizione(pazienteSelezionato) > 0) {
                 prescriviTerapia.setDisable(false);
             }
         }catch (DAOException e) {
@@ -66,22 +73,16 @@ public class SchedaPersonalePazienteGraphicController {
     }
 
     private void notificaStatoTest() {
-        try {
-            int count = schedaPersonaleController.cercaNuoviTestSvoltiPazienteDaNotificare(username);
-            if (count>0) {
-                notificaTest.setText(String.valueOf(count));
-            }
-        } catch (DAOException e) {
-            logger.info("Errore durante la ricerca dei nuovi test svolti dal paziente " , e);
+        if (pazienteSelezionato.getNumTest()>0) {
+            notificaTest.setText(String.valueOf(pazienteSelezionato.getNumTest()));
         }
-
     }
 
 
     private void popolaSchedaPersonale()  {
         try {
-            PazientiBean paziente= schedaPersonaleController.getSchedaPersonale(username);
-            creaSchedaPersonale(paziente);
+            pazienteSelezionato= schedaPersonaleController.getSchedaPersonale(pazienteSelezionato);
+            creaSchedaPersonale();
 
         } catch (DAOException e) {
             logger.info("Non esistono informazioni relative al paziente", e);
@@ -90,20 +91,20 @@ public class SchedaPersonalePazienteGraphicController {
     }
 
 
-    private void creaSchedaPersonale(PazientiBean paziente) {
+    private void creaSchedaPersonale() {
 
-        nomePaziente.setText(paziente.getNome());
-        cognomePaziente.setText(paziente.getCognome());
+        nomePaziente.setText(pazienteSelezionato.getNome());
+        cognomePaziente.setText(pazienteSelezionato.getCognome());
 
-        anniPaziente.setText(paziente.getAnni()+ " anni");
+        anniPaziente.setText(pazienteSelezionato.getAnni()+ " anni");
 
-        if(paziente.getDiagnosi()==null || paziente.getDiagnosi().isEmpty()) {
+        if(pazienteSelezionato.getDiagnosi()==null || pazienteSelezionato.getDiagnosi().isEmpty()) {
             diagnosiPaziente.setText("Diagnosi Sconosciuta");
         } else {
-            diagnosiPaziente.setText(paziente.getDiagnosi());
+            diagnosiPaziente.setText(pazienteSelezionato.getDiagnosi());
         }
 
-        ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,paziente.getGenere());
+        ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,pazienteSelezionato.getGenere());
         imageDecorator.loadImage();
     }
 
@@ -113,6 +114,7 @@ public class SchedaPersonalePazienteGraphicController {
             Stage schedaPersonale = (Stage) home.getScene().getWindow();
             schedaPersonale.close();
 
+            schedaPersonaleController.deletePazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
         }catch(IOException e) {
             logger.error(Constants.INTERFACE_LOAD_ERROR, e);
@@ -126,6 +128,7 @@ public class SchedaPersonalePazienteGraphicController {
             Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
             schedaPersonale.close();
 
+            schedaPersonaleController.deletePazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/ListaPazienti.fxml");
         }catch(IOException e) {
             logger.error(Constants.INTERFACE_LOAD_ERROR, e);
@@ -140,8 +143,7 @@ public class SchedaPersonalePazienteGraphicController {
             Stage schedaPersonale = (Stage) home.getScene().getWindow();
             schedaPersonale.close();
 
-            schedaPersonaleController.setUsername(username);
-
+            schedaPersonaleController.setPazienteSelezionato(pazienteSelezionato);
             navigator.gotoPage("/com/example/mindharbor/ScegliTest.fxml");
         }catch(IOException e) {
             logger.error(Constants.INTERFACE_LOAD_ERROR, e);
@@ -153,7 +155,7 @@ public class SchedaPersonalePazienteGraphicController {
             Stage schedaPersonale = (Stage) prescriviTerapia.getScene().getWindow();
             schedaPersonale.close();
 
-            schedaPersonaleController.setUsername(username);
+            schedaPersonaleController.setPazienteSelezionato(pazienteSelezionato);
             navigator.gotoPage("/com/example/mindharbor/PrescrizioneTerapia.fxml");
         }catch(IOException e) {
             logger.error(Constants.INTERFACE_LOAD_ERROR, e);

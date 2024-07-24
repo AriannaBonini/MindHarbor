@@ -2,7 +2,8 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.SvolgiTestController;
 import com.example.mindharbor.beans.DomandeTestBean;
-import com.example.mindharbor.beans.HomeInfoUtenteBean;
+import com.example.mindharbor.beans.InfoUtenteBean;
+import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.beans.TestResultBean;
 import com.example.mindharbor.constants.Constants;
 import com.example.mindharbor.exceptions.DAOException;
@@ -22,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class SvolgiTestGraphicController {
@@ -88,32 +88,28 @@ public class SvolgiTestGraphicController {
 
     private final SvolgiTestController controller= new SvolgiTestController();
     private DomandeTestBean domandeBean;
-    private String nomeTest;
-
     private  Label[] labels;
-    private Date dataTest;
-
     private CheckBox[][] risposteTest;
 
     private static final Logger logger = LoggerFactory.getLogger(SvolgiTestGraphicController.class);
     private final  NavigatorSingleton navigator=NavigatorSingleton.getInstance();
+    private TestBean testSelezionato;
 
     public void initialize() {
-        HomeInfoUtenteBean infoUtenteBean = controller.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = controller.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        nomeTest=controller.getNomeTest();
-        dataTest=controller.getData();
+        testSelezionato=controller.getTestSelezionato();
 
         labels= new Label[]{domanda1, domanda2, domanda3, domanda4, domanda5, domanda6};
         risposteTest= new CheckBox[][]{{felice1, triste1, arrabbiata1}, {felice2, triste2, arrabbiata2},{felice3, triste3, arrabbiata3},
                 {felice4, triste4, arrabbiata4}, {felice5, triste5, arrabbiata5}, {felice6, triste6, arrabbiata6}};
 
-        aggiungiDomande(nomeTest);
+        aggiungiDomande();
 
     }
 
-    private void aggiungiDomande(String nomeTest) {
-        domandeBean= controller.cercaDomande(nomeTest);
+    private void aggiungiDomande() {
+        domandeBean= controller.cercaDomande(testSelezionato);
 
         int numLabels = Math.min(domandeBean.getDomande().size(), labels.length);
         for (int i = 0; i < numLabels; i++) {
@@ -131,7 +127,7 @@ public class SvolgiTestGraphicController {
    @FXML
     public void goToHome() {
         try {
-            Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare indietro?");
+            Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare alla Home?");
             if (risposta==0) {
                 return;
             }
@@ -152,6 +148,8 @@ public class SvolgiTestGraphicController {
             if (risposta==0) {
                 return;
             }
+            controller.deleteTestSelezionato();
+
             Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
             schedaPersonale.close();
 
@@ -189,8 +187,7 @@ public class SvolgiTestGraphicController {
 
         try {
 
-            TestResultBean testResult = controller.calcolaRisultato(punteggio, dataTest, nomeTest);
-            System.out.println("sono qui");
+            TestResultBean testResult = controller.calcolaRisultato(punteggio,testSelezionato);
 
             if (testResult.getRisultatoTestPrecedente() == null) {
                 notificaProgresso("Risultato test: " + testResult.getRisultatoUltimoTest(), "Complimenti! Hai svolto il tuo primo test");
@@ -225,6 +222,7 @@ public class SvolgiTestGraphicController {
         schedaPersonale.close();
 
         try {
+            controller.deleteTestSelezionato();
             navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
         } catch (IOException e) {
             logger.info(Constants.INTERFACE_LOAD_ERROR, e);
