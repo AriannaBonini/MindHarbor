@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.InserisciInfoController;
+import com.example.mindharbor.app_controllers.RichiestaAppuntamentoController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
@@ -37,15 +37,15 @@ public class InserisciInfoGraphicController {
 
     private static final Logger logger = LoggerFactory.getLogger(InserisciInfoGraphicController.class);
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-    private final InserisciInfoController inserisciInfoController= new InserisciInfoController();
+    private final RichiestaAppuntamentoController richiestaAppuntamentoController = new RichiestaAppuntamentoController();
     private AppuntamentiBean appuntamentoBean;
     private PazientiBean pazienteBean;
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = inserisciInfoController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = richiestaAppuntamentoController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        appuntamentoBean =inserisciInfoController.getAppuntamentoSelezionato();
+        appuntamentoBean = richiestaAppuntamentoController.getRichiestaAppuntamentoScelta();
 
         if(appuntamentoBean.getPaziente()!=null && appuntamentoBean.getPaziente().getNome()!=null && appuntamentoBean.getPaziente().getCognome()!=null && appuntamentoBean.getPaziente().getAnni()!=null) {
             campoNome.setText(appuntamentoBean.getPaziente().getNome());
@@ -57,48 +57,49 @@ public class InserisciInfoGraphicController {
     @FXML
     public void clickConferma() {
         if(campoNome.getText().isEmpty() || campoCognome.getText().isEmpty() || campoAnni.getText().isEmpty()) {
-            new LabelDuration().Duration(info,"Compila tutti i campi");
+            new LabelDuration().duration(info,"Compila tutti i campi");
         } else {
             try {
-                pazienteBean=new PazientiBean(campoNome.getText(), campoCognome.getText(), null, Integer.valueOf(campoAnni.getText()));
-                if (inserisciInfoController.controllaInformazioniPaziente(pazienteBean)) {
-                    goToListaPsicologi();
+                pazienteBean=new PazientiBean(campoNome.getText(), campoCognome.getText(), Integer.valueOf(campoAnni.getText()));
+                if (richiestaAppuntamentoController.controllaInformazioniPaziente(pazienteBean)) {
+                    caricaListaPsicologi();
                 }else {
-                    new LabelDuration().Duration(info,"Dati errati");
+                    new LabelDuration().duration(info,"Dati errati");
                 }
             }catch (DAOException e) {
                 logger.info("Errore nel controllo dei dati del paziente");
             }
         }
     }
-    private void goToListaPsicologi() {
+    private void caricaListaPsicologi() {
         try {
             appuntamentoBean.setPaziente(pazienteBean);
-            inserisciInfoController.setAppuntamento(appuntamentoBean);
+            richiestaAppuntamentoController.setRichiestaAppuntamentoScelta(appuntamentoBean);
 
             Stage inserisciInfo = (Stage) conferma.getScene().getWindow();
             inserisciInfo.close();
 
             navigator.gotoPage("/com/example/mindharbor/ListaPsicologi.fxml");
         }catch (IOException e) {
-            logger.info("Impossibile caricare l'interfaccia ", e);
+            logger.info("Impossibile caricare l'interfaccia della lista di psicologi ", e);
         }
     }
 
     @FXML
-    public void goToHome() {
+    public void clickLabelHome() {
         try {
-            inserisciInfoController.deleteAppuntamento();
+            richiestaAppuntamentoController.eliminaRichiestaAppuntamentoScelta();
+
             Stage inserisciInfo = (Stage) home.getScene().getWindow();
             inserisciInfo.close();
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia della Home", e);
         }
     }
 
     @FXML
-    public void tornaIndietro() {
+    public void clickLabelTornaIndietro() {
         try {
             Stage inserisciInfo = (Stage) tornaIndietro.getScene().getWindow();
             inserisciInfo.close();

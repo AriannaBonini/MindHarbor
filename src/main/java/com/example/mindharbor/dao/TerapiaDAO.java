@@ -61,8 +61,8 @@ public class TerapiaDAO extends QuerySQLTerapiaDAO {
 
     private void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
 
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(QuerySQLTerapiaDAO.AGGIORNA_NOTIFICA_PAZIENTE)) {
+        Connection conn = ConnectionFactory.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTerapiaDAO.AGGIORNA_NOTIFICA_PAZIENTE)) {
 
             stmt.setString(1, utente.getUsername());
             stmt.executeUpdate();

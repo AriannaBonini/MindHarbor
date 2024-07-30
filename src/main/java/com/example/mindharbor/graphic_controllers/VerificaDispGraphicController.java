@@ -92,35 +92,35 @@ public class VerificaDispGraphicController {
         labelOra.setText(richiestaAppuntamentoSelezionato.getOra());
 
         ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,richiestaAppuntamentoSelezionato.getPaziente().getGenere());
-        imageDecorator.loadImage();
+        imageDecorator.caricaImmagine();
     }
 
 
     @FXML
-    public void goToHome() {
+    public void clickLabelHome() {
         try {
-            verificaDispController.deleteRichiestaAppuntamentoSelezionato();
+            verificaDispController.eliminaRichiestaAppuntamentoSelezionato();
 
             Stage verificaDispStage = (Stage) home.getScene().getWindow();
             verificaDispStage.close();
 
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
         }catch(IOException e) {
-            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
+            logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
         }
     }
 
     @FXML
-    public void tornaIndietro() {
+    public void clickLabelTornaIndietro() {
         try {
-            verificaDispController.deleteRichiestaAppuntamentoSelezionato();
+            verificaDispController.eliminaRichiestaAppuntamentoSelezionato();
 
             Stage verificaDispStage = (Stage) tornaIndietro.getScene().getWindow();
             verificaDispStage.close();
 
             navigator.gotoPage("/com/example/mindharbor/ListaRichiesteAppuntamenti.fxml");
         }catch(IOException e) {
-            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
+            logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
         }
     }
 
@@ -140,11 +140,11 @@ public class VerificaDispGraphicController {
         try {
             if(!verificaDispController.verificaDisp(richiestaAppuntamentoSelezionato.getIdAppuntamento())) {
                 ImageDecorator imageDecorator= new DispDecorator(immagineDisp,false);
-                imageDecorator.loadImage();
+                imageDecorator.caricaImmagine();
 
             } else {
                 ImageDecorator imageDecorator= new DispDecorator(immagineDisp,true);
-                imageDecorator.loadImage();
+                imageDecorator.caricaImmagine();
                 accetta.setDisable(false);
             }
 
@@ -163,9 +163,9 @@ public class VerificaDispGraphicController {
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             alert.showAndWait();
 
-            tornaIndietro();
+            clickLabelTornaIndietro();
         } catch (DAOException e) {
-            logger.info(Constants.DELETE_REQUEST, e);
+            logger.info(Constants.ELIMINA_RICHIESTA, e);
         }
     }
 
@@ -177,9 +177,9 @@ public class VerificaDispGraphicController {
 
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             alert.showAndWait();
-            tornaIndietro();
+            clickLabelTornaIndietro();
         } catch (DAOException e) {
-            logger.info(Constants.DELETE_REQUEST, e);
+            logger.info(Constants.ELIMINA_RICHIESTA, e);
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.mindharbor.graphic_controllers;
 import com.example.mindharbor.app_controllers.ScegliTestController;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImageDecorator;
@@ -49,15 +50,15 @@ public class ScegliTestGraphicController {
 
     private PazientiBean pazienteSelezionato;
     private static final Logger logger = LoggerFactory.getLogger(ScegliTestGraphicController.class);
-    private List<String> listaTestPsicologici;
-    private final  ScegliTestController scegliTest= new ScegliTestController();
+    private List<TestBean> listaTestPsicologiciBean;
+    private final  ScegliTestController scegliTestController = new ScegliTestController();
     private final  NavigatorSingleton navigator= NavigatorSingleton.getInstance();
 
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = scegliTest.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = scegliTestController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        pazienteSelezionato=scegliTest.getPazienteSelezionato();
+        pazienteSelezionato= scegliTestController.getPazienteSelezionato();
 
         aggiungiInformazioni();
         getTest();
@@ -66,53 +67,52 @@ public class ScegliTestGraphicController {
     }
 
     private void aggiungiInformazioni() {
-
         nomePaziente.setText(pazienteSelezionato.getNome());
         cognomePaziente.setText(pazienteSelezionato.getCognome());
 
         anniPaziente.setText(pazienteSelezionato.getAnni()+ " anni");
 
         ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,pazienteSelezionato.getGenere());
-        imageDecorator.loadImage();
+        imageDecorator.caricaImmagine();
 
     }
     @FXML
-    public void goToHome() {
+    public void clickLabelHome() {
         try {
-            Stage schedaPersonale = (Stage) home.getScene().getWindow();
-            schedaPersonale.close();
+            Stage scegliTest = (Stage) home.getScene().getWindow();
+            scegliTest.close();
 
-            scegliTest.eliminaPazienteSelezionato();
+            scegliTestController.eliminaPazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia Home dello psicologo", e);
         }
 
     }
 
     @FXML
-    public void tornaIndietro() {
+    public void clickLabelTornaIndietro() {
         try {
-            Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
-            schedaPersonale.close();
+            Stage scegliTest = (Stage) tornaIndietro.getScene().getWindow();
+            scegliTest.close();
 
             navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
 
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia della scheda personale del paziente", e);
         }
 
     }
 
     @FXML
     public void getTest() {
-         listaTestPsicologici=scegliTest.getListaTest();
+         listaTestPsicologiciBean = scegliTestController.getListaTest();
 
-        if (listaTestPsicologici != null) {
+        if (listaTestPsicologiciBean != null) {
             CheckBox[] checkBoxes = {test1, test2, test3, test4};
-            int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length);
+            int numCheckBoxes = Math.min(listaTestPsicologiciBean.size(), checkBoxes.length);
             for (int i = 0; i < numCheckBoxes; i++) {
-                checkBoxes[i].setText(listaTestPsicologici.get(i));
+                checkBoxes[i].setText(String.valueOf(listaTestPsicologiciBean.get(i).getNomeTest()));
                 checkBoxes[i].setVisible(true);
             }
             for (int i = numCheckBoxes; i < checkBoxes.length; i++) {
@@ -124,7 +124,7 @@ public class ScegliTestGraphicController {
     @FXML
     public void assegnaTest() {
         CheckBox[] checkBoxes = {test1, test2, test3, test4};
-        int numCheckBoxes = Math.min(listaTestPsicologici.size(), checkBoxes.length);
+        int numCheckBoxes = Math.min(listaTestPsicologiciBean.size(), checkBoxes.length);
         int contatore = 0;
         String nomeTest = null;
 
@@ -135,7 +135,7 @@ public class ScegliTestGraphicController {
             }
         }
         try {
-            if(!scegliTest.controlloNumTest(contatore,nomeTest)){
+            if(!scegliTestController.controlloNumTest(contatore,nomeTest)){
                 controlloFallito();
             }else {
                 controlloSuperato();
@@ -154,11 +154,14 @@ public class ScegliTestGraphicController {
     }
 
     public void controlloSuperato() {
-        Alert alert= new AlertMessage().Informazione("Operazione Completata","Esito Positivo", "Test assegnato con successo");
+        Alert alert = new AlertMessage().Informazione("Operazione Completata", "Esito Positivo", "Test assegnato con successo");
         alert.show();
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
-        timeline.play();
 
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
+            alert.close(); // Chiude l'alert
+            clickLabelTornaIndietro(); // Chiama il metodo dopo la chiusura dell'alert
+        }));
+        timeline.play();
     }
 }
 

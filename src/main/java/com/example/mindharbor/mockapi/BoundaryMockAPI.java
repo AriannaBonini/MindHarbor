@@ -1,80 +1,87 @@
 package com.example.mindharbor.mockapi;
 
-import com.example.mindharbor.model.DomandeTest;
+import com.example.mindharbor.beans.DomandeTestBean;
+import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.utilities.HttpUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import wiremock.net.minidev.json.JSONArray;
 import wiremock.net.minidev.json.JSONObject;
-import wiremock.net.minidev.json.parser.JSONParser;
+import wiremock.net.minidev.json.JSONValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class BoundaryMockAPI {
 
+    private BoundaryMockAPI(){}
+    private static final Logger logger = LoggerFactory.getLogger(BoundaryMockAPI.class);
     private static final String BASE_URL = "http://localhost:8080"; // Indirizzo del server WireMock
 
-    public static List<String> TestPiscologici() {
+    public static List<TestBean> testPiscologici() {
 
         MockBancaTestPsicologiciAPI.mockTestPiscologiciAPI();
 
-        List<String> testNames = new ArrayList<>();
+        List<TestBean> nomiTest = new ArrayList<>();
+        TestBean nomeTestBean;
 
         String jsonResponse = HttpUtil.makeHttpRequest(BASE_URL + "/test", "GET");
 
         try {
 
-            JSONParser parser = new JSONParser();
-
-            JSONArray jsonArray = (JSONArray) parser.parse(jsonResponse); // al posto di response.toString() ci andrà il return della classe HttpUtile
+            JSONArray jsonArray = (JSONArray) JSONValue.parse(jsonResponse);
             for (Object obj : jsonArray) {
-                String testName = (String) obj;
-                testNames.add(testName);
+                String nomeTest = (String) obj;
+                nomeTestBean=new TestBean(nomeTest);
+                
+                nomiTest.add(nomeTestBean);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
-        return testNames;
+        return nomiTest;
     }
 
-    public static DomandeTest DomandeTest(String nomeTest) {
+    public static DomandeTestBean domandeTest(String nomeTest) {
 
         MockBancaTestPsicologiciAPI.mockTestPiscologiciAPI();
 
-        DomandeTest domande=new DomandeTest();
+        DomandeTestBean domande=new DomandeTestBean();
         String jsonResponse = HttpUtil.makeHttpRequest(BASE_URL + "/api/test-urls", "GET");
         String urlTest=null;
 
         try {
 
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(jsonResponse);
-            for (Object key : jsonObject.keySet()) {
-                String testName = (String) key;
-                if (testName.equalsIgnoreCase(nomeTest)) {
-                    urlTest = (String) jsonObject.get(key);
-                    break;
+            JSONObject jsonObject = (JSONObject) JSONValue.parse(jsonResponse);
+            for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+                String key = entry.getKey(); // Ottieni la chiave
+                String value = (String) entry.getValue(); // Ottieni il valore
+
+                if (key.equalsIgnoreCase(nomeTest)) {
+                    urlTest = value;
+                    break; // Esci dal ciclo se trovato
                 }
             }
-            domande.setDomande(TrovaDomande(urlTest));
-            domande.setPunteggio(TrovaPunteggio(nomeTest));
+            domande.setDomande(trovaDomande(urlTest));
+            domande.setPunteggi(trovaPunteggio(nomeTest));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return domande;
     }
 
-    public static List<String> TrovaDomande(String urlTest) {
+    private static List<String> trovaDomande(String urlTest) {
 
         String jsonResponse = HttpUtil.makeHttpRequest(urlTest, "GET");
         List<String> domande= new ArrayList<>();
 
         try {
 
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(jsonResponse);
+            JSONObject jsonObject = (JSONObject) JSONValue.parse(jsonResponse);
 
             JSONArray domandeArray = (JSONArray) jsonObject.get("domande");
             for (Object domanda : domandeArray) {
@@ -82,14 +89,14 @@ public class BoundaryMockAPI {
             }
 
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
         return domande;
     }
 
-    public static List<Integer> TrovaPunteggio(String nomeTest) {
-        String urlPunteggi=null;
+    private static List<Integer> trovaPunteggio(String nomeTest) {
+        String urlPunteggi;
         List<Integer> punteggi= new ArrayList<>(Arrays.asList(0,0,0));
 
         if(nomeTest.equalsIgnoreCase("Test di Personalità")) {
@@ -103,26 +110,26 @@ public class BoundaryMockAPI {
         String jsonResponse = HttpUtil.makeHttpRequest(urlPunteggi, "GET");
 
         try{
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(jsonResponse);
+            JSONObject jsonObject = (JSONObject) JSONValue.parse(jsonResponse);
 
-            for (Object key : jsonObject.keySet()) {
-                String nomeRisposta = (String) key;
-                String valoreStringa = (String) jsonObject.get(key);
-                Integer valoreIntero = Integer.parseInt(valoreStringa);
-                if (nomeRisposta.equalsIgnoreCase("felice")) {
-                    punteggi.set(0,valoreIntero);
-                } else if (nomeRisposta.equalsIgnoreCase("triste")) {
-                    punteggi.set(1,valoreIntero);
-                }else {
-                    punteggi.set(2,valoreIntero);
+            for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+                String key = entry.getKey(); // Ottieni la chiave
+                String valoreStringa = (String) entry.getValue(); // Ottieni il valore come stringa
+                Integer valoreIntero = Integer.parseInt(valoreStringa); // Converti il valore in un intero
+
+                // Imposta i valori nella lista punteggi in base alla chiave
+                if (key.equalsIgnoreCase("felice")) {
+                    punteggi.set(0, valoreIntero);
+                } else if (key.equalsIgnoreCase("triste")) {
+                    punteggi.set(1, valoreIntero);
+                } else {
+                    punteggi.set(2, valoreIntero);
                 }
             }
 
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
-
         return punteggi;
     }
 }

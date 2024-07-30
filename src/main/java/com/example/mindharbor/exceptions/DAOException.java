@@ -6,12 +6,12 @@ public class DAOException extends Exception {
         super();
     }
 
-    public DAOException(String message, Throwable cause) {
-        super(message, cause);
+    public DAOException(String messaggio, Throwable causa) {
+        super(messaggio, causa);
     }
 
-    public DAOException(String message) {
-        super(message);
+    public DAOException(String messaggio) {
+        super(messaggio);
     }
 }
 

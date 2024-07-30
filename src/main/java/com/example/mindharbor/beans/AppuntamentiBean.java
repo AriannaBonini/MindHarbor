@@ -21,55 +21,49 @@ public class AppuntamentiBean {
         this.notificaRichiesta=notificaRichiesta;
     }
 
+    public AppuntamentiBean(String data, String ora, PazientiBean paziente) {
+        this.data=data;
+        this.ora=ora;
+        this.paziente=paziente;
+    }
+
+    public AppuntamentiBean(String data, String ora, PsicologoBean psicologo) {
+        this.data=data;
+        this.ora=ora;
+        this.psicologo=psicologo;
+    }
+
     public AppuntamentiBean(PazientiBean paziente, Integer idAppuntamento, Integer notificaRichiesta) {
         this.paziente=paziente;
         this.idAppuntamento=idAppuntamento;
         this.notificaRichiesta=notificaRichiesta;
     }
 
-
-    public String getData() {
-        return data;
-    }
-
+    public String getData() {return data;}
     public void setData(String data) {
         this.data = data;
     }
-
     public String getOra() {
         return ora;
     }
-
     public void setOra(String ora) {
         this.ora = ora;
     }
-
-
-
-
     public Integer getNotificaRichiesta() {return notificaRichiesta;}
-
     public PazientiBean getPaziente() {
         return paziente;
     }
-
     public void setPaziente(PazientiBean paziente) {
         this.paziente = paziente;
     }
-
     public PsicologoBean getPsicologo() {
         return psicologo;
     }
-
     public void setPsicologo(PsicologoBean psicologo) {
         this.psicologo = psicologo;
     }
-
     public Integer getIdAppuntamento() {
         return idAppuntamento;
     }
 
-    public void setIdAppuntamento(Integer idAppuntamento) {
-        this.idAppuntamento = idAppuntamento;
-    }
 }

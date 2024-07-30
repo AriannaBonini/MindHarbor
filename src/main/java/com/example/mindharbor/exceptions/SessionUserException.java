@@ -11,7 +11,7 @@ public class SessionUserException extends Exception{
         super("The user hasn't been defined yet");
     }
 
-    public SessionUserException(String message) {
-        super(message);
+    public SessionUserException(String messaggio) {
+        super(messaggio);
     }
 }

@@ -1,12 +1,10 @@
 package com.example.mindharbor.mockapi;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-
-import java.util.Random;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 public class MockCalendarioPsicologiAPI {
+    private MockCalendarioPsicologiAPI(){}
     private static final WireMockServer wireMockServer = new WireMockServer(8080);
 
         public static void mockCalendarioAPI() {

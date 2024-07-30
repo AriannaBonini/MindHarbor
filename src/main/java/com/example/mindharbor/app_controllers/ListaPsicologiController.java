@@ -7,7 +7,7 @@ import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
-import com.example.mindharbor.utilities.setInfoUtente;
+import com.example.mindharbor.utilities.SetInfoUtente;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,9 +30,7 @@ public class ListaPsicologiController {
         }
     }
 
-    public InfoUtenteBean getInfoPaziente() {return new setInfoUtente().getInfo();}
+    public InfoUtenteBean getInfoPaziente() {return new SetInfoUtente().getInfo();}
     public void setPsicologoSelezionato(PsicologoBean psicologoSelezionato) {navigator.setPsicologoBean(psicologoSelezionato);}
-
-
-    public void deleteAppuntamento() {navigator.deleteAppuntamentoBean();}
+    public void eliminaAppuntamentoSelezionato() {navigator.deleteAppuntamentoBean();}
 }

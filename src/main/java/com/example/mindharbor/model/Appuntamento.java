@@ -18,6 +18,12 @@ public class Appuntamento {
         this.notificaRichiesta=notificaRichiesta;
     }
 
+    public Appuntamento(String data, String ora, Paziente paziente) {
+        this.data = data;
+        this.ora = ora;
+        this.paziente = paziente;
+    }
+
     public Appuntamento(String data, String ora) {
         this.data = data;
         this.ora = ora;
@@ -40,6 +46,11 @@ public class Appuntamento {
 
     public Appuntamento(Integer idAppuntamento) {
         this.idAppuntamento=idAppuntamento;
+    }
+    public Appuntamento(Integer idAppuntamento, Psicologo psicologo, Paziente paziente) {
+        this.idAppuntamento=idAppuntamento;
+        this.psicologo=psicologo;
+        this.paziente=paziente;
     }
 
     public Integer getIdAppuntamento() {

@@ -56,7 +56,7 @@ public class ListaPazientiGraphicController {
     private void creaVBoxListaPazienti(List<PazientiBean> listaPazienti) {
         listViewPazienti.getItems().clear();
 
-        ObservableList<Node> items = FXCollections.observableArrayList();
+        ObservableList<Node> nodi = FXCollections.observableArrayList();
 
         for (PazientiBean paz : listaPazienti) {
 
@@ -67,7 +67,7 @@ public class ListaPazientiGraphicController {
             Label nomePaziente = new Label("\n     NOME:" + " " + paz.getNome());
             Label cognomePaziente = new Label("     COGNOME:" + " " + paz.getCognome());
 
-            if(paz.getNumTest()>0) {
+            if(paz.getNumTestSvolti()>0) {
                 nomePaziente.setStyle("-fx-font-weight: bold;");
                 cognomePaziente.setStyle("-fx-font-weight: bold;");
 
@@ -79,27 +79,27 @@ public class ListaPazientiGraphicController {
             boxPaziente.getChildren().addAll(nomePaziente, cognomePaziente);
 
             ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,paz.getGenere());
-            imageDecorator.loadImage();
+            imageDecorator.caricaImmagine();
 
             hBoxPaziente.getChildren().addAll(immaginePaziente, boxPaziente);
-            items.add(hBoxPaziente);
+            nodi.add(hBoxPaziente);
 
             hBoxPaziente.setUserData(paz);
 
         }
 
         listViewPazienti.setFixedCellSize(100);
-        listViewPazienti.getItems().addAll(items);
+        listViewPazienti.getItems().addAll(nodi);
     }
     @FXML
-    public void goToHome() {
+    public void clickLabelHome() {
         try {
             Stage listaPazienti = (Stage) home.getScene().getWindow();
             listaPazienti.close();
 
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia Home dello psicologo", e);
         }
 
     }
@@ -107,20 +107,17 @@ public class ListaPazientiGraphicController {
     public void nodoSelezionato() {
         try {
             Node nodo = listViewPazienti.getSelectionModel().getSelectedItem();
-            if(nodo==null) {
-                return;
+            if(nodo!=null) {
+                PazientiBean pazienteSelezionato = (PazientiBean) nodo.getUserData();
+                listaPazientiController.setPazienteSelezionato(pazienteSelezionato);
+
+                Stage listaPazienti = (Stage) listViewPazienti.getScene().getWindow();
+                listaPazienti.close();
+
+                navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
             }
-
-            PazientiBean paziente =(PazientiBean) nodo.getUserData();
-
-            Stage listaPazienti = (Stage) listViewPazienti.getScene().getWindow();
-            listaPazienti.close();
-
-            listaPazientiController.setPazienteSelezionato(paziente);
-
-            navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
         } catch (IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia della scheda personale del paziente", e);
         }
 
     }

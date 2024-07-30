@@ -45,21 +45,27 @@ public class ListaTestGraphicController {
         infoUtenteBean = listaTestController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        modificaStatoNotifica();
         trovaPsicologo();
-        popolaLista();
 
     }
 
     private void trovaPsicologo() {
         try {
-            infoUtenteBean= listaTestController.infoPsicologo();
-            labelPsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        } catch (DAOException e) {
+            infoUtenteBean = listaTestController.infoPsicologo();
+
+            if (infoUtenteBean != null) {
+                labelPsicologo.setText("PSICOLOGO " + infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
+                modificaStatoNotifica();
+                popolaLista();
+
+            }else {
+                info.setText("Non hai ancora uno psicologo");
+            }
+        }catch (DAOException e) {
             logger.info("Errore durante la ricerca dello psicologo: ", e);
         }
-
     }
+
 
     private void modificaStatoNotifica()  {
         try {
@@ -73,19 +79,19 @@ public class ListaTestGraphicController {
         try {
             List<TestBean> listaTest = listaTestController.getListaTest();
             if (listaTest.isEmpty()) {
-                info.setText("Non esistono test");
+                info.setText("Non hai test assegnati");
             } else {
                 creaVBoxListaTest(listaTest);
             }
         }catch (DAOException e) {
-            logger.info("Non non ci sono test", e);
+            logger.info("Errore durante la ricerca dei test ", e);
         }
     }
 
     private void creaVBoxListaTest(List<TestBean> listaTest) {
         listViewTest.getItems().clear();
 
-        ObservableList<Node> items = FXCollections.observableArrayList();
+        ObservableList<Node> nodi = FXCollections.observableArrayList();
 
         for (TestBean test : listaTest){
 
@@ -110,7 +116,7 @@ public class ListaTestGraphicController {
             boxTest.getChildren().addAll(dataTest, nomeTest, risultatoTest);
 
             ImageDecorator imageDecorator= new TestDecorator(immagineStato,test.getSvolto());
-            imageDecorator.loadImage();
+            imageDecorator.caricaImmagine();
 
             immagineStato.setFitWidth(25);
             immagineStato.setFitHeight(25);
@@ -118,16 +124,16 @@ public class ListaTestGraphicController {
             hBoxTest.getChildren().addAll(immagineStato, boxTest);
             hBoxTest.setSpacing(10);
 
-            items.add(hBoxTest);
+            nodi.add(hBoxTest);
 
             hBoxTest.setUserData(test);
         }
         listViewTest.setFixedCellSize(100);
-        listViewTest.getItems().addAll(items);
+        listViewTest.getItems().addAll(nodi);
     }
 
     @FXML
-    public void goToHome() {
+    public void clickLabelHome() {
         try {
             Stage listaTest = (Stage) home.getScene().getWindow();
             listaTest.close();
@@ -135,7 +141,7 @@ public class ListaTestGraphicController {
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
         } catch (IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia Home del paziente", e);
         }
     }
 
@@ -148,18 +154,18 @@ public class ListaTestGraphicController {
             }
             TestBean test = (TestBean) nodo.getUserData();
             if(test.getSvolto()==1) {
-                new LabelDuration().Duration(info,"test già effettuato");
+                new LabelDuration().duration(info,"test già effettuato");
                 return;
             }
+            listaTestController.setTestSelezionato(test);
 
             Stage listaTest = (Stage) listViewTest.getScene().getWindow();
             listaTest.close();
 
-            listaTestController.setTestSelezionato(test);
             navigator.gotoPage("/com/example/mindharbor/SvolgiTest.fxml");
 
         } catch (IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia Svolgi Test ", e);
         }
 
     }

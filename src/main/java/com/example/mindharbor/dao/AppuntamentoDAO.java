@@ -6,7 +6,6 @@ import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
-import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.session.ConnectionFactory;
 import com.example.mindharbor.utilities.HelperDAO;
 import java.sql.*;
@@ -14,10 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppuntamentoDAO extends QuerySQLAppuntamentoDAO implements HelperDAO {
-    public List<Appuntamento> trovaAppuntamenti(Utente utente, String selectedTabName)  throws DAOException {
-        List<Appuntamento> appuntamentoList = new ArrayList<>();
 
-        String sql = QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI;
+    public List<Appuntamento>  trovaAppuntamentiPaziente(Utente paziente, String selectedTabName) throws DAOException {
+        List<Appuntamento> appuntamentoPazienteList = new ArrayList<>();
+
+        String sql = QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI_PAZIENTE;
 
         if (selectedTabName.equals("IN PROGRAMMA")) {
             sql += QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI_IN_PROGRAMMA;
@@ -27,25 +27,61 @@ public class AppuntamentoDAO extends QuerySQLAppuntamentoDAO implements HelperDA
 
         Connection conn = ConnectionFactory.getConnection();
 
-        try (PreparedStatement stmt = createPreparedStatement(conn, sql, utente);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            stmt.setString(1, paziente.getUsername());
 
-            while (rs.next()) {
-                Appuntamento appuntamento = new Appuntamento(
-                        rs.getString(1),
-                        rs.getString(2),
-                        null,
-                        new Paziente(rs.getString(7), rs.getString(5), rs.getString(6)),
-                        new Psicologo(rs.getString(8), rs.getString(3), rs.getString(4))
-                );
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Appuntamento appuntamento = new Appuntamento(
+                            rs.getString(1),
+                            rs.getString(2)
+                    );
 
-                appuntamentoList.add(appuntamento);
+                    appuntamentoPazienteList.add(appuntamento);
+                }
             }
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
 
-        return appuntamentoList;
+        return appuntamentoPazienteList;
+    }
+
+    public List<Appuntamento> trovaAppuntamentiPsicologo(Utente psicologo, String selectedTabName) throws DAOException {
+        List<Appuntamento> appuntamentoPsicologoList = new ArrayList<>();
+
+        String sql = QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI_PSICOLOGO;
+
+        if (selectedTabName.equals("IN PROGRAMMA")) {
+            sql += QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI_IN_PROGRAMMA;
+        } else {
+            sql += QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI_PASSATI;
+        }
+
+        Connection conn = ConnectionFactory.getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            stmt.setString(1, psicologo.getUsername());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                UtenteDao utenteDAO = new UtenteDao();
+                while (rs.next()) {
+                    Utente paziente = utenteDAO.trovaNomeCognome(new Utente(rs.getString(3)));
+
+                    Appuntamento appuntamento = new Appuntamento(
+                            rs.getString(1),
+                            rs.getString(2),
+                            new Paziente(paziente.getUsername(), paziente.getNome(), paziente.getCognome())
+                    );
+
+                    appuntamentoPsicologoList.add(appuntamento);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
+
+        return appuntamentoPsicologoList;
     }
 
     public void insertRichiestaAppuntamento(Appuntamento appuntamento) throws DAOException{
@@ -213,7 +249,7 @@ public class AppuntamentoDAO extends QuerySQLAppuntamentoDAO implements HelperDA
         return disponibile;
     }
 
-    public void updateStatoNotificaPaziente(Utente utente) throws DAOException {
+    public void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
 
         Connection conn = ConnectionFactory.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.UPDATE_STATO_NOTIFICA_PAZIENTE)) {

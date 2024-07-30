@@ -11,7 +11,7 @@ import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.*;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
-import com.example.mindharbor.utilities.setInfoUtente;
+import com.example.mindharbor.utilities.SetInfoUtente;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class PrescriviTerapiaController {
 
     public void deletePazienteSelezionato() {navigator.deletePazienteBean();}
     public InfoUtenteBean getInfoPsicologo() {
-        return new setInfoUtente().getInfo();
+        return new SetInfoUtente().getInfo();
     }
     public PazientiBean getPazienteSelezionato() {return navigator.getPazienteBean();}
 
@@ -37,7 +37,7 @@ public class PrescriviTerapiaController {
         List<TestBean> testSvoltiBean= new ArrayList<>();
         try {
 
-            List<TestPsicologico> testSvolti = new TestPsicologicoDAO().ListaTestSvoltiSenzaPrescrizione(pazienteSelezionato.getUsername(), SessionManager.getInstance().getCurrentUser().getUsername());
+            List<TestPsicologico> testSvolti = new TestPsicologicoDAO().listaTestSvoltiSenzaPrescrizione(pazienteSelezionato.getUsername(), SessionManager.getInstance().getCurrentUser().getUsername());
 
             for (TestPsicologico test : testSvolti) {
                 TestBean testSvoltoBean = new TestBean(test.getTest(),

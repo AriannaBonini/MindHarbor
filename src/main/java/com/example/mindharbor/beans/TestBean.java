@@ -12,6 +12,8 @@ public class TestBean {
 
     public TestBean() {}
 
+    public TestBean(String nomeTest) {this.nomeTest=nomeTest;}
+
     public TestBean(String nomeTest, String psicologo, String paziente, Integer risultato, Date data, Integer svolto) {
         this.nomeTest=nomeTest;
         this.psicologo=psicologo;
@@ -20,6 +22,13 @@ public class TestBean {
         this.data=data;
         this.svolto=svolto;
 
+    }
+
+    public TestBean(String nomeTest, Integer risultato, Date data, Integer svolto) {
+        this.nomeTest=nomeTest;
+        this.risultato=risultato;
+        this.data=data;
+        this.svolto=svolto;
     }
 
     public String getNomeTest() {

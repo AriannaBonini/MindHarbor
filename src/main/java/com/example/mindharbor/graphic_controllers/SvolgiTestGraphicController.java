@@ -38,7 +38,6 @@ public class SvolgiTestGraphicController {
     private Label domanda5;
     @FXML
     private Label domanda6;
-
     @FXML
     private CheckBox felice1;
     @FXML
@@ -86,8 +85,8 @@ public class SvolgiTestGraphicController {
     @FXML
     private ImageView tornaIndietro;
 
-    private final SvolgiTestController controller= new SvolgiTestController();
-    private DomandeTestBean domandeBean;
+    private final SvolgiTestController svolgiTestController = new SvolgiTestController();
+    private DomandeTestBean domandeTestBean;
     private  Label[] labels;
     private CheckBox[][] risposteTest;
 
@@ -96,9 +95,9 @@ public class SvolgiTestGraphicController {
     private TestBean testSelezionato;
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = controller.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = svolgiTestController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        testSelezionato=controller.getTestSelezionato();
+        testSelezionato= svolgiTestController.getTestSelezionato();
 
         labels= new Label[]{domanda1, domanda2, domanda3, domanda4, domanda5, domanda6};
         risposteTest= new CheckBox[][]{{felice1, triste1, arrabbiata1}, {felice2, triste2, arrabbiata2},{felice3, triste3, arrabbiata3},
@@ -109,11 +108,11 @@ public class SvolgiTestGraphicController {
     }
 
     private void aggiungiDomande() {
-        domandeBean= controller.cercaDomande(testSelezionato);
+        domandeTestBean = svolgiTestController.cercaDomande(testSelezionato);
 
-        int numLabels = Math.min(domandeBean.getDomande().size(), labels.length);
+        int numLabels = Math.min(domandeTestBean.getDomande().size(), labels.length);
         for (int i = 0; i < numLabels; i++) {
-            labels[i].setText(domandeBean.getDomande().get(i));
+            labels[i].setText(domandeTestBean.getDomande().get(i));
             labels[i].setWrapText(true);
             labels[i].setVisible(true);
             risposteTest[i][0].setVisible(true);
@@ -125,54 +124,54 @@ public class SvolgiTestGraphicController {
 
 
    @FXML
-    public void goToHome() {
+    public void clickLabelHome() {
         try {
             Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare alla Home?");
-            if (risposta==0) {
-                return;
+            if (risposta!=0) {
+                svolgiTestController.eliminaTestSelezionato();
+
+                Stage svolgiTest = (Stage) home.getScene().getWindow();
+                svolgiTest.close();
+                navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
             }
-            Stage svolgiTest = (Stage) home.getScene().getWindow();
-            svolgiTest.close();
-
-            navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
-
         } catch (IOException e) {
-            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
+            logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
         }
     }
 
     @FXML
-    public void tornaIndietro() {
+    public void clickLabelTornaIndietro() {
         try {
             Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare indietro?");
-            if (risposta==0) {
-                return;
+            if (risposta!=0) {
+                svolgiTestController.eliminaTestSelezionato();
+
+                Stage svolgiTest = (Stage) tornaIndietro.getScene().getWindow();
+                svolgiTest.close();
+
+                navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
             }
-            controller.deleteTestSelezionato();
-
-            Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
-            schedaPersonale.close();
-
-            navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
         }catch(IOException e) {
-            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
+            logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
         }
 
     }
 
     @FXML
     public void concludiTest()  {
-        int numCheckBoxes = Math.min(domandeBean.getDomande().size(), labels.length);
+        int numCheckBoxs = Math.min(domandeTestBean.getDomande().size(), labels.length);
         int count;
-        List<Integer> punteggio=new ArrayList<>();
+        DomandeTestBean punteggiBean=new DomandeTestBean();
+        List<Integer> punteggi=new ArrayList<>();
 
-        for(int i=0;i<numCheckBoxes;i++) {
+        for(int i = 0; i< numCheckBoxs; i++) {
             count=0;
             for(int j=0; j<3; j++) {
                 if(risposteTest[i][j].isSelected()) {
                     count++;
-                    punteggio.add(domandeBean.getPunteggi().get(j));
+                    punteggi.add(domandeTestBean.getPunteggi().get(j));
                 }
+                punteggiBean.setPunteggi(punteggi);
             }
 
             if (count!=1) {
@@ -186,23 +185,20 @@ public class SvolgiTestGraphicController {
         }
 
         try {
+            TestResultBean risultatoTest = svolgiTestController.calcolaRisultato(punteggiBean,testSelezionato);
 
-            TestResultBean testResult = controller.calcolaRisultato(punteggio,testSelezionato);
-
-            if (testResult.getRisultatoTestPrecedente() == null) {
-                notificaProgresso("Risultato test: " + testResult.getRisultatoUltimoTest(), "Complimenti! Hai svolto il tuo primo test");
+            if (risultatoTest.getRisultatoTestPrecedente() == null) {
+                notificaProgresso("Risultato test: " + risultatoTest.getRisultatoUltimoTest(), "Complimenti! Hai svolto il tuo primo test");
 
             } else {
-                if (testResult.getRisultatoTestPrecedente() > 0) {
-                    notificaProgresso("Progresso: " + testResult.getRisultatoTestPrecedente() + "%", "Complimenti!");
+                if (risultatoTest.getRisultatoTestPrecedente() > 0) {
+                    notificaProgresso("Progresso: " + risultatoTest.getRisultatoTestPrecedente() + "%", "Complimenti!");
                 } else {
-                    notificaProgresso("Regresso: " + testResult.getRisultatoTestPrecedente() + "%", "Mi dispiace!");
+                    notificaProgresso("Regresso: " + risultatoTest.getRisultatoTestPrecedente() + "%", "Mi dispiace!");
                 }
             }
         }catch (DAOException e) {
             logger.info("Errore nel calcolo del risultato del test ", e);
-
-
         }
     }
 
@@ -210,22 +206,22 @@ public class SvolgiTestGraphicController {
         Alert alert= new AlertMessage().Informazione("Test Concluso", header,messaggio);
 
         alert.getButtonTypes().setAll(ButtonType.OK);
-        ButtonType result = alert.showAndWait().orElse(ButtonType.OK);
-        if (result==ButtonType.OK) {
+        ButtonType risultato = alert.showAndWait().orElse(ButtonType.OK);
+        if (risultato ==ButtonType.OK) {
             alert.close();
-            indirizzaAllaListaTest();
+            testConclusoTornaAllaListaTest();
         }
     }
 
-    private void indirizzaAllaListaTest() {
-        Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
-        schedaPersonale.close();
-
+    private void testConclusoTornaAllaListaTest() {
+        Stage svolgiTest = (Stage) tornaIndietro.getScene().getWindow();
+        svolgiTest.close();
         try {
-            controller.deleteTestSelezionato();
+            svolgiTestController.eliminaTestSelezionato();
+
             navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
         } catch (IOException e) {
-            logger.info(Constants.INTERFACE_LOAD_ERROR, e);
+            logger.info(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
         }
     }
 }

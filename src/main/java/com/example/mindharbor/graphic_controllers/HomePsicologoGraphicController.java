@@ -2,6 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.HomePsicologoController;
 import com.example.mindharbor.beans.InfoUtenteBean;
+import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
@@ -28,11 +29,12 @@ public class HomePsicologoGraphicController {
     @FXML
     private Label notificaRichieste;
     private static final Logger logger = LoggerFactory.getLogger(HomePsicologoGraphicController.class);
-    private final HomePsicologoController homeController= new HomePsicologoController();
+    private final HomePsicologoController homePsicologoController = new HomePsicologoController();
     private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
+    private PsicologoBean psicologoBean;
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = homeController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = homePsicologoController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         notificaTestEffettuati();
         notificaRichiesteAppuntamenti();
@@ -40,9 +42,9 @@ public class HomePsicologoGraphicController {
 
     private void notificaRichiesteAppuntamenti() {
         try {
-            int count = homeController.cercaRichiesteAppuntamenti();
-            if (count > 0) {
-                notificaRichieste.setText(String.valueOf(count));
+            psicologoBean= homePsicologoController.cercaRichiesteAppuntamenti();
+            if (psicologoBean.getNumNotifiche() > 0) {
+                notificaRichieste.setText(String.valueOf(psicologoBean.getNumNotifiche()));
             }
         } catch (DAOException e) {
             logger.info("Errore nella ricerca dei test ", e);
@@ -52,9 +54,9 @@ public class HomePsicologoGraphicController {
 
     private void notificaTestEffettuati() {
         try {
-            int count = homeController.cercaNuoviTestSvolti();
-            if (count > 0) {
-                notificaTest.setText(String.valueOf(count));
+            psicologoBean = homePsicologoController.cercaNuoviTestSvolti();
+            if (psicologoBean.getNumNotifiche() > 0) {
+                notificaTest.setText(String.valueOf(psicologoBean.getNumNotifiche()));
             }
         } catch (DAOException e) {
             logger.info("Errore nella ricerca dei test ", e);
@@ -63,10 +65,11 @@ public class HomePsicologoGraphicController {
     }
 
     @FXML
-    public void onVisualAppuntamentiClick() {
+    public void clickLabelAppuntamenti() {
         try {
             Stage homePsicologo = (Stage) visualizzaAppuntamenti.getScene().getWindow();
             homePsicologo.close();
+
             navigator.gotoPage("/com/example/mindharbor/ListaAppuntamenti2.fxml");
         } catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia degli appuntamenti", e);
@@ -75,7 +78,7 @@ public class HomePsicologoGraphicController {
     }
 
     @FXML
-    public void onPrescriviTerapiaClick() {
+    public void clickLabelPrescriviTerapia() {
         try {
             Stage homePsicologo = (Stage) prescriviTerapia.getScene().getWindow();
             homePsicologo.close();
@@ -86,27 +89,29 @@ public class HomePsicologoGraphicController {
     }
 
     @FXML
-    public void logout() {
-        try {
-            Stage homePsicologo = (Stage) logout.getScene().getWindow();
-            homePsicologo.close();
-            homeController.logout();
-            navigator.gotoPage("/com/example/mindharbor/Login.fxml");
-        } catch (IOException e ) {
-            logger.error("Impossibile caricare l'interfaccia", e);
-        }
-    }
-
-    @FXML
-    public void richiestePrenotazioni() {
+    public void clickLabelRichiestePrenotazioni() {
         try {
             Stage homePsicologo = (Stage) richiestaPrenotazione.getScene().getWindow();
             homePsicologo.close();
 
             navigator.gotoPage("/com/example/mindharbor/ListaRichiesteAppuntamenti.fxml");
         } catch (IOException e ) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia delle richieste di appuntamento", e);
         }
 
+    }
+
+    @FXML
+    public void clickLabelLogout() {
+        try {
+            homePsicologoController.logout();
+
+            Stage homePsicologo = (Stage) logout.getScene().getWindow();
+            homePsicologo.close();
+
+            navigator.gotoPage("/com/example/mindharbor/Login.fxml");
+        } catch (IOException e ) {
+            logger.error("Impossibile caricare l'interfaccia del Login", e);
+        }
     }
 }

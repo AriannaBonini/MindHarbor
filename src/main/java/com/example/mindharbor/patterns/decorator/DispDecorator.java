@@ -13,14 +13,14 @@ public class DispDecorator extends ImageDecorator{
         this.disp = disp;
     }
 
-    public void loadImage() {
-        Image image;
+    public void caricaImmagine() {
+        Image immagine;
         if(!disp) {
-            image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/casellaRossa.png")));
+            immagine = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/casellaRossa.png")));
         }else {
-            image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/casellaVerde.png")));
+            immagine = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/casellaVerde.png")));
         }
-        imageView.setImage(image);
+        imageView.setImage(immagine);
     }
 
 }

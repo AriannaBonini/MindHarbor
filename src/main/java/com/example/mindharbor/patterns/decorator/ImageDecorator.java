@@ -9,6 +9,6 @@ public abstract class ImageDecorator {
          this.imageView = imageView;
      }
 
-     public abstract void loadImage();
+     public abstract void caricaImmagine();
 }
 

@@ -9,41 +9,35 @@ import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
-import com.example.mindharbor.utilities.setInfoUtente;
+import com.example.mindharbor.utilities.SetInfoUtente;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListaTestController {
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-    public InfoUtenteBean getInfoPaziente() {
-       return new setInfoUtente().getInfo();
-    }
-    public void setTestSelezionato(TestBean testSelezionato) {
-        navigator.setTestBean(testSelezionato);
-    }
+    public InfoUtenteBean getInfoPaziente() {return new SetInfoUtente().getInfo();}
+    public void setTestSelezionato(TestBean testSelezionato) {navigator.setTestBean(testSelezionato);}
 
     public List<TestBean> getListaTest() throws DAOException {
         List<TestBean> testBeanList = new ArrayList<>();
 
-        try {
-            List<TestPsicologico> listaTest = new TestPsicologicoDAO().TrovaListaTest(SessionManager.getInstance().getCurrentUser());
+        if (SessionManager.getInstance().getUsernamePsicologo() != null) {
+            try {
+                List<TestPsicologico> listaTest = new TestPsicologicoDAO().trovaListaTest(SessionManager.getInstance().getCurrentUser());
 
+                for (TestPsicologico test : listaTest) {
+                    TestBean testBean = new TestBean(
+                            test.getTest(),
+                            test.getRisultato(),
+                            test.getData(),
+                            test.getSvolto());
 
-            for (TestPsicologico test : listaTest) {
-                TestBean testBean = new TestBean(
-                        test.getTest(),
-                        null,
-                        null,
-                        test.getRisultato(),
-                        test.getData(),
-                        test.getSvolto());
-
-
-                testBeanList.add(testBean);
+                    testBeanList.add(testBean);
+                }
+            } catch (DAOException e) {
+                throw new DAOException(e.getMessage());
             }
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
         }
         return testBeanList;
     }
@@ -57,6 +51,9 @@ public class ListaTestController {
     }
 
     public InfoUtenteBean infoPsicologo() throws DAOException {
+        if(SessionManager.getInstance().getUsernamePsicologo()==null) {
+            return null;
+        }
         try {
             Utente utente= new UtenteDao().trovaNomeCognome(new Utente(SessionManager.getInstance().getUsernamePsicologo()));
             return new InfoUtenteBean(utente.getNome(),utente.getCognome());

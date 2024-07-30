@@ -39,6 +39,8 @@ public class SchedaPersonalePazienteGraphicController {
     private ImageView immaginePaziente;
     @FXML
     private ImageView tornaIndietro;
+    @FXML
+    private Label scegliTest;
 
     private PazientiBean pazienteSelezionato;
     private final SchedaPersonalePazienteController schedaPersonaleController = new SchedaPersonalePazienteController();
@@ -52,6 +54,7 @@ public class SchedaPersonalePazienteGraphicController {
 
         notificaStatoTest();
         abilitaPrescriviTerapia();
+        abilitaAssegnaTest();
 
         if (pazienteSelezionato.getAnni() == null && pazienteSelezionato.getDiagnosi() == null) {
             //questo if controlla se c'è già stato un accesso alla DAO precedentemente.
@@ -73,8 +76,19 @@ public class SchedaPersonalePazienteGraphicController {
     }
 
     private void notificaStatoTest() {
-        if (pazienteSelezionato.getNumTest()>0) {
-            notificaTest.setText(String.valueOf(pazienteSelezionato.getNumTest()));
+        if (pazienteSelezionato.getNumTestSvolti()>0) {
+            notificaTest.setText(String.valueOf(pazienteSelezionato.getNumTestSvolti()));
+        }
+    }
+
+    private void abilitaAssegnaTest() {
+        try {
+            if (schedaPersonaleController.getNumTestOdiernoAssegnato(pazienteSelezionato)>0) {
+                scegliTest.setDisable(true);
+            }
+        }catch (DAOException e) {
+            logger.info("Errore durante il controllo della presenza di un test già assegnato al paziente nella giornata odierna" , e);
+
         }
     }
 
@@ -105,7 +119,7 @@ public class SchedaPersonalePazienteGraphicController {
         }
 
         ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,pazienteSelezionato.getGenere());
-        imageDecorator.loadImage();
+        imageDecorator.caricaImmagine();
     }
 
     @FXML
@@ -117,7 +131,7 @@ public class SchedaPersonalePazienteGraphicController {
             schedaPersonaleController.deletePazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
         }catch(IOException e) {
-            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
+            logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
         }
 
     }
@@ -131,7 +145,7 @@ public class SchedaPersonalePazienteGraphicController {
             schedaPersonaleController.deletePazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/ListaPazienti.fxml");
         }catch(IOException e) {
-            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
+            logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
         }
 
     }
@@ -146,7 +160,7 @@ public class SchedaPersonalePazienteGraphicController {
             schedaPersonaleController.setPazienteSelezionato(pazienteSelezionato);
             navigator.gotoPage("/com/example/mindharbor/ScegliTest.fxml");
         }catch(IOException e) {
-            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
+            logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
         }
     }
     @FXML
@@ -158,7 +172,7 @@ public class SchedaPersonalePazienteGraphicController {
             schedaPersonaleController.setPazienteSelezionato(pazienteSelezionato);
             navigator.gotoPage("/com/example/mindharbor/PrescrizioneTerapia.fxml");
         }catch(IOException e) {
-            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
+            logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
         }
 
     }

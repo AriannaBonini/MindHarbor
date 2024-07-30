@@ -3,7 +3,7 @@ package com.example.mindharbor.utilities;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.session.SessionManager;
 
-public class setInfoUtente {
+public class SetInfoUtente {
     public InfoUtenteBean getInfo() {
         SessionManager sessionManager = SessionManager.getInstance();
 

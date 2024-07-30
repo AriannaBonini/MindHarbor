@@ -14,6 +14,8 @@ public class Paziente extends Utente{
         this.numeroTest=numTest;
     }
 
+    public Paziente(Integer numTest) {this.numeroTest=numTest;}
+
     public Paziente(String username, String nome, String cognome, UserType userType, String genere) {
         super(username, nome, cognome, userType, genere);
     }

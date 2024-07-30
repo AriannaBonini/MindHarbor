@@ -7,7 +7,7 @@ import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
-import com.example.mindharbor.utilities.setInfoUtente;
+import com.example.mindharbor.utilities.SetInfoUtente;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class ListaPazientiController {
         }
     }
 
-    public InfoUtenteBean getInfoPsicologo() {return new setInfoUtente().getInfo();}
+    public InfoUtenteBean getInfoPsicologo() {return new SetInfoUtente().getInfo();}
     public void setPazienteSelezionato(PazientiBean pazienteSelezionato) {navigator.setPazienteBean(pazienteSelezionato);}
 
 }

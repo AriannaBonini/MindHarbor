@@ -39,10 +39,9 @@ public class AppuntamentiPsicologoGraphicController {
     private Label homeTab2;
     private final AppuntamentiController appuntamentiController = new AppuntamentiController();
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPsicologoGraphicController.class);
-
+    private final InfoUtenteBean infoUtenteBean=appuntamentiController.getInfoUtente();
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = appuntamentiController.getInfoUtente();
         labelNomePsicologoTab1.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         labelNomePsicologoTab2.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
@@ -62,28 +61,28 @@ public class AppuntamentiPsicologoGraphicController {
 
     private void ricercaAppuntamenti(String selectedTabName, Text text, ListView<Node> listView){
         try {
-            List<AppuntamentiBean> appuntamenti = appuntamentiController.getAppuntamenti(selectedTabName);
+            List<AppuntamentiBean> appuntamenti = appuntamentiController.getAppuntamentiPsicologo(selectedTabName);
             if (appuntamenti.isEmpty()) {
                 text.setText("Non ci sono appuntamenti");
             }else {
                 creaVBoxAppuntamenti(appuntamenti, listView);
             }
         }catch (DAOException e) {
-            logger.info("Non non ci sono appuntamenti", e);
+            logger.info("Errore nella ricerca degli appuntamenti", e);
         }
     }
 
     private void creaVBoxAppuntamenti(List<AppuntamentiBean> appuntamenti, ListView<Node> listView) {
         listView.getItems().clear();
 
-        ObservableList<Node> items = FXCollections.observableArrayList();
+        ObservableList<Node> nodi = FXCollections.observableArrayList();
 
         for (AppuntamentiBean app : appuntamenti) {
             VBox vBox = new VBox();
 
             Label dataAppuntamento = new Label("DATA:" + " " + app.getData());
             Label oraAppuntamento = new Label("ORA:" + " " + app.getOra());
-            Label nomePsicologo = new Label("PSICOLOGO:" + " " + app.getPsicologo().getNome() + " " + app.getPsicologo().getCognome());
+            Label nomePsicologo = new Label("PSICOLOGO:" + " " + infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
             Label nomePaziente = new Label("PAZIENTE:" + " " + app.getPaziente().getNome()+ " " + app.getPaziente().getCognome());
 
             dataAppuntamento.setTextFill(Color.WHITE);
@@ -92,22 +91,22 @@ public class AppuntamentiPsicologoGraphicController {
             nomePaziente.setTextFill(Color.WHITE);
 
             vBox.getChildren().addAll(dataAppuntamento, oraAppuntamento, nomePsicologo, nomePaziente);
-            items.add(vBox);
+            nodi.add(vBox);
         }
 
         listView.setFixedCellSize(100);
-        listView.getItems().addAll(items);
+        listView.getItems().addAll(nodi);
     }
 
     @FXML
-    public void goToHomeFromTab1() {
-        goToHome(homeTab1);
+    public void vaiAllaHomeDaTab1() {
+        clickLabelHome(homeTab1);
     }
     @FXML
-    public void goToHomeFromTab2() {
-        goToHome(homeTab2);
+    public void vaiAllaHomeDaTab2() {
+        clickLabelHome(homeTab2);
     }
-    private void goToHome(Label label) {
+    private void clickLabelHome(Label label) {
         try {
             Stage appuntamenti = (Stage) label.getScene().getWindow();
             appuntamenti.close();
@@ -117,7 +116,7 @@ public class AppuntamentiPsicologoGraphicController {
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
 
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia Home dello psicologo", e);
         }
     }
 }

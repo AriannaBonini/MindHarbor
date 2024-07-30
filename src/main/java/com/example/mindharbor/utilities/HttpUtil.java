@@ -1,12 +1,19 @@
 package com.example.mindharbor.utilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class HttpUtil {
-    //aelihjb
+
+    private HttpUtil(){}
+    private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
     /*
     Il metodo makeHttpRequest è progettato per eseguire richieste HTTP.
@@ -23,19 +30,7 @@ public class HttpUtil {
         frequenti modifiche alle stringhe.
          */
         try{
-            URL url = new URL(urlPath);
-            /*
-            Crea un nuovo oggetto URL dall'URL fornito.
-            Questo è necessario per stabilire una connessione
-             */
-
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            /*
-            Apre una connessione verso l'URL specificato. openConnection() ritorna un oggetto URLConnection
-            che viene castato a HttpURLConnection per poter utilizzare funzionalità specifiche per HTTP.
-             */
-
-            connection.setRequestMethod(requestMethod);
+            HttpURLConnection connection = getHttpURLConnection(urlPath, requestMethod);
             /*
             Imposta il metodo HTTP (come "GET" o "POST") per la connessione.
              */
@@ -64,12 +59,31 @@ public class HttpUtil {
             Chiude la connessione HTTP per liberare le risorse di rete.
              */
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         return response.toString();
         /*
         Converte il StringBuilder in una stringa e la restituisce.
         Questo è il contenuto della risposta del server alla tua richiesta HTTP.
          */
+    }
+
+    private static HttpURLConnection getHttpURLConnection(String urlPath, String requestMethod) throws URISyntaxException, IOException {
+        URI uri = new URI(urlPath);
+        URL url = uri.toURL();
+
+            /*
+            Crea un nuovo oggetto URL dall'URL fornito.
+            Questo è necessario per stabilire una connessione
+             */
+
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            /*
+            Apre una connessione verso l'URL specificato. openConnection() ritorna un oggetto URLConnection
+            che viene castato a HttpURLConnection per poter utilizzare funzionalità specifiche per HTTP.
+             */
+
+        connection.setRequestMethod(requestMethod);
+        return connection;
     }
 }

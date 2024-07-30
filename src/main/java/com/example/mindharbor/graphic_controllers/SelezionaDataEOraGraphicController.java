@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.SelezionaDataEOraController;
+import com.example.mindharbor.app_controllers.RichiestaAppuntamentoController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.constants.Constants;
@@ -35,16 +35,16 @@ public class SelezionaDataEOraGraphicController {
 
     private static final Logger logger = LoggerFactory.getLogger(SelezionaDataEOraGraphicController.class);
     private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
-    private final SelezionaDataEOraController selezionaDataEOraController= new SelezionaDataEOraController();
+    private final RichiestaAppuntamentoController richiestaAppuntamentoController = new RichiestaAppuntamentoController();
     private AppuntamentiBean appuntamento;
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = selezionaDataEOraController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = richiestaAppuntamentoController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
         dataRules();
 
-        if((appuntamento=selezionaDataEOraController.getAppuntamento())!=null) {
+        if((appuntamento= richiestaAppuntamentoController.getRichiestaAppuntamentoScelta())!=null) {
             orario.setText(appuntamento.getOra());
             LocalDate dataLocale = LocalDate.parse(appuntamento.getData());
             this.data.setValue(dataLocale);
@@ -79,48 +79,48 @@ public class SelezionaDataEOraGraphicController {
     @FXML
     public void goToHome() {
         try {
-            selezionaDataEOraController.deleteAppuntamento();
+            richiestaAppuntamentoController.eliminaRichiestaAppuntamentoScelta();
             Stage selezionaDataEOra = (Stage) home.getScene().getWindow();
             selezionaDataEOra.close();
 
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
         } catch (IOException e) {
-            logger.error(Constants.INTERFACE_LOAD_ERROR, e);
+            logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
         }
     }
 
     @FXML
     public void clickAvanti() {
         if (data.getValue() == null || orario.getText().isEmpty()) {
-            new LabelDuration().Duration(info, "Compilare tutti i campi");
+            new LabelDuration().duration(info, "Compilare tutti i campi");
         } else {
 
             try {
-                if (!selezionaDataEOraController.checkTime(orario.getText())) {
-                    new LabelDuration().Duration(info, "Orario non valido");
+                if (!richiestaAppuntamentoController.controllaOrario(orario.getText())) {
+                    new LabelDuration().duration(info, "Orario non valido");
                 } else {
                     appuntamento.setData(String.valueOf(data.getValue()));
                     appuntamento.setOra(orario.getText());
 
-                    goToInfo(appuntamento);
+                    prossimaInterfaccia(appuntamento);
                 }
             } catch (IllegalArgumentException e) {
-                new LabelDuration().Duration(info, "Il formato deve essere: HH:mm");
+                new LabelDuration().duration(info, "Il formato deve essere: HH:mm");
             }
         }
     }
 
-    private void goToInfo(AppuntamentiBean appuntamento) {
+    private void prossimaInterfaccia(AppuntamentiBean appuntamento) {
         try {
             Stage selezionaDataEOra = (Stage) avanti.getScene().getWindow();
             selezionaDataEOra.close();
 
-            selezionaDataEOraController.setAppuntamento(appuntamento);
+            richiestaAppuntamentoController.setRichiestaAppuntamentoScelta(appuntamento);
 
             navigator.gotoPage("/com/example/mindharbor/InserisciInfo.fxml");
         }catch (IOException e) {
-            logger.info(Constants.INTERFACE_LOAD_ERROR, e);
+            logger.info(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
         }
     }
 }

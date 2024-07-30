@@ -60,7 +60,7 @@ public class RichiediPrenotazioneGraphicController {
             creaSchedaPsicologo();
 
         }catch (DAOException e) {
-            logger.info("Non esistono informazioni relative allo psicologo " ,e);
+            logger.info("Non esistono ulteriori informazioni relative allo psicologo " ,e);
         }
 
     }
@@ -72,42 +72,41 @@ public class RichiediPrenotazioneGraphicController {
         nomeStudio.setText(psicologoSelezionato.getNomeStudio());
 
         ImageDecorator imageDecorator= new GenereDecorator(immaginePsicologo,psicologoSelezionato.getGenere());
-        imageDecorator.loadImage();
+        imageDecorator.caricaImmagine();
 
     }
 
     @FXML
-    public void goToHome() {
+    public void clickLabelHome() {
         try {
             Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare indietro?");
-            if(risposta==0) {
-                return;
+            if(risposta!=0) {
+
+                prenotazioneController.deleteAppuntamentoSelezionato();
+
+                Stage richiediPrenotazione = (Stage) home.getScene().getWindow();
+                richiediPrenotazione.close();
+
+                navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
             }
 
-            prenotazioneController.deleteAppuntamentoSelezionato();
-
-            Stage richiediPrenotazione = (Stage) home.getScene().getWindow();
-            richiediPrenotazione.close();
-
-            navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
-
         } catch (IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia Home del paziente", e);
         }
     }
 
     @FXML
-    public void tornaIndietro() {
+    public void clickLabelTornaIndietro() {
         try {
             Stage richiediPrenotazione = (Stage) tornaIndietro.getScene().getWindow();
             richiediPrenotazione.close();
 
-            prenotazioneController.deletePsicologoSelezionato();
+            prenotazioneController.eliminaPsicologoSelezionato();
 
             navigator.gotoPage("/com/example/mindharbor/ListaPsicologi.fxml");
 
         } catch (IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia della lista degli psicolog", e);
         }
     }
 

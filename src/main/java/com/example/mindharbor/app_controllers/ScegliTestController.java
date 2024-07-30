@@ -2,6 +2,7 @@ package com.example.mindharbor.app_controllers;
 
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.mockapi.BoundaryMockAPI;
@@ -10,17 +11,15 @@ import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
-import com.example.mindharbor.utilities.setInfoUtente;
+import com.example.mindharbor.utilities.SetInfoUtente;
 import java.util.List;
 
 public class ScegliTestController {
 
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
-    public List<String> getListaTest() {
-        return BoundaryMockAPI.TestPiscologici();
-    }
+    public List<TestBean> getListaTest() {return BoundaryMockAPI.testPiscologici();}
     public InfoUtenteBean getInfoPsicologo() {
-        return new setInfoUtente().getInfo();
+        return new SetInfoUtente().getInfo();
     }
     public PazientiBean getPazienteSelezionato() {return navigator.getPazienteBean();}
     public void eliminaPazienteSelezionato() {navigator.deletePazienteBean();}
@@ -33,7 +32,6 @@ public class ScegliTestController {
                 //Se il controllo va a buon fine, il controller applicativo chiede di inserire il nuovo test in persistenza
                 //inoltre, elimina la bean pazienteSelezionato dal Navigator Singleton visto che da questo momento non servirà più.
                 notificaTest(nomeTest);
-                eliminaPazienteSelezionato();
                 return true;
             }catch (DAOException e) {
                 throw new DAOException(e.getMessage());

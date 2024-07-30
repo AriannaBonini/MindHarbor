@@ -36,34 +36,33 @@ public class ListaRichiesteAppuntamentiGraphicController {
     @FXML
     private Text listaVuota;
 
-    private final ListaRichiesteAppuntamentiController listaRichiesteController = new ListaRichiesteAppuntamentiController();
+    private final ListaRichiesteAppuntamentiController listaRichiesteAppuntamentiController = new ListaRichiesteAppuntamentiController();
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(ListaRichiesteAppuntamentiGraphicController.class);
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = listaRichiesteController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = listaRichiesteAppuntamentiController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         popolaLista();
     }
 
     private void popolaLista() {
         try {
-            List<AppuntamentiBean> listaRichieste = listaRichiesteController.getListaRichieste();
+            List<AppuntamentiBean> listaRichieste = listaRichiesteAppuntamentiController.getListaRichieste();
             if(listaRichieste.isEmpty()) {
                 listaVuota.setText("Non ci sono richieste di appuntamento");
             }else {
                 creaVBoxListaRichieste(listaRichieste);
             }
         }catch (DAOException e) {
-            logger.info("Non non ci sono appuntamenti", e);
-            listaVuota.setText("Non esistono appuntamenti");
+            logger.info("Errore nella ricerca delle richieste di appuntamento", e);
         }
     }
 
     private void creaVBoxListaRichieste(List<AppuntamentiBean> listaRichieste) {
         listViewPazienti.getItems().clear();
 
-        ObservableList<Node> items = FXCollections.observableArrayList();
+        ObservableList<Node> nodi = FXCollections.observableArrayList();
 
         for (AppuntamentiBean appBean : listaRichieste) {
 
@@ -85,22 +84,22 @@ public class ListaRichiesteAppuntamentiGraphicController {
             boxPaziente.getChildren().addAll(nomePaziente, cognomePaziente);
 
             ImageDecorator imageDecorator= new GenereDecorator(immaginePaziente,appBean.getPaziente().getGenere());
-            imageDecorator.loadImage();
+            imageDecorator.caricaImmagine();
 
             hBoxPaziente.getChildren().addAll(immaginePaziente, boxPaziente);
-            items.add(hBoxPaziente);
+            nodi.add(hBoxPaziente);
 
             hBoxPaziente.setUserData(appBean);
 
         }
 
         listViewPazienti.setFixedCellSize(100);
-        listViewPazienti.getItems().addAll(items);
+        listViewPazienti.getItems().addAll(nodi);
     }
 
 
     @FXML
-    public void goToHome() {
+    public void clickLabelHome() {
         try {
             Stage richiesteAppuntamenti = (Stage) home.getScene().getWindow();
             richiesteAppuntamenti.close();
@@ -108,7 +107,7 @@ public class ListaRichiesteAppuntamentiGraphicController {
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
 
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia Home dello psicologo", e);
         }
     }
 
@@ -116,17 +115,16 @@ public class ListaRichiesteAppuntamentiGraphicController {
     public void nodoSelezionato() {
         try {
             Node nodo = listViewPazienti.getSelectionModel().getSelectedItem();
-            if(nodo==null) {
-                return;
+            if(nodo!=null) {
+
+                AppuntamentiBean richiestaAppuntamentoSelezionato = (AppuntamentiBean) nodo.getUserData();
+                listaRichiesteAppuntamentiController.setRichiestaAppuntamentoSelezionato(richiestaAppuntamentoSelezionato);
+
+                Stage listaRichieste = (Stage) listViewPazienti.getScene().getWindow();
+                listaRichieste.close();
+
+                navigator.gotoPage("/com/example/mindharbor/VerificaDisponibilità.fxml");
             }
-
-            AppuntamentiBean richiestaAppuntamentoSelezionato =(AppuntamentiBean) nodo.getUserData();
-            listaRichiesteController.setRichiestaAppuntamentoSelezionato(richiestaAppuntamentoSelezionato);
-
-            Stage listaRichieste = (Stage) listViewPazienti.getScene().getWindow();
-            listaRichieste.close();
-
-            navigator.gotoPage("/com/example/mindharbor/VerificaDisponibilità.fxml");
         } catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia", e);
         }

@@ -11,18 +11,18 @@ import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.NavigatorSingleton;
-import com.example.mindharbor.utilities.setInfoUtente;
+import com.example.mindharbor.utilities.SetInfoUtente;
 
 public class RichiediPrenotazioneController {
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
-    public InfoUtenteBean getPageRichPrenInfo() {return new setInfoUtente().getInfo();}
+    public InfoUtenteBean getPageRichPrenInfo() {return new SetInfoUtente().getInfo();}
 
     public PsicologoBean getPsicologoSelezionato(){ return navigator.getPsicologoBean();}
     public void deleteAppuntamentoSelezionato(){
         navigator.deleteAppuntamentoBean();
-        deletePsicologoSelezionato();
+        eliminaPsicologoSelezionato();
     }
-    public void deletePsicologoSelezionato(){navigator.deletePsicologoBean();}
+    public void eliminaPsicologoSelezionato(){navigator.deletePsicologoBean();}
 
 
     public AppuntamentiBean getAppuntamentoSelezionato() {return navigator.getAppuntamentoBean();}

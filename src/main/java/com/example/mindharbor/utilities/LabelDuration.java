@@ -6,7 +6,7 @@ import javafx.util.Duration;
 
 public class LabelDuration {
 
-    public void Duration(Label label,String messagge) {
+    public void duration(Label label, String messagge) {
         Duration duration = Duration.seconds(5);
         FadeTransition fadeIn = new FadeTransition(duration, label);
         fadeIn.setFromValue(0.0);

@@ -116,7 +116,7 @@
          </ImageView>
          <TextArea fx:id="campoPrescrizione" layoutX="13.0" layoutY="102.0" prefHeight="136.0" prefWidth="386.0"/>
          <Button fx:id="prescrivi" layoutX="172.0" layoutY="273.0" mnemonicParsing="false"
-                 onMouseClicked="#prescrivi" style="-fx-background-color: #234439; -fx-border-color: white;"
+                 onMouseClicked="#clickLabelPrescrivi" style="-fx-background-color: #234439; -fx-border-color: white;"
                  text="PRESCRIVI" textFill="WHITE" disable="true"/>
          <Text fx:id="campoInfoTest" layoutX="15.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0"
                wrappingWidth="150.39999999999998">
@@ -155,9 +155,9 @@
          <Image url="@Img/IconaProfilo.png"/>
       </ImageView>
    </HBox>
-   <Label fx:id="home" layoutX="48.0" layoutY="19.0" onMouseClicked="#goToHome" text="HOME" textFill="WHITE"/>
+   <Label fx:id="home" layoutX="48.0" layoutY="19.0" onMouseClicked="#clickLabelHome" text="HOME" textFill="WHITE"/>
    <ImageView fx:id="tornaIndietro" fitHeight="19.0" fitWidth="20.0" layoutX="17.0" layoutY="18.0"
-              onMouseClicked="#tornaIndietro">
+              onMouseClicked="#clickLabelTornaIndietro">
       <Image url="@Img/TornaIndietro.png"/>
    </ImageView>
    <Label layoutX="86.0" layoutY="19.0" prefHeight="18.0" prefWidth="116.0" text="/ PRESCRIVI TERAPIA"

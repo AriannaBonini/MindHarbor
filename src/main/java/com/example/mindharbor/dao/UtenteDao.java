@@ -18,7 +18,7 @@ import java.util.List;
 public class UtenteDao extends QuerySQLUtenteDAO {
 
     public Utente trovaUtente(Utente credenzialiUtenteLogin) throws DAOException {
-        Utente utente;
+        Utente utente=null;
         Connection conn = ConnectionFactory.getConnection();
 
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLUtenteDAO.CONTROLLO_CREDENZIALI, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
@@ -27,18 +27,15 @@ public class UtenteDao extends QuerySQLUtenteDAO {
             stmt.setString(2, credenzialiUtenteLogin.getPassword());
 
             try (ResultSet rs = stmt.executeQuery()) {
-                if (!rs.first()) {
-                    throw new DAOException("Utente non trovato");
+                if (rs.first()) {
+                    utente = getUser(rs);
                 }
-                utente = getUser(rs);
             }
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
-
         return utente;
     }
-
 
     protected Utente getUser(ResultSet rs) throws SQLException {
         Utente utente;
@@ -59,8 +56,8 @@ public class UtenteDao extends QuerySQLUtenteDAO {
     public Utente trovaNomeCognome(Utente utente) throws DAOException {
         Utente infoUtente = null;
 
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(QuerySQLUtenteDAO.TROVA_NOME_COGNOME, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+        Connection conn = ConnectionFactory.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLUtenteDAO.TROVA_NOME_COGNOME, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 
             stmt.setString(1, utente.getUsername());
 
@@ -129,4 +126,27 @@ public class UtenteDao extends QuerySQLUtenteDAO {
         }
         return richiesteAppuntamenti;
     }
+
+
+    public Utente trovaInfoUtente(Utente paziente) throws DAOException {
+        Utente infoUtente = null;
+
+        Connection conn = ConnectionFactory.getConnection();
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLUtenteDAO.TROVA_INFO_PAZIENTE, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+
+            stmt.setString(1, paziente.getUsername());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    infoUtente = new Utente("",rs.getString(1), rs.getString(2), rs.getString(3));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
+
+        return infoUtente;
+    }
+
+
 }

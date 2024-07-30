@@ -35,17 +35,22 @@ public class PrescrizioniPazienteGraphicController {
     public ListView<Node> listViewTerapia;
 
     private static final Logger logger = LoggerFactory.getLogger(PrescrizioniPazienteGraphicController.class);
-    private final PrescrizioniTerapiaPazienteController prescriviTerapiaController= new PrescrizioniTerapiaPazienteController();
+    private final PrescrizioniTerapiaPazienteController prescrizioniTerapiaPazienteController = new PrescrizioniTerapiaPazienteController();
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = prescrizioniTerapiaPazienteController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        getListaTerapie();
+
+        if(prescrizioniTerapiaPazienteController.getPsicologo()) {
+            getListaTerapie();
+        } else {
+            listaVuota.setText("Non hai ancora uno psicologo");
+        }
     }
 
     private void getListaTerapie() {
         try {
-            List<TerapiaBean> terapieBean= prescriviTerapiaController.trovaTerapie();
+            List<TerapiaBean> terapieBean= prescrizioniTerapiaPazienteController.trovaTerapie();
             if (terapieBean.isEmpty()) {
                 listaVuota.setText("Non ci sono terapie");
             } else {
@@ -60,7 +65,7 @@ public class PrescrizioniPazienteGraphicController {
     private void popolaListaTerapia(List<TerapiaBean> terapieBean) {
         listViewTerapia.getItems().clear();
 
-        ObservableList<Node> items = FXCollections.observableArrayList();
+        ObservableList<Node> nodi = FXCollections.observableArrayList();
 
         for (TerapiaBean terapia : terapieBean) {
             VBox boxTerapia= new VBox();
@@ -72,25 +77,26 @@ public class PrescrizioniPazienteGraphicController {
             boxTerapia.getChildren().addAll(labelDataPrescrizione, labelPrescrizione);
             boxTerapia.setSpacing(5);
 
-            items.add(boxTerapia);
+            nodi.add(boxTerapia);
 
 
             boxTerapia.setUserData(terapia);
         }
         listViewTerapia.setFixedCellSize(150);
-        listViewTerapia.getItems().addAll(items);
+        listViewTerapia.getItems().addAll(nodi);
     }
 
     @FXML
-    public void goToHome() {
+    public void clickLabelHome() {
         try {
             Stage terapiaPaziente = (Stage) home.getScene().getWindow();
             terapiaPaziente.close();
+
             NavigatorSingleton navigator= NavigatorSingleton.getInstance();
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia della Home del paziente", e);
         }
     }
 }

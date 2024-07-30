@@ -38,26 +38,32 @@ public class AppuntamentiPazienteGraphicController {
     @FXML
     private Label homeTab2;
 
-    private final AppuntamentiController controllerAppuntamenti= new AppuntamentiController();
-
+    private final AppuntamentiController appuntamentiController = new AppuntamentiController();
     private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPazienteGraphicController.class);
+    private final InfoUtenteBean infoUtenteBean= appuntamentiController.getInfoUtente();
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = controllerAppuntamenti.getInfoUtente();
         labelNomePazienteTab1.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         labelNomePazienteTab2.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        modificaStatoNotifica();
+        if(appuntamentiController.getPsicologo()) {
+            modificaStatoNotifica();
+            tab1Selezionato();
+        } else {
+            assenzaPsicologo();
+        }
+    }
 
-        tab1Selezionato();
-
+    private void assenzaPsicologo() {
+        listaVuotaPassati.setText("Non hai ancora uno psicologo");
+        listaVuotaInProgramma.setText("Non hai ancora uno psicologo");
     }
 
     private void modificaStatoNotifica() {
         try {
-            controllerAppuntamenti.modificaStatoNotificaAppuntamenti();
+            appuntamentiController.modificaStatoNotificaAppuntamenti();
         } catch (DAOException e ) {
-            logger.info("Errore durante la modifica dello stato dei test psicologici", e);
+            logger.info("Errore durante la modifica dello stato di notifica dei test psicologici", e);
         }
     }
 
@@ -65,27 +71,27 @@ public class AppuntamentiPazienteGraphicController {
     @FXML
     public void tab1Selezionato(){ricercaAppuntamentiPaziente("IN PROGRAMMA", listaVuotaInProgramma, listViewInProgramma);}
     @FXML
-    public void tab2Selezionato() {
-        ricercaAppuntamentiPaziente("PASSATI", listaVuotaPassati, listViewPassati);
-    }
+    public void tab2Selezionato() {ricercaAppuntamentiPaziente("PASSATI", listaVuotaPassati, listViewPassati);}
 
     private void ricercaAppuntamentiPaziente(String selectedTabName, Text text, ListView<Node> listView) {
-        try {
-            List<AppuntamentiBean> appuntamenti = controllerAppuntamenti.getAppuntamenti(selectedTabName);
-            if (appuntamenti.isEmpty()) {
-                text.setText("Non ci sono appuntamenti");
-            }else {
-                creaVBoxAppuntamentiPaziente(appuntamenti, listView);
-            }
-        }catch (DAOException e) {
-            logger.info("Non non ci sono appuntamenti", e);
-        }
+           if(appuntamentiController.getPsicologo()) {
+               try {
+                   List<AppuntamentiBean> appuntamenti = appuntamentiController.getAppuntamentiPaziente(selectedTabName);
+                   if (appuntamenti.isEmpty()) {
+                       text.setText("Non ci sono appuntamenti");
+                   } else {
+                       creaVBoxAppuntamentiPaziente(appuntamenti, listView);
+                   }
+               } catch (DAOException e) {
+                   logger.info("Errore nella ricerca degli appuntamenti", e);
+               }
+           }
     }
 
     private void creaVBoxAppuntamentiPaziente(List<AppuntamentiBean> appuntamenti, ListView<Node> listView) {
         listView.getItems().clear();
 
-        ObservableList<Node> items = FXCollections.observableArrayList();
+        ObservableList<Node> nodi = FXCollections.observableArrayList();
 
         for (AppuntamentiBean app : appuntamenti) {
             VBox vBox = new VBox();
@@ -93,7 +99,7 @@ public class AppuntamentiPazienteGraphicController {
             Label dataAppuntamento = new Label("DATA:" + " " + app.getData());
             Label oraAppuntamento = new Label("ORA:" + " " + app.getOra());
             Label nomePsicologo = new Label("PSICOLOGO:" + " " + app.getPsicologo().getNome() + " " + app.getPsicologo().getCognome());
-            Label nomePaziente = new Label("PAZIENTE:" + " " + app.getPaziente().getNome() + " " + app.getPaziente().getCognome());
+            Label nomePaziente = new Label("PAZIENTE:" + " " + infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
             dataAppuntamento.setTextFill(Color.WHITE);
             oraAppuntamento.setTextFill(Color.WHITE);
@@ -101,19 +107,19 @@ public class AppuntamentiPazienteGraphicController {
             nomePaziente.setTextFill(Color.WHITE);
 
             vBox.getChildren().addAll(dataAppuntamento, oraAppuntamento, nomePsicologo, nomePaziente);
-            items.add(vBox);
+            nodi.add(vBox);
         }
 
         listView.setFixedCellSize(100);
-        listView.getItems().addAll(items);
+        listView.getItems().addAll(nodi);
     }
 
     @FXML
-    public void goToHomeFromTab1() { goToHome(homeTab1);}
+    public void clickLabelHomeDaTab1() { caricaHome(homeTab1);}
     @FXML
-    public void goToHomeFromTab2() { goToHome(homeTab2);}
+    public void clickLabelHomeDaTab2() { caricaHome(homeTab2);}
 
-    private void goToHome(Label label) {
+    private void caricaHome(Label label) {
         try {
             Stage appuntamenti = (Stage) label.getScene().getWindow();
             appuntamenti.close();
@@ -122,7 +128,7 @@ public class AppuntamentiPazienteGraphicController {
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia Home del paziente", e);
         }
     }
 

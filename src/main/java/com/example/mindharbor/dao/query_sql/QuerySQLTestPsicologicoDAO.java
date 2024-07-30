@@ -1,5 +1,6 @@
 package com.example.mindharbor.dao.query_sql;
 
+
 public abstract class QuerySQLTestPsicologicoDAO {
     protected QuerySQLTestPsicologicoDAO() {/*Costruttore vuoto*/}
     protected static final String DATA="DataOdierna";
@@ -83,4 +84,16 @@ public abstract class QuerySQLTestPsicologicoDAO {
             "AND " + TABELLA_TESTPSICOLOGICO + "." + PAZIENTE + " = " + TERAPIA + "." + PAZIENTE + " " +
             "AND " + TABELLA_TESTPSICOLOGICO + "." + DATA + " = " + TERAPIA + "." +  DATA_TEST +  " )";
 
+    protected static final String NUMERO_TEST_SVOLTI_PAZIENTE="SELECT SUM(statoNotificaPsicologo) " + " " +
+            "FROM " + TABELLA_TESTPSICOLOGICO + " " +
+            "WHERE " + PAZIENTE + " " + CONFRONTO;
+
+    protected static final String TEST_ASSEGNATO_IN_DATA_ODIERNA = "SELECT COUNT(*) AS test_assegnato " +
+            "FROM " + TABELLA_TESTPSICOLOGICO + " " +
+            "WHERE DATE(" + DATA + ") = CURDATE() AND " + PAZIENTE + " " + CONFRONTO;
+    //questa query mi restituisce TRUE se viene trovato almeno un test assegnato la paziente nella data odierna; altrimenti restituisce FALSE
+
 }
+
+
+

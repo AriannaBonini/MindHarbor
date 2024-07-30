@@ -49,16 +49,19 @@ public class ListaPsicologiGraphicController {
     private void popolaLista() {
         try {
             List<PsicologoBean> listaPsicologiBean = ListaPsicologiController.getListaPsicologi();
-            creaVBoxListaPsicologi(listaPsicologiBean);
+            if(listaPsicologiBean.isEmpty()) {
+                listaVuota.setText("Non esistono psicologi");
+            }else {
+                creaVBoxListaPsicologi(listaPsicologiBean);
+            }
         }catch (DAOException e) {
-            logger.info("Non non ci sono appuntamenti", e);
-            listaVuota.setText("Non esistono appuntamenti");
+            logger.info("Errore nella ricerca dei psicologi", e);
         }
     }
     private void creaVBoxListaPsicologi(List<PsicologoBean> listaPsicologiBean) {
         listViewPsicologo.getItems().clear();
 
-        ObservableList<Node> items = FXCollections.observableArrayList();
+        ObservableList<Node> nodi = FXCollections.observableArrayList();
         for(PsicologoBean psiBean : listaPsicologiBean) {
 
             VBox boxPsicologo =new VBox();
@@ -74,23 +77,23 @@ public class ListaPsicologiGraphicController {
             boxPsicologo.getChildren().addAll(nomePsicologo, cognomePsicologo);
 
             ImageDecorator imageDecorator= new GenereDecorator(immaginePsicologo,psiBean.getGenere());
-            imageDecorator.loadImage();
+            imageDecorator.caricaImmagine();
 
             hBoxPsicologo.getChildren().addAll(immaginePsicologo, boxPsicologo);
-            items.add(hBoxPsicologo);
+            nodi.add(hBoxPsicologo);
 
             hBoxPsicologo.setUserData(psiBean);
 
         }
         listViewPsicologo.setFixedCellSize(100);
-        listViewPsicologo.getItems().addAll(items);
+        listViewPsicologo.getItems().addAll(nodi);
 
     }
 
     @FXML
-    public void goToHome() {
+    public void clickLabelHome() {
         try {
-            listaPsicologiController.deleteAppuntamento();
+            listaPsicologiController.eliminaAppuntamentoSelezionato();
 
             Stage listaPsicologi = (Stage) home.getScene().getWindow();
             listaPsicologi.close();
@@ -103,7 +106,7 @@ public class ListaPsicologiGraphicController {
     }
 
     @FXML
-    public void tornaIndietro() {
+    public void clickLabelTornaIndietro() {
         try {
             Stage listaPsicologi= (Stage) tornaIndietro.getScene().getWindow();
             listaPsicologi.close();
@@ -123,11 +126,11 @@ public class ListaPsicologiGraphicController {
                 return;
             }
 
-            PsicologoBean psicologo =(PsicologoBean) nodo.getUserData();
+            PsicologoBean psicologoSelezionato =(PsicologoBean) nodo.getUserData();
             Stage listaPsicologi = (Stage) listViewPsicologo.getScene().getWindow();
             listaPsicologi.close();
 
-            listaPsicologiController.setPsicologoSelezionato(psicologo);
+            listaPsicologiController.setPsicologoSelezionato(psicologoSelezionato);
 
             navigator.gotoPage("/com/example/mindharbor/RichiediPrenotazione.fxml");
         } catch (IOException e) {

@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class LoginGraphicController {
     @FXML
@@ -52,25 +51,23 @@ public class LoginGraphicController {
         try {
             LoginCredentialBean credenziali = new LoginCredentialBean(username, password);
             InfoUtenteBean infoUtenteLoggato=loginController.login(credenziali);
-
-            if(infoUtenteLoggato.getUserType().equals(UserType.PAZIENTE)) {
-                homePaziente();
+            if(infoUtenteLoggato==null) {
+                new LabelDuration().duration(msgLbl,"Credenziali errate");
             }else {
-                homePsicologo();
+
+                if (infoUtenteLoggato.getUserType().equals(UserType.PAZIENTE)) {
+                    homePaziente();
+                } else {
+                    homePsicologo();
+                }
             }
-
-
         } catch (DAOException e){
-            logger.info("Credenziali errate per l'utente {}", username, e);
-            new LabelDuration().Duration(msgLbl,"Credenziali errate");
-        }
-        catch (SQLException e) {
-            logger.info("Problemi di connessione al database", e);
-            new LabelDuration().Duration(msgLbl,"Problema di connessione al database");
+            logger.error("Errore durante la ricerca dell'utente {}", username, e);
+            new LabelDuration().duration(msgLbl,"Credenziali errate");
         }
         catch(SessionUserException e) {
             logger.info("{} già loggato", username, e);
-            new LabelDuration().Duration(msgLbl,"Utente già loggato");
+            new LabelDuration().duration(msgLbl,"Utente già loggato");
         }
 
     }

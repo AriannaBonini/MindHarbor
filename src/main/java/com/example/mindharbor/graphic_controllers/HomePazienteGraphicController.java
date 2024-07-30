@@ -2,6 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.HomePazienteController;
 import com.example.mindharbor.beans.InfoUtenteBean;
+import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
@@ -14,6 +15,8 @@ import java.io.IOException;
 public class HomePazienteGraphicController {
     @FXML
     private Label listaAppuntamenti;
+    @FXML
+    private Label listaTest;
     @FXML
     private Label terapia;
     @FXML
@@ -28,12 +31,13 @@ public class HomePazienteGraphicController {
     private Label notificaTerapie;
     @FXML
     private Label notificaAppuntamenti;
-    private final HomePazienteController homeController= new HomePazienteController();
+    private final HomePazienteController homePazienteController = new HomePazienteController();
     private static final Logger logger = LoggerFactory.getLogger(HomePazienteGraphicController.class);
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
+    private PazientiBean pazientiBean;
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = homeController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = homePazienteController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
         notificaNuoviTest();
@@ -43,10 +47,10 @@ public class HomePazienteGraphicController {
 
     private void notificaNuoviAppuntamenti() {
         try {
-            int count= homeController.cercaNuoviAppuntamenti();
-            if (count>0) {
+            pazientiBean= homePazienteController.cercaNuoviAppuntamenti();
+            if (pazientiBean.getNumNotifiche()>0) {
                 notificaAppuntamenti.setVisible(true);
-                notificaAppuntamenti.setText(String.valueOf(count));
+                notificaAppuntamenti.setText(String.valueOf(pazientiBean.getNumNotifiche()));
             }
 
         } catch (DAOException e) {
@@ -56,20 +60,30 @@ public class HomePazienteGraphicController {
 
     private void notificaNuoveTerapie() {
         try {
-            int count= homeController.cercaNuoveTerapie();
-            if (count>0) {
+            pazientiBean= homePazienteController.cercaNuoveTerapie();
+            if (pazientiBean.getNumNotifiche()>0) {
                 notificaTerapie.setVisible(true);
-                notificaTerapie.setText(String.valueOf(count));
+                notificaTerapie.setText(String.valueOf(pazientiBean.getNumNotifiche()));
             }
-
         } catch (DAOException e) {
             logger.info("Errore nella ricerca delle nuove terapie assegnate al paziente ", e);
         }
+    }
 
+    private void notificaNuoviTest() {
+        try {
+            pazientiBean=homePazienteController.cercaNuoviTestDaSvolgere();
+            if (pazientiBean.getNumNotifiche()>0) {
+                notificaTest.setVisible(true);
+                notificaTest.setText(String.valueOf(pazientiBean.getNumNotifiche()));
+            }
+        } catch (DAOException e) {
+            logger.info("Errore nella ricerca dei nuovi test assegnati al paziente ", e);
+        }
     }
 
     @FXML
-    public void onVisualAppuntamentiClick() {
+    public void clickLabelAppuntamenti() {
         try {
             Stage homePaziente = (Stage) listaAppuntamenti.getScene().getWindow();
             homePaziente.close();
@@ -82,9 +96,9 @@ public class HomePazienteGraphicController {
     }
 
     @FXML
-    public void onVisualTestClick() {
+    public void clickLabelTest() {
         try {
-            Stage homePaziente = (Stage) listaAppuntamenti.getScene().getWindow();
+            Stage homePaziente = (Stage) listaTest.getScene().getWindow();
             homePaziente.close();
             navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
 
@@ -95,7 +109,7 @@ public class HomePazienteGraphicController {
 
 
     @FXML
-    public void clickPrenotaAppuntamento() {
+    public void clickLabelPrenotaAppuntamento() {
         try {
             Stage homePaziente = (Stage) prenotaAppuntamento.getScene().getWindow();
             homePaziente.close();
@@ -107,44 +121,32 @@ public class HomePazienteGraphicController {
 
     }
 
-
-    private void notificaNuoviTest() {
-        try {
-            Integer count= homeController.cercaNuoviTestDaSvolgere();
-            if (count>0) {
-                notificaTest.setText(String.valueOf(count));
-            }
-
-        } catch (DAOException e) {
-            logger.info("Errore nella ricerca dei nuovi test assegnati al paziente ", e);
-        }
-    }
-
     @FXML
-    public void logout() {
+    public void clickLabelterapia() {
         try {
-            homeController.logout();
-
-            Stage homePsicologo = (Stage) logout.getScene().getWindow();
-            homePsicologo.close();
-
-            navigator.gotoPage("/com/example/mindharbor/Login.fxml");
-
-        } catch (IOException e ) {
-            logger.error("Impossibile caricare l'interfaccia", e);
-        }
-    }
-
-    @FXML
-    public void terapia() {
-        try {
-            Stage homePsicologo = (Stage) terapia.getScene().getWindow();
-            homePsicologo.close();
+            Stage homePaziente = (Stage) terapia.getScene().getWindow();
+            homePaziente.close();
 
             navigator.gotoPage("/com/example/mindharbor/PrescrizioniPaziente.fxml");
 
         } catch (IOException e ) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia delle terapie", e);
+        }
+    }
+
+
+    @FXML
+    public void clickLabelLogout() {
+        try {
+            homePazienteController.logout();
+
+            Stage homePaziente = (Stage) logout.getScene().getWindow();
+            homePaziente.close();
+
+            navigator.gotoPage("/com/example/mindharbor/Login.fxml");
+
+        } catch (IOException e ) {
+            logger.error("Impossibile caricare l'interfaccia del login", e);
         }
     }
 

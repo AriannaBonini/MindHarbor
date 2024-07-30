@@ -6,12 +6,6 @@ public abstract class QuerySQLAppuntamentoDAO {
     protected static final String ORA = "Ora";
     protected static final String USERNAME_PAZIENTE = "Username_Paziente";
     protected static final String USERNAME_PSICOLOGO = "Username_Psicologo";
-    protected static final String NOME_PSICOLOGO = "Nome";
-    protected static final String NOME_PAZIENTE = "Nome";
-    protected static final String COGNOME_PSICOLOGO = "Cognome";
-    protected static final String COGNOME_PAZIENTE = "Cognome";
-    protected static final String USERNAME = "Username";
-    protected static final String TABELLA_UTENTE="utente";
     protected static final String TABELLA_APPUNTAMENTO="Appuntamento";
     protected static final String ID_APPUNTAMENTO="ID_Appuntamento";
     protected static final String STATO_APPUNTAMENTO="statoAppuntamento";
@@ -22,23 +16,19 @@ public abstract class QuerySQLAppuntamentoDAO {
     protected static final String UGUALE_1 ="= 1";
     protected static final String AND_A ="AND a.";
     protected static final String UPDATE="UPDATE";
+    protected static final String SELECT="SELECT";
 
-    protected static final String TROVA_APPUNTAMENTI="SELECT " +
-            "a." + DATA + ", " +
-            "a." + ORA + ", " +
-            "p." + NOME_PSICOLOGO + ", " +
-            "p." + COGNOME_PSICOLOGO + ", " +
-            "pp." + NOME_PAZIENTE + ", " +
-            "pp." + COGNOME_PAZIENTE + ", " +
-            "a." + USERNAME_PAZIENTE + ", " +
-            "a." + USERNAME_PSICOLOGO + " " +
-            "FROM " + TABELLA_APPUNTAMENTO + " a " +
-            "JOIN " + TABELLA_UTENTE + " p ON p." + USERNAME + " " + UGUALE_A + " " + USERNAME_PSICOLOGO + " " +
-            "JOIN " + TABELLA_UTENTE + " pp ON pp." + USERNAME +  " " + UGUALE_A + " "  + USERNAME_PAZIENTE + " " +
-            "WHERE a." + STATO_APPUNTAMENTO + " " + UGUALE_1;
+    protected static final String TROVA_APPUNTAMENTI_PSICOLOGO= SELECT + " " + DATA + " , "  + ORA + " , " + USERNAME_PAZIENTE + " " +
+            "FROM " + TABELLA_APPUNTAMENTO + " " +
+            "WHERE " + STATO_APPUNTAMENTO + " " + UGUALE_1 + " AND " + USERNAME_PSICOLOGO + " " + CONFRONTO;
 
-    protected static final String TROVA_APPUNTAMENTI_IN_PROGRAMMA= " " +AND_A + " " + DATA + " >= NOW() ";
-    protected static final String TROVA_APPUNTAMENTI_PASSATI= " " + AND_A + " "+ DATA + " < NOW() ";
+    protected static final String TROVA_APPUNTAMENTI_PAZIENTE= SELECT + " " + DATA + " , "  + ORA + " " +
+            "FROM " + TABELLA_APPUNTAMENTO + " " +
+            "WHERE " + STATO_APPUNTAMENTO + " " + UGUALE_1 + " AND " + USERNAME_PAZIENTE + " " + CONFRONTO;
+
+
+    protected static final String TROVA_APPUNTAMENTI_IN_PROGRAMMA= " " + " AND " + " " + DATA + " >= NOW() ";
+    protected static final String TROVA_APPUNTAMENTI_PASSATI= " " + " AND " + " " + DATA + " < NOW() ";
 
     protected static final String INSERISCI_RICHIESTA_APPUNTAMENTO="INSERT INTO " + TABELLA_APPUNTAMENTO + " ( " +
             ID_APPUNTAMENTO + ", " +
@@ -104,8 +94,5 @@ public abstract class QuerySQLAppuntamentoDAO {
 
     protected static final String ELIMINA_RICHIESTE_DI_APPUNTAMENTO="DELETE FROM " + TABELLA_APPUNTAMENTO + " " +
             "WHERE " + USERNAME_PAZIENTE + " " + CONFRONTO + " " +
-            "AND " + USERNAME_PSICOLOGO + " <> ?";
-
-
-
+            "AND " + USERNAME_PSICOLOGO + " <> ? ";
 }

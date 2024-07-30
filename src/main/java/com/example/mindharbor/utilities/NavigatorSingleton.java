@@ -19,10 +19,6 @@ public class NavigatorSingleton {
     private TestBean testBean;
     private PsicologoBean psicologoBean;
 
-    public Stage getStg() {
-        return this.stg;
-    }
-
     protected NavigatorSingleton(Stage stg) {
         this.stg = stg;
     }

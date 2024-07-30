@@ -14,7 +14,6 @@ import java.util.List;
 
 public class TestPsicologicoDAO extends QuerySQLTestPsicologicoDAO {
 
-
     public void assegnaTest(TestPsicologico test) throws DAOException {
 
         Connection conn = ConnectionFactory.getConnection();
@@ -49,7 +48,6 @@ public class TestPsicologicoDAO extends QuerySQLTestPsicologicoDAO {
         } catch (SQLException e) {
             throw new DAOException(e.getMessage());
         }
-
         return count;
     }
 
@@ -81,7 +79,7 @@ public class TestPsicologicoDAO extends QuerySQLTestPsicologicoDAO {
         }
     }
 
-    public List<TestPsicologico> TrovaListaTest(Utente paziente) throws DAOException {
+    public List<TestPsicologico> trovaListaTest(Utente paziente) throws DAOException {
 
         List<TestPsicologico> testPsicologicoList = new ArrayList<>();
 
@@ -148,13 +146,13 @@ public class TestPsicologicoDAO extends QuerySQLTestPsicologicoDAO {
         }
     }
 
-    public Integer getNumTestSvoltiDaNotificare(String usernamePsicologo) throws DAOException {
+    public Integer getNumTestSvoltiDaNotificare(Utente psicologo) throws DAOException {
         int count = 0;
 
         Connection conn = ConnectionFactory.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTestPsicologicoDAO.NOTIFICA_PSICOLOGO_TEST_SVOLTI, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 
-            stmt.setString(1, usernamePsicologo);
+            stmt.setString(1, psicologo.getUsername());
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -189,7 +187,7 @@ public class TestPsicologicoDAO extends QuerySQLTestPsicologicoDAO {
         return count;
     }
 
-    public List<TestPsicologico> ListaTestSvoltiSenzaPrescrizione(String usernamePaziente, String usernamePsicologo) throws DAOException {
+    public List<TestPsicologico> listaTestSvoltiSenzaPrescrizione(String usernamePaziente, String usernamePsicologo) throws DAOException {
         List<TestPsicologico> testSvolti = new ArrayList<>();
 
         Connection conn = ConnectionFactory.getConnection();
@@ -213,5 +211,45 @@ public class TestPsicologicoDAO extends QuerySQLTestPsicologicoDAO {
         }
 
         return testSvolti;
+    }
+
+    public Paziente numTestSvoltiPerPaziente(Utente paziente) throws DAOException {
+        Paziente numeroTestSvoltiPaziente=null;
+
+        Connection conn = ConnectionFactory.getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTestPsicologicoDAO.NUMERO_TEST_SVOLTI_PAZIENTE, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            stmt.setString(1, paziente.getUsername());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    numeroTestSvoltiPaziente = new Paziente(rs.getInt(1));
+                }
+
+            }
+        }catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
+        return numeroTestSvoltiPaziente;
+    }
+
+    public Integer getNumTestAssegnato(Paziente paziente) throws DAOException {
+        int contatore=0;
+        Connection conn = ConnectionFactory.getConnection();
+
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTestPsicologicoDAO.TEST_ASSEGNATO_IN_DATA_ODIERNA, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            stmt.setString(1, paziente.getUsername());
+            //Se la query restituisce TRUE, vuol dire che al paziente è stato già assegnato un test, quindi il metodo deve restituire FALSE.
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    contatore=rs.getInt("test_assegnato");
+                    System.out.println(contatore);
+                }
+            }
+        }catch (SQLException e) {
+            throw new DAOException(e.getMessage());
+        }
+        return contatore;
     }
 }

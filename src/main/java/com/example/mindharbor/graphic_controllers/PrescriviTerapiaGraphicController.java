@@ -55,14 +55,14 @@ public class PrescriviTerapiaGraphicController {
     private final   NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private PazientiBean pazienteSelezionato;
     private TestBean testbean;
-    private final PrescriviTerapiaController prescriviController= new PrescriviTerapiaController();
+    private final PrescriviTerapiaController prescriviTerapiaController = new PrescriviTerapiaController();
 
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = prescriviController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        pazienteSelezionato=prescriviController.getPazienteSelezionato();
+        pazienteSelezionato= prescriviTerapiaController.getPazienteSelezionato();
 
         modificaStatoNotifica();
         popolaListaTestSvoltiSenzaPrescrizione();
@@ -71,7 +71,7 @@ public class PrescriviTerapiaGraphicController {
 
     private void popolaListaTestSvoltiSenzaPrescrizione() {
         try {
-            List<TestBean> testSvoltiBean = prescriviController.getTestSvoltiSenzaPrescrizione(pazienteSelezionato);
+            List<TestBean> testSvoltiBean = prescriviTerapiaController.getTestSvoltiSenzaPrescrizione(pazienteSelezionato);
             popolaAreaTest(testSvoltiBean);
         } catch (DAOException e) {
             logger.info("Errore nella ricerca dei test svolti senza ancora prescrizioni ", e);
@@ -81,7 +81,7 @@ public class PrescriviTerapiaGraphicController {
     private void popolaAreaTest(List<TestBean> testSvoltiBean) {
         listViewTest.getItems().clear();
 
-        ObservableList<Node> items = FXCollections.observableArrayList();
+        ObservableList<Node> nodi = FXCollections.observableArrayList();
         for (TestBean testBean : testSvoltiBean) {
             VBox areaTest = new VBox();
 
@@ -92,40 +92,41 @@ public class PrescriviTerapiaGraphicController {
             areaTest.getChildren().addAll(dataTest,nomeTest,risultatoTest);
             areaTest.setSpacing(5);
 
-            items.add(areaTest);
+            nodi.add(areaTest);
 
             areaTest.setUserData(testBean);
         }
         listViewTest.setFixedCellSize(100);
-        listViewTest.getItems().addAll(items);
+        listViewTest.getItems().addAll(nodi);
 
     }
 
 
     private void modificaStatoNotifica() {
         try {
-            prescriviController.modificaStatoTestSvolto(pazienteSelezionato);
+            prescriviTerapiaController.modificaStatoTestSvolto(pazienteSelezionato);
         } catch (DAOException e ) {
             logger.info("Errore durante la modifica dello stato dei test psicologici", e);
         }
     }
 
     @FXML
-    public void goToHome() {
+    public void clickLabelHome() {
         try {
+            prescriviTerapiaController.deletePazienteSelezionato();
+
             Stage prescriviTerapia = (Stage) home.getScene().getWindow();
             prescriviTerapia.close();
 
-            prescriviController.deletePazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
 
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia Home dello psicologo", e);
         }
     }
 
     @FXML
-    public void tornaIndietro() {
+    public void clickLabelTornaIndietro() {
         try {
             Stage prescriviTerapia = (Stage) tornaIndietro.getScene().getWindow();
             prescriviTerapia.close();
@@ -133,26 +134,25 @@ public class PrescriviTerapiaGraphicController {
             navigator.gotoPage("/com/example/mindharbor/SchedaPersonalePaziente.fxml");
 
         }catch(IOException e) {
-            logger.error("Impossibile caricare l'interfaccia", e);
+            logger.error("Impossibile caricare l'interfaccia della scheda personale del paziente", e);
         }
     }
 
     @FXML
     public void nodoSelezionato() {
         Node nodo= listViewTest.getSelectionModel().getSelectedItem();
-        if (nodo == null) {
-            return;
+        if (nodo != null) {
+            testbean = (TestBean) nodo.getUserData();
+            campoNome.setText(pazienteSelezionato.getNome());
+            campoCognome.setText(pazienteSelezionato.getCognome());
+            campoData.setText(String.valueOf(LocalDate.now()));
+            campoInfoTest.setText("Risultato Test: " + testbean.getRisultato());
+            prescrivi.setDisable(false);
         }
-        testbean=(TestBean) nodo.getUserData();
-        campoNome.setText(pazienteSelezionato.getNome());
-        campoCognome.setText(pazienteSelezionato.getCognome());
-        campoData.setText(String.valueOf(LocalDate.now()));
-        campoInfoTest.setText("Risultato Test: " + testbean.getRisultato());
-        prescrivi.setDisable(false);
     }
 
     @FXML
-    public void prescrivi() {
+    public void clickLabelPrescrivi() {
         String testoInserito= campoPrescrizione.getText();
         if (testoInserito.isEmpty()) {
             Alert alert= new AlertMessage().Errore("Inserisci la prescrizione");
@@ -162,12 +162,12 @@ public class PrescriviTerapiaGraphicController {
         } else {
             try {
             Date currentDate= new Date();
-            prescriviController.aggiungiTerapia(new TerapiaBean(SessionManager.getInstance().getCurrentUser().getUsername(), pazienteSelezionato.getUsername(), testoInserito,currentDate,testbean.getData()));
+            prescriviTerapiaController.aggiungiTerapia(new TerapiaBean(SessionManager.getInstance().getCurrentUser().getUsername(), pazienteSelezionato.getUsername(), testoInserito,currentDate,testbean.getData()));
             Alert alert= new AlertMessage().Informazione("ESITO POSITIVO", "Operazione completata", "Terapia assegnata con successo");
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             alert.showAndWait();
 
-            tornaIndietro();
+            clickLabelTornaIndietro();
 
             } catch (DAOException e) {
             logger.info("Errore durante il salvataggio della terapia ", e );
