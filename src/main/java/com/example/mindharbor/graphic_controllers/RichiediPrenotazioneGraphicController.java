@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.RichiediPrenotazioneController;
+import com.example.mindharbor.app_controllers.paziente.prenota_appuntamento.RichiediPrenotazioneController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;

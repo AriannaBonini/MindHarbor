@@ -5,10 +5,11 @@ import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazientiBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.dao.AppuntamentoDAO;
-import com.example.mindharbor.dao.UtenteDao;
+import com.example.mindharbor.dao.UtenteDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Utente;
+import com.example.mindharbor.patterns.facade.DAOFactoryFacade;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.SetInfoUtente;
 
@@ -21,18 +22,24 @@ public class AppuntamentiController {
 
     public void modificaStatoNotificaAppuntamenti() throws DAOException {
         //Questo metodo viene utilizzato per modificare lo stato della notifica dei nuovi appuntamenti del paziente.
+        DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
+        AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
         try {
-            new AppuntamentoDAO().aggiornaStatoNotificaPaziente(SessionManager.getInstance().getCurrentUser());
+            appuntamentoDAO.aggiornaStatoNotificaPaziente(SessionManager.getInstance().getCurrentUser());
         }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
     }
 
     public List<AppuntamentiBean> getAppuntamentiPaziente(String selectedTabName ) throws DAOException {
+        DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
+        UtenteDAO utenteDAO= daoFactoryFacade.getUtenteDAO();
+        AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
+
         List<AppuntamentiBean> appuntamentiPazienteBeanList = new ArrayList<>();
         try {
-            Utente infoPsicologo=new UtenteDao().trovaNomeCognome(new Utente(SessionManager.getInstance().getUsernamePsicologo()));
-            List<Appuntamento> appuntamentoPazienteList = new AppuntamentoDAO().trovaAppuntamentiPaziente(SessionManager.getInstance().getCurrentUser(), selectedTabName);
+            Utente infoPsicologo=utenteDAO.trovaNomeCognome(new Utente(SessionManager.getInstance().getUsernamePsicologo()));
+            List<Appuntamento> appuntamentoPazienteList = appuntamentoDAO.trovaAppuntamentiPaziente(SessionManager.getInstance().getCurrentUser(), selectedTabName);
 
             for (Appuntamento app : appuntamentoPazienteList) {
                 AppuntamentiBean appuntamentiPazienteBean = new AppuntamentiBean(
@@ -50,10 +57,13 @@ public class AppuntamentiController {
     }
 
     public List<AppuntamentiBean> getAppuntamentiPsicologo(String selectedTabName) throws DAOException {
+        DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
+        AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
+
         List<AppuntamentiBean> appuntamentiPsicologoBeanList=new ArrayList<>();
 
         try {
-            List<Appuntamento> appuntamentoPsicologoList=new AppuntamentoDAO().trovaAppuntamentiPsicologo(SessionManager.getInstance().getCurrentUser(),selectedTabName);
+            List<Appuntamento> appuntamentoPsicologoList=appuntamentoDAO.trovaAppuntamentiPsicologo(SessionManager.getInstance().getCurrentUser(),selectedTabName);
 
             for (Appuntamento app : appuntamentoPsicologoList) {
                 AppuntamentiBean appuntamentiPsicologoBean = new AppuntamentiBean(

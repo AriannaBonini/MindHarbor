@@ -1,5 +1,7 @@
 package com.example.mindharbor;
 
+import com.example.mindharbor.patterns.facade.DAOFactoryFacade;
+import com.example.mindharbor.patterns.facade.TipoPersistenza;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -15,5 +17,22 @@ public class Main extends Application {
 
     }
 
-    public static void main(String[] args) {launch();}
+    public static void main(String[] args) {
+        DAOFactoryFacade daoFactoryFacade = DAOFactoryFacade.getInstance();
+
+        String tipoPersistenza = args.length > 0 ? args[0].toLowerCase() : "csv";
+        String tipoInterfaccia = args.length > 1 ? args[1].toLowerCase() : "gui";
+
+        if ("mysql".equals(tipoPersistenza)) {
+            daoFactoryFacade.setTipoPersistenza(TipoPersistenza.MYSQL);
+        } else {
+            daoFactoryFacade.setTipoPersistenza(TipoPersistenza.CSV);
+        }
+
+        if ("gui".equals(tipoInterfaccia)) {
+            launch(args);
+        } else {
+            //parte la CLI
+        }
+    }
 }

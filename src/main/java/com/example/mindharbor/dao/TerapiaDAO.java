@@ -1,93 +1,13 @@
 package com.example.mindharbor.dao;
 
-import com.example.mindharbor.dao.query_sql.QuerySQLTerapiaDAO;
 import com.example.mindharbor.exceptions.DAOException;
-import com.example.mindharbor.model.*;
-import com.example.mindharbor.session.ConnectionFactory;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import com.example.mindharbor.model.Terapia;
+import com.example.mindharbor.model.Utente;
+
 import java.util.List;
 
-public class TerapiaDAO extends QuerySQLTerapiaDAO {
-
-    public void insertTerapia(Terapia terapia) throws DAOException {
-        Connection conn = ConnectionFactory.getConnection();
-
-        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTerapiaDAO.INSERISCI_TERAPIA)) {
-
-            stmt.setString(1, terapia.getTestPsicologico().getPsicologo().getUsername());
-            stmt.setString(2, terapia.getTestPsicologico().getPaziente().getUsername());
-            stmt.setString(3, terapia.getTerapia());
-            stmt.setDate(4, new java.sql.Date(terapia.getDataTerapia().getTime()));
-            stmt.setDate(5, new java.sql.Date(terapia.getTestPsicologico().getData().getTime()));
-
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
-        }
-
-    }
-
-    public List<Terapia> getTerapie(Utente utente) throws  DAOException{
-        List<Terapia> terapie = new ArrayList<>();
-
-        Connection conn = ConnectionFactory.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTerapiaDAO.TERAPIE_PAZIENTE)) {
-
-            stmt.setString(1, utente.getUsername());
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Terapia terapia = new Terapia(
-                            new TestPsicologico(new Psicologo(rs.getString(1))),
-                            rs.getString(2),
-                            rs.getDate(3)
-                    );
-                    terapie.add(terapia);
-                }
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
-        }
-
-        aggiornaStatoNotificaPaziente(utente);
-
-        return terapie;
-
-    }
-
-    private void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
-
-        Connection conn = ConnectionFactory.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTerapiaDAO.AGGIORNA_NOTIFICA_PAZIENTE)) {
-
-            stmt.setString(1, utente.getUsername());
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
-        }
-    }
-
-    public Integer getNuoveTerapie(Utente paziente) throws DAOException{
-        int count = 0;
-
-        Connection conn = ConnectionFactory.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTerapiaDAO.NOTIFICHE_NUOVE_TERAPIE_PAZIENTE, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
-
-            stmt.setString(1, paziente.getUsername());
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    count = rs.getInt(TOTAL);
-                }
-            }
-        } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
-        }
-        return count;
-    }
+public interface TerapiaDAO {
+    void insertTerapia(Terapia terapia) throws DAOException;
+    List<Terapia> getTerapie(Utente utente) throws  DAOException;
+    Integer getNuoveTerapie(Utente paziente) throws DAOException;
 }

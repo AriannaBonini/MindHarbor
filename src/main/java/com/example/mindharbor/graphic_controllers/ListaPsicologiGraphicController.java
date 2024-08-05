@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.ListaPsicologiController;
+import com.example.mindharbor.app_controllers.paziente.prenota_appuntamento.ListaPsicologiController;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.exceptions.DAOException;

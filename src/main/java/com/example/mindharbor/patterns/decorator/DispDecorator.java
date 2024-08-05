@@ -5,7 +5,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.Objects;
 
-public class DispDecorator extends ImageDecorator{
+public class DispDecorator extends ImageDecorator {
     private final boolean disp;
 
     public DispDecorator(ImageView imageView, boolean disp) {

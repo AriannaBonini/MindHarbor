@@ -1,5 +1,7 @@
 package com.example.mindharbor.model;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class TestPsicologico {
@@ -40,6 +42,14 @@ public class TestPsicologico {
         this.risultato = risultato;
         this.test=test;
     }
+
+    public LocalDate convertiInLocalDate(Date date) {
+        // Converti java.util.Date a LocalDate
+        return date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
+
 
     public Date getData() {
         return data;

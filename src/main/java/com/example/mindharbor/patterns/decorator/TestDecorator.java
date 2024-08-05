@@ -1,11 +1,12 @@
 package com.example.mindharbor.patterns.decorator;
 
+import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.Objects;
 
-public class TestDecorator extends ImageDecorator{
+public class TestDecorator extends ImageDecorator {
     private final Integer testSvolto;
 
     public TestDecorator(ImageView imageView, Integer testSvolto) {

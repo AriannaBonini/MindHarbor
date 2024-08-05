@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.SvolgiTestController;
+import com.example.mindharbor.app_controllers.paziente.prescrivi_terapia.SvolgiTestController;
 import com.example.mindharbor.beans.DomandeTestBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.TestBean;
