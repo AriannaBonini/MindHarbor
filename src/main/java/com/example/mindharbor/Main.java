@@ -20,7 +20,7 @@ public class Main extends Application {
     public static void main(String[] args) {
         DAOFactoryFacade daoFactoryFacade = DAOFactoryFacade.getInstance();
 
-        String tipoPersistenza = args.length > 0 ? args[0].toLowerCase() : "csv";
+        String tipoPersistenza = args.length > 0 ? args[0].toLowerCase() : "mysql";
         String tipoInterfaccia = args.length > 1 ? args[1].toLowerCase() : "gui";
 
         if ("mysql".equals(tipoPersistenza)) {

@@ -48,7 +48,7 @@ public class LoginController extends AbstractController {
     protected void storeSessionUtente(String username, String nome, String cognome, UserType userType) throws SessionUserException {
         SessionManager sessionManager = SessionManager.getInstance();
         Utente currentUser = new Utente(username, nome, cognome, userType);
-        sessionManager.login(currentUser,null);
+        sessionManager.login(currentUser,null); //sarebbe meglio cambiare nome al metodo in creaSessione
     }
 
 }

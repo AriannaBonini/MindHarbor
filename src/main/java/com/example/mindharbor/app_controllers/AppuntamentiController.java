@@ -57,15 +57,16 @@ public class AppuntamentiController {
     }
 
     public List<AppuntamentiBean> getAppuntamentiPsicologo(String selectedTabName) throws DAOException {
-        DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
-        AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
+        DAOFactoryFacade daoFactoryFacade = DAOFactoryFacade.getInstance();
+        AppuntamentoDAO appuntamentoDAO = daoFactoryFacade.getAppuntamentoDAO();
 
-        List<AppuntamentiBean> appuntamentiPsicologoBeanList=new ArrayList<>();
+        List<AppuntamentiBean> appuntamentiPsicologoBeanList = new ArrayList<>();
 
         try {
-            List<Appuntamento> appuntamentoPsicologoList=appuntamentoDAO.trovaAppuntamentiPsicologo(SessionManager.getInstance().getCurrentUser(),selectedTabName);
+            List<Appuntamento> appuntamentoPsicologoList = appuntamentoDAO.trovaAppuntamentiPsicologo(SessionManager.getInstance().getCurrentUser(),selectedTabName);
 
             for (Appuntamento app : appuntamentoPsicologoList) {
+
                 AppuntamentiBean appuntamentiPsicologoBean = new AppuntamentiBean(
                         app.getData(),
                         app.getOra(),

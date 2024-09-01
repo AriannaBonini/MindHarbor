@@ -6,11 +6,13 @@ import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.user_type.UserType;
+import com.example.mindharbor.utilities.UtilitiesCSV;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -72,28 +74,9 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
 
     @Override
     public Integer getNotificaPazientePerTestAssegnato(Utente paziente) throws DAOException {
-        // Questo metodo ci ritorna il numero di test da notificare al paziente sulla sua Home.
-        int count = 0;
-
-        // Leggi tutte le righe del file CSV
-        List<String> righeCSV;
-        try {
-            righeCSV = Files.readAllLines(Paths.get(FILE_PATH));
-        } catch (IOException e) {
-            throw new DAOException(ERRORE_LETTURA + " " + e.getMessage());
-        }
-
-        // Verifica il numero di test notificati al paziente
-        for (String riga : righeCSV) {
-            String[] colonne = riga.split(","); // Supponendo che il CSV utilizzi la virgola come delimitatore
-
-            //contiamo le notifiche del paziente che stiamo cercando.
-            if (colonne[INDICE_PAZIENTE].equals(paziente.getUsername()) && colonne[INDICE_STATO_NOTIFICA_PAZIENTE].equals("1")) {
-                count++;
-            }
-        }
-        return count;
+        return UtilitiesCSV.contaNotifichePaziente(FILE_PATH, paziente.getUsername(), INDICE_PAZIENTE, INDICE_STATO_NOTIFICA_PAZIENTE);
     }
+
 
     @Override
     public void modificaStatoNotificaTest(Utente utente, Paziente pazienteSelezionato) throws DAOException {
@@ -212,8 +195,9 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
     private void aggiornaTestAppenaSvolto(TestPsicologico testDaAggiungere) throws DAOException {
         // Lettura del file CSV esistente
         List<String> righeCSV;
+        Path path = Paths.get(FILE_PATH);
         try {
-            righeCSV = Files.readAllLines(Paths.get(FILE_PATH));
+            righeCSV = Files.readAllLines(path);
         } catch (IOException e) {
             throw new DAOException(ERRORE_LETTURA + " " + e.getMessage());
         }
@@ -240,7 +224,7 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
 
         // Scrittura delle righe aggiornate nel file CSV
         try {
-            Files.write(Paths.get(FILE_PATH), righeAggiornate);
+            Files.write(path, righeAggiornate);
         } catch (IOException e) {
             throw new DAOException(ERRORE_SCRITTURA + " " + e.getMessage());
         }

@@ -22,7 +22,6 @@ public class ListaPazientiController {
 
             List<Paziente> listaPazienti = pazienteDAO.trovaPaziente(
                     SessionManager.getInstance().getCurrentUser());
-
             List<PazientiBean> pazientiNumTestBeanList = new ArrayList<>();
 
             for (Paziente paz : listaPazienti) {

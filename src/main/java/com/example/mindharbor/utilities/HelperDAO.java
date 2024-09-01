@@ -8,5 +8,4 @@ import java.sql.PreparedStatement;
 public interface HelperDAO  {
      PreparedStatement createPreparedStatement(Connection conn, String sql, Utente utente) throws DAOException;
      PreparedStatement createPreparedStatement(Connection conn, Utente utente) throws DAOException;
-
 }
