@@ -83,7 +83,6 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         }
         return appuntamentoPsicologoList;
     }
-
     /**
      * Recupera una lista di appuntamenti dal file CSV in base all'utente e al tipo di visualizzazione richiesto.
      * <p>
