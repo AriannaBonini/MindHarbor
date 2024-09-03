@@ -20,7 +20,7 @@ public class ListaPazientiController {
         PazienteDAO pazienteDAO= daoFactoryFacade.getPazienteDAO();
         try {
 
-            List<Paziente> listaPazienti = pazienteDAO.trovaPaziente(
+            List<Paziente> listaPazienti = pazienteDAO.trovaPazienti(
                     SessionManager.getInstance().getCurrentUser());
             List<PazientiBean> pazientiNumTestBeanList = new ArrayList<>();
 

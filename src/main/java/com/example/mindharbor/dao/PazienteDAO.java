@@ -8,7 +8,7 @@ import com.example.mindharbor.model.Utente;
 import java.util.List;
 
 public interface PazienteDAO {
-    List<Paziente> trovaPaziente(Utente psicologo) throws DAOException;
+    List<Paziente> trovaPazienti(Utente psicologo) throws DAOException;
     Paziente getInfoSchedaPersonale(Paziente pazienteSelezionato) throws DAOException;
     boolean checkAnniPaziente(Paziente paziente) throws DAOException;
     String getUsernamePsicologo(Utente paziente) throws DAOException;

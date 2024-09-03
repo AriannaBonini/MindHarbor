@@ -17,7 +17,7 @@ import java.util.List;
 public class PazienteDAOMySql extends QuerySQLPazienteDAO implements PazienteDAO {
 
     @Override
-    public List<Paziente> trovaPaziente(Utente psicologo) throws DAOException {
+    public List<Paziente> trovaPazienti(Utente psicologo) throws DAOException {
         //Questo metodo viene utilizzato per prendere dalla persistenza lo username, il nome, il cognome e il genere del Paziente.
         //Viene utilizzato dallo psicologo per ottenere la lista dei suoi pazienti.
         List<Paziente> pazienteList = new ArrayList<>();

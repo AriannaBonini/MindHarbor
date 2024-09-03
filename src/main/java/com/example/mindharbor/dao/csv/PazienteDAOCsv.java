@@ -5,10 +5,9 @@ import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Utente;
+import com.example.mindharbor.utilities.UtilitiesCSV;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,44 +25,41 @@ public class PazienteDAOCsv implements PazienteDAO {
     protected static final Integer INDICE_PSICOLOGO_USERNAME=3;
 
 
-    @Override
-    public List<Paziente> trovaPaziente(Utente psicologo) throws DAOException {
+    public List<Paziente> trovaPazienti(Utente psicologo) throws DAOException {
         List<Paziente> pazienteList = new ArrayList<>();
-        UtenteDAOCsv utenteDAOCsv =new UtenteDAOCsv();
+        UtenteDAOCsv utenteDAOCsv = new UtenteDAOCsv();
         Utente utente;
-
-        TestPsicologicoDAOCsv testPsicologicoDAOCsv =new TestPsicologicoDAOCsv();
+        TestPsicologicoDAOCsv testPsicologicoDAOCsv = new TestPsicologicoDAOCsv();
         Paziente numeroTestPaziente;
 
-        // Leggi tutte le righe del file CSV
-        List<String> righeCSV;
-        try {
-            righeCSV = Files.readAllLines(Paths.get(FILE_PATH));
-        } catch (IOException e) {
-            throw new DAOException(ERRORE_LETTURA + " " + e.getMessage());
-        }
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+            UtilitiesCSV.scartaIntestazione(br);  // Scarta l'intestazione se presente
+            String line;
 
-        // Filtra i pazienti associati allo psicologo
-        for (String riga : righeCSV) {
-            String[] colonne = riga.split(",");
+            while ((line = br.readLine()) != null) {
+                String[] colonne = line.split(",", -1);
+                String pazienteUsername = colonne[2].trim();
+                String usernamePsicologo = colonne[3].trim();
 
-            // Verifichiamo che lo username dello psicologo sia quello corretto
-            if (colonne[INDICE_PSICOLOGO_USERNAME].equals(psicologo.getUsername())) {
-                Paziente paziente = new Paziente(colonne[INDICE_PAZIENTE_USERNAME]); // username del paziente
+                if (!pazienteUsername.isBlank() && !usernamePsicologo.isEmpty()) {
+                    Paziente paziente = new Paziente(pazienteUsername);
+                    utente = utenteDAOCsv.trovaInfoUtente(paziente);
 
-                utente= utenteDAOCsv.trovaInfoUtente(paziente);
-                paziente.setNome(utente.getNome());
-                paziente.setCognome(utente.getCognome());
-                paziente.setGenere(utente.getGenere());
+                    if (usernamePsicologo.equals(psicologo.getUsername()) && utente != null) {
+                        paziente = creaIstanzaPaziente(utente, colonne);
 
-                numeroTestPaziente= testPsicologicoDAOCsv.numTestSvoltiPerPaziente(paziente);
-                //con questa chiamata otteniamo il numero dei test svolti dal paziente da notificare allo psicologo
-                paziente.setNumeroTest(numeroTestPaziente.getNumeroTest());
+                        numeroTestPaziente = testPsicologicoDAOCsv.numTestSvoltiPerPaziente(paziente);
 
-                pazienteList.add(paziente);
+                        if (numeroTestPaziente != null) {
+                            paziente.setNumeroTest(numeroTestPaziente.getNumeroTest());
+                        }
+                        pazienteList.add(paziente);
+                    }
+                }
             }
+        } catch (IOException e) {
+            throw new DAOException(ERRORE_LETTURA + " " + e.getMessage(), e);
         }
-
         return pazienteList;
     }
 
@@ -187,6 +183,13 @@ public class PazienteDAOCsv implements PazienteDAO {
         }
     }
 
+    private Paziente creaIstanzaPaziente(Utente utente, String[] rigaPaziente) {
+        Paziente paziente = new Paziente(utente.getUsername(), utente.getNome(), utente.getCognome());
+        paziente.setGenere(utente.getGenere());
+        paziente.setAnni(Integer.parseInt(rigaPaziente[0]));
+        paziente.setDiagnosi(rigaPaziente[1]);
+        return paziente;
+    }
 }
 
 

@@ -83,6 +83,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         }
         return appuntamentoPsicologoList;
     }
+
     /**
      * Recupera una lista di appuntamenti dal file CSV in base all'utente e al tipo di visualizzazione richiesto.
      * <p>
@@ -318,21 +319,23 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      */
     @Override
     public void updateStatoNotifica(Appuntamento richiestaAppuntamento) throws DAOException {
-        List<String> file;
+        StringBuilder recordAggiornato = new StringBuilder();
 
-        try {
-            file = Files.readAllLines(Paths.get(FILE_PATH));
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+            // Scarta l'intestazione
+            UtilitiesCSV.scartaIntestazione(br);
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] colonne = line.split(",");
+                if (Integer.parseInt(colonne[INDICE_ID_APPUNTAMENTO]) == richiestaAppuntamento.getIdAppuntamento()) {
+                    colonne[INDICE_STATO_NOTIFICA_PSICOLOGO] = "0"; // Imposta stato notifica psicologo a 0
+                }
+                recordAggiornato.append(String.join(",", colonne)).append(System.lineSeparator());
+            }
         } catch (IOException e) {
             throw new DAOException(ERRORE_LETTURA + " " + e.getMessage());
         }
-        StringBuilder recordAggiornato = new StringBuilder();
-        for (String riga : file) {
-            String[] colonne = riga.split(",");
-            if (Integer.parseInt(colonne[INDICE_ID_APPUNTAMENTO]) == richiestaAppuntamento.getIdAppuntamento()) {
-                colonne[INDICE_STATO_NOTIFICA_PSICOLOGO] = "0"; // Imposta stato notifica psicologo a 0
-            }
-            recordAggiornato.append(String.join(",", colonne)).append(System.lineSeparator());
-        }
+        // Scrittura delle righe aggiornate nel file CSV
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             writer.write(recordAggiornato.toString());
         } catch (IOException e) {
@@ -340,12 +343,13 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         }
     }
 
-
     @Override
     public Appuntamento getInfoRichiesta(Appuntamento richiestaAppuntamento) throws DAOException {
         Appuntamento richiesta = null;
 
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+
+            UtilitiesCSV.scartaIntestazione(br);
             String line;
             while ((line = br.readLine()) != null) {
                 String[] colonne = line.split(",");
