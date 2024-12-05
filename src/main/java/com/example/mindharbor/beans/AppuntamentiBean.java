@@ -3,7 +3,7 @@ package com.example.mindharbor.beans;
 public class AppuntamentiBean {
         private String data;
         private String ora;
-        private PazientiBean paziente;
+        private PazienteBean paziente;
         private PsicologoBean psicologo;
         private Integer idAppuntamento;
         private Integer notificaRichiesta;
@@ -12,7 +12,7 @@ public class AppuntamentiBean {
     public AppuntamentiBean() {
     }
 
-    public AppuntamentiBean(String data, String ora, PazientiBean paziente, PsicologoBean psicologo, Integer idAppuntamento, Integer notificaRichiesta) {
+    public AppuntamentiBean(String data, String ora, PazienteBean paziente, PsicologoBean psicologo, Integer idAppuntamento, Integer notificaRichiesta) {
         this.data=data;
         this.ora=ora;
         this.paziente=paziente;
@@ -21,7 +21,7 @@ public class AppuntamentiBean {
         this.notificaRichiesta=notificaRichiesta;
     }
 
-    public AppuntamentiBean(String data, String ora, PazientiBean paziente) {
+    public AppuntamentiBean(String data, String ora, PazienteBean paziente) {
         this.data=data;
         this.ora=ora;
         this.paziente=paziente;
@@ -33,7 +33,7 @@ public class AppuntamentiBean {
         this.psicologo=psicologo;
     }
 
-    public AppuntamentiBean(PazientiBean paziente, Integer idAppuntamento, Integer notificaRichiesta) {
+    public AppuntamentiBean(PazienteBean paziente, Integer idAppuntamento, Integer notificaRichiesta) {
         this.paziente=paziente;
         this.idAppuntamento=idAppuntamento;
         this.notificaRichiesta=notificaRichiesta;
@@ -50,10 +50,10 @@ public class AppuntamentiBean {
         this.ora = ora;
     }
     public Integer getNotificaRichiesta() {return notificaRichiesta;}
-    public PazientiBean getPaziente() {
+    public PazienteBean getPaziente() {
         return paziente;
     }
-    public void setPaziente(PazientiBean paziente) {
+    public void setPaziente(PazienteBean paziente) {
         this.paziente = paziente;
     }
     public PsicologoBean getPsicologo() {

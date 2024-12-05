@@ -1,7 +1,7 @@
 package com.example.mindharbor.patterns.factory;
 
 import com.example.mindharbor.dao.AppuntamentoDAO;
-import com.example.mindharbor.dao.csv.AppuntamentoDAOCsv;
+import com.example.mindharbor.dao.csv.appuntamento_dao_csv.AppuntamentoDAOCsv;
 import com.example.mindharbor.dao.mysql.AppuntamentoDAOMySql;
 import com.example.mindharbor.patterns.facade.TipoPersistenza;
 

@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia.ScegliTestController;
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
@@ -48,7 +48,7 @@ public class ScegliTestGraphicController {
     @FXML
     private CheckBox test4;
 
-    private PazientiBean pazienteSelezionato;
+    private PazienteBean pazienteSelezionato;
     private static final Logger logger = LoggerFactory.getLogger(ScegliTestGraphicController.class);
     private List<TestBean> listaTestPsicologiciBean;
     private final  ScegliTestController scegliTestController = new ScegliTestController();

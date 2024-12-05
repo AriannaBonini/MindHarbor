@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia.PrescriviTerapiaController;
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.beans.TerapiaBean;
 import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.exceptions.DAOException;
@@ -53,7 +53,7 @@ public class PrescriviTerapiaGraphicController {
 
     private static final Logger logger = LoggerFactory.getLogger(PrescriviTerapiaGraphicController.class);
     private final   NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-    private PazientiBean pazienteSelezionato;
+    private PazienteBean pazienteSelezionato;
     private TestBean testbean;
     private final PrescriviTerapiaController prescriviTerapiaController = new PrescriviTerapiaController();
 
@@ -62,11 +62,10 @@ public class PrescriviTerapiaGraphicController {
         InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        pazienteSelezionato= prescriviTerapiaController.getPazienteSelezionato();
+        pazienteSelezionato = prescriviTerapiaController.getPazienteSelezionato();
 
         modificaStatoNotifica();
         popolaListaTestSvoltiSenzaPrescrizione();
-
     }
 
     private void popolaListaTestSvoltiSenzaPrescrizione() {
@@ -157,15 +156,18 @@ public class PrescriviTerapiaGraphicController {
         if (testoInserito.isEmpty()) {
             Alert alert= new AlertMessage().Errore("Inserisci la prescrizione");
             alert.show();
-
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
         } else {
             try {
             Date currentDate= new Date();
             prescriviTerapiaController.aggiungiTerapia(new TerapiaBean(SessionManager.getInstance().getCurrentUser().getUsername(), pazienteSelezionato.getUsername(), testoInserito,currentDate,testbean.getData()));
+            modificaStatoNotifica();
+            popolaListaTestSvoltiSenzaPrescrizione();
             Alert alert= new AlertMessage().Informazione("ESITO POSITIVO", "Operazione completata", "Terapia assegnata con successo");
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             alert.showAndWait();
+
+            // IL PROBLEMA DELLA NOTIFICA POST PRESCRIZIONE DOVREBBE STARE QUI
 
             clickLabelTornaIndietro();
 
@@ -177,7 +179,7 @@ public class PrescriviTerapiaGraphicController {
                 new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             }
         }
-
     }
+
 }
 

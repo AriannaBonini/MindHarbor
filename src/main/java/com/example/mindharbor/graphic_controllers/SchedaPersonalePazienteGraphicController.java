@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia.SchedaPersonalePazienteController;
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.constants.Constants;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
@@ -42,7 +42,7 @@ public class SchedaPersonalePazienteGraphicController {
     @FXML
     private Label scegliTest;
 
-    private PazientiBean pazienteSelezionato;
+    private PazienteBean pazienteSelezionato;
     private final SchedaPersonalePazienteController schedaPersonaleController = new SchedaPersonalePazienteController();
     private static final Logger logger = LoggerFactory.getLogger(SchedaPersonalePazienteGraphicController.class);
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
@@ -51,13 +51,12 @@ public class SchedaPersonalePazienteGraphicController {
         InfoUtenteBean infoUtenteBean = schedaPersonaleController.getInfoPsicologo();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         pazienteSelezionato = schedaPersonaleController.getPazienteSelezionato();
-
         notificaStatoTest();
         abilitaPrescriviTerapia();
         abilitaAssegnaTest();
 
         if (pazienteSelezionato.getAnni() == null && pazienteSelezionato.getDiagnosi() == null) {
-            //questo if controlla se c'è già stato un accesso alla DAO precedentemente.
+            // Questo if controlla se c'è già stato un accesso alla DAO precedentemente.
             // Ci permette di gestire la possibilità che lo psicologo, abbia selezionato il "Torna Indietro" dall'interfaccia immediatamente successiva a questa.
             popolaSchedaPersonale();
         } else {
@@ -95,7 +94,7 @@ public class SchedaPersonalePazienteGraphicController {
 
     private void popolaSchedaPersonale()  {
         try {
-            pazienteSelezionato= schedaPersonaleController.getSchedaPersonale(pazienteSelezionato);
+            pazienteSelezionato = schedaPersonaleController.getSchedaPersonale(pazienteSelezionato);
             creaSchedaPersonale();
 
         } catch (DAOException e) {
@@ -141,7 +140,6 @@ public class SchedaPersonalePazienteGraphicController {
         try {
             Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
             schedaPersonale.close();
-
             schedaPersonaleController.deletePazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/ListaPazienti.fxml");
         }catch(IOException e) {
@@ -156,7 +154,6 @@ public class SchedaPersonalePazienteGraphicController {
         try {
             Stage schedaPersonale = (Stage) home.getScene().getWindow();
             schedaPersonale.close();
-
             schedaPersonaleController.setPazienteSelezionato(pazienteSelezionato);
             navigator.gotoPage("/com/example/mindharbor/ScegliTest.fxml");
         }catch(IOException e) {
@@ -168,7 +165,6 @@ public class SchedaPersonalePazienteGraphicController {
         try {
             Stage schedaPersonale = (Stage) prescriviTerapia.getScene().getWindow();
             schedaPersonale.close();
-
             schedaPersonaleController.setPazienteSelezionato(pazienteSelezionato);
             navigator.gotoPage("/com/example/mindharbor/PrescrizioneTerapia.fxml");
         }catch(IOException e) {

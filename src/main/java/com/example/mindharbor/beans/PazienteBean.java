@@ -1,6 +1,6 @@
 package com.example.mindharbor.beans;
 
-public class PazientiBean {
+public class PazienteBean {
     private String nome;
     private String cognome;
     private String genere;
@@ -10,7 +10,7 @@ public class PazientiBean {
     private Integer numTestSvolti;
     private Integer numNotifiche;
 
-    public PazientiBean(String username, Integer numTestSvolti, String nome, String cognome, String genere) {
+    public PazienteBean(String username, Integer numTestSvolti, String nome, String cognome, String genere) {
         this.username=username;
         this.numTestSvolti = numTestSvolti;
         this.nome=nome;
@@ -18,30 +18,30 @@ public class PazientiBean {
         this.genere=genere;
     }
 
-    public PazientiBean(Integer numNotifiche) {
+    public PazienteBean(Integer numNotifiche) {
         this.numNotifiche=numNotifiche;
     }
 
-    public PazientiBean(String nome, String cognome, Integer anni) {
+    public PazienteBean(String nome, String cognome, Integer anni) {
         this.nome = nome;
         this.cognome = cognome;
         this.anni = anni;
     }
 
-    public PazientiBean(String username, String nome, String cognome, String genere) {
+    public PazienteBean(String username, String nome, String cognome, String genere) {
         this.username=username;
         this.nome = nome;
         this.cognome = cognome;
         this.genere= genere;
     }
 
-    public PazientiBean(String nome, String cognome) {
+    public PazienteBean(String nome, String cognome) {
         this.nome = nome;
         this.cognome = cognome;
     }
 
 
-    public PazientiBean(String nome, String cognome, String genere, Integer anni, String diagnosi, String username) {
+    public PazienteBean(String nome, String cognome, String genere, Integer anni, String diagnosi, String username) {
         this.nome = nome;
         this.cognome = cognome;
         this.genere= genere;

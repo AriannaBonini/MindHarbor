@@ -1,7 +1,7 @@
 package com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia;
 
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.beans.TerapiaBean;
 import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.dao.TerapiaDAO;
@@ -22,9 +22,9 @@ public class PrescriviTerapiaController {
     public InfoUtenteBean getInfoPsicologo() {
         return new SetInfoUtente().getInfo();
     }
-    public PazientiBean getPazienteSelezionato() {return navigator.getPazienteBean();}
+    public PazienteBean getPazienteSelezionato() {return navigator.getPazienteBean();}
 
-    public void modificaStatoTestSvolto(PazientiBean pazienteSelezionato) throws DAOException {
+    public void modificaStatoTestSvolto(PazienteBean pazienteSelezionato) throws DAOException {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
         try {
@@ -34,7 +34,7 @@ public class PrescriviTerapiaController {
             }
     }
 
-    public List<TestBean> getTestSvoltiSenzaPrescrizione(PazientiBean pazienteSelezionato) throws DAOException {
+    public List<TestBean> getTestSvoltiSenzaPrescrizione(PazienteBean pazienteSelezionato) throws DAOException {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
 

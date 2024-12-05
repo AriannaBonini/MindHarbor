@@ -1,4 +1,4 @@
-package com.example.mindharbor.dao.csv;
+package com.example.mindharbor.dao.csv.terapia_dao_csv;
 
 import com.example.mindharbor.dao.TerapiaDAO;
 import com.example.mindharbor.exceptions.DAOException;
@@ -16,14 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TerapiaDAOCsv implements TerapiaDAO {
-    protected static final String FILE_PATH="MindHarborDB/csv/terapia.csv";
-    protected static final String ERRORE_LETTURA="Errore nella lettura del file CSV";
-    protected static final String ERRORE_SCRITTURA="Errore nella scrittura nel file CSV:";
-    protected static final Integer INDICE_PSICOLOGO=0;
-    protected static final Integer INDICE_PAZIENTE=1;
-    protected static final Integer INDICE_TERAPIA=2;
-    protected static final Integer INDICE_DATA_TERAPIA =3;
-    protected static final Integer INDICE_NOTIFICA_PAZIENTE=5;
 
     @Override
     public void insertTerapia(Terapia terapia) throws DAOException {
@@ -40,11 +32,11 @@ public class TerapiaDAOCsv implements TerapiaDAO {
         );
 
         // Lettura delle righe esistenti nel CSV
-        Path path = Paths.get(FILE_PATH);
+        Path path = Paths.get(ConstantsTerapiaCsv.FILE_PATH);
         try {
             righeCSV = Files.readAllLines(path);
         } catch (IOException e) {
-            throw new DAOException(ERRORE_LETTURA + " " + e.getMessage());
+            throw new DAOException(ConstantsTerapiaCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
 
         // Aggiungi la nuova riga
@@ -54,7 +46,7 @@ public class TerapiaDAOCsv implements TerapiaDAO {
         try {
             Files.write(path, righeCSV);
         } catch (IOException e) {
-            throw new DAOException(ERRORE_SCRITTURA + " " + e.getMessage());
+            throw new DAOException(ConstantsTerapiaCsv.ERRORE_SCRITTURA + " " + e.getMessage());
         }
     }
 
@@ -65,9 +57,9 @@ public class TerapiaDAOCsv implements TerapiaDAO {
 
         // Lettura delle righe dal file CSV
         try {
-            righeCSV = Files.readAllLines(Paths.get(FILE_PATH));
+            righeCSV = Files.readAllLines(Paths.get(ConstantsTerapiaCsv.FILE_PATH));
         } catch (IOException e) {
-            throw new DAOException(ERRORE_LETTURA + " " + e.getMessage());
+            throw new DAOException(ConstantsTerapiaCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
 
         // Elaborazione delle righe lette
@@ -75,18 +67,16 @@ public class TerapiaDAOCsv implements TerapiaDAO {
             String[] colonne = riga.split(","); // Supponiamo che il CSV utilizzi la virgola come delimitatore
 
             // Controllo se l'utente è il paziente
-            if (colonne[INDICE_PAZIENTE].equals(utente.getUsername())) {
+            if (colonne[ConstantsTerapiaCsv.INDICE_PAZIENTE].equals(utente.getUsername())) {
                 Terapia terapia = new Terapia(
-                        new TestPsicologico(new Psicologo(colonne[INDICE_PSICOLOGO])),
-                        colonne[INDICE_TERAPIA],
-                        java.sql.Date.valueOf(colonne[INDICE_DATA_TERAPIA])
+                        new TestPsicologico(new Psicologo(colonne[ConstantsTerapiaCsv.INDICE_PSICOLOGO])),
+                        colonne[ConstantsTerapiaCsv.INDICE_TERAPIA],
+                        java.sql.Date.valueOf(colonne[ConstantsTerapiaCsv.INDICE_DATA_TERAPIA])
                 );
                 terapie.add(terapia);
             }
         }
-
         aggiornaStatoNotificaPaziente(utente);
-
         return terapie;
     }
 
@@ -107,7 +97,7 @@ public class TerapiaDAOCsv implements TerapiaDAO {
      * @throws DAOException Se si verifica un errore durante la lettura o la scrittura del file CSV.
      */
     private void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
-        List<String> righeCSV = UtilitiesCSV.leggiRigheDaCsv(FILE_PATH);
+        List<String> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH);
         List<String> righeAggiornate = new ArrayList<>();
 
         // Aggiornamento delle righe esistenti
@@ -115,9 +105,9 @@ public class TerapiaDAOCsv implements TerapiaDAO {
             String[] colonne = riga.split(","); // Supponiamo che il CSV utilizzi la virgola come delimitatore
 
             // Controlla se la riga corrisponde all'utente paziente
-            if (colonne[INDICE_PAZIENTE].equals(utente.getUsername())) {
+            if (colonne[ConstantsTerapiaCsv.INDICE_PAZIENTE].equals(utente.getUsername())) {
                 // Aggiorna lo stato di notifica del paziente
-                colonne[INDICE_NOTIFICA_PAZIENTE] = String.valueOf(0); // Supponiamo che 0 significhi "non notificato"
+                colonne[ConstantsTerapiaCsv.INDICE_NOTIFICA_PAZIENTE] = String.valueOf(0); // Supponiamo che 0 significhi "non notificato"
             }
 
             // Aggiungi la riga (aggiornata o meno) alla lista
@@ -125,11 +115,11 @@ public class TerapiaDAOCsv implements TerapiaDAO {
         }
 
         // Scrittura delle righe aggiornate nel file CSV
-        UtilitiesCSV.scriviRigheAggiornate(FILE_PATH, righeAggiornate);
+        UtilitiesCSV.scriviRigheAggiornate(ConstantsTerapiaCsv.FILE_PATH, righeAggiornate);
     }
 
     @Override
     public Integer getNuoveTerapie(Utente paziente) throws DAOException {
-        return UtilitiesCSV.contaNotifichePaziente(FILE_PATH, paziente.getUsername(), INDICE_PAZIENTE, INDICE_NOTIFICA_PAZIENTE);
+        return UtilitiesCSV.contaNotifichePaziente(ConstantsTerapiaCsv.FILE_PATH, paziente.getUsername(), ConstantsTerapiaCsv.INDICE_PAZIENTE, ConstantsTerapiaCsv.INDICE_NOTIFICA_PAZIENTE);
     }
 }

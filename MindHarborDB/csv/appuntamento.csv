@@ -1,4 +1,3 @@
-"ID_Appuntamento","Data","Ora","Username_Paziente","Username_Psicologo","statoAppuntamento","statoNotificaPsicologo","statoNotificaPaziente"
 1,2024-06-23,15:30,Giacomino,Ciccio,1,0,0
 2,2024-10-02,09:45,Luigi@67,Ciccio,1,0,0
 6,2024-07-26,17:50,Giacomino,Ciccio,1,0,0
@@ -9,4 +8,4 @@
 17,2024-07-05,15:00,Giacomino,Ciccio,1,0,0
 22,2024-07-24,17:15,Susy,Sph97,0,0,0
 24,2024-08-02,15:00,Gargamella,Sph97,1,0,1
-26,2024-08-15,15:15,Giacomino,Ciccio,0,1,0
+26,2024-08-15,15:15,Giacomino,Ciccio,1,0,1

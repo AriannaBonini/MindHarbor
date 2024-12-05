@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia.ListaPazientiController;
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImageDecorator;
@@ -45,7 +45,7 @@ public class ListaPazientiGraphicController {
 
     private void popolaLista() {
         try {
-            List<PazientiBean> listaPazienti = listaPazientiController.getListaPazienti();
+            List<PazienteBean> listaPazienti = listaPazientiController.getListaPazienti();
             creaVBoxListaPazienti(listaPazienti);
         }catch (DAOException e) {
             logger.info("Non non ci sono pazienti", e);
@@ -53,12 +53,12 @@ public class ListaPazientiGraphicController {
         }
     }
 
-    private void creaVBoxListaPazienti(List<PazientiBean> listaPazienti) {
+    private void creaVBoxListaPazienti(List<PazienteBean> listaPazienti) {
         listViewPazienti.getItems().clear();
 
         ObservableList<Node> nodi = FXCollections.observableArrayList();
 
-        for (PazientiBean paz : listaPazienti) {
+        for (PazienteBean paz : listaPazienti) {
 
             VBox boxPaziente = new VBox();
             HBox hBoxPaziente = new HBox();
@@ -108,7 +108,8 @@ public class ListaPazientiGraphicController {
         try {
             Node nodo = listViewPazienti.getSelectionModel().getSelectedItem();
             if(nodo!=null) {
-                PazientiBean pazienteSelezionato = (PazientiBean) nodo.getUserData();
+                PazienteBean pazienteSelezionato = (PazienteBean) nodo.getUserData();
+                System.out.println("username: " + pazienteSelezionato.getUsername());
                 listaPazientiController.setPazienteSelezionato(pazienteSelezionato);
 
                 Stage listaPazienti = (Stage) listViewPazienti.getScene().getWindow();
@@ -119,7 +120,5 @@ public class ListaPazientiGraphicController {
         } catch (IOException e) {
             logger.error("Impossibile caricare l'interfaccia della scheda personale del paziente", e);
         }
-
     }
-
 }

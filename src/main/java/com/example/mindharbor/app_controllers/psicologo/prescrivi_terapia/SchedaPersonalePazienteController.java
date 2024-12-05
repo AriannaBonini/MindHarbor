@@ -1,7 +1,7 @@
 package com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia;
 
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.exceptions.DAOException;
@@ -19,26 +19,26 @@ public class SchedaPersonalePazienteController {
     public InfoUtenteBean getInfoPsicologo() {
         return new SetInfoUtente().getInfo();
     }
-    public PazientiBean getPazienteSelezionato(){return navigator.getPazienteBean();}
-    public void setPazienteSelezionato(PazientiBean pazienteSelezionato) { navigator.setPazienteBean(pazienteSelezionato);}
+    public PazienteBean getPazienteSelezionato(){
+        return navigator.getPazienteBean();
+    }
+    public void setPazienteSelezionato(PazienteBean pazienteSelezionato) { navigator.setPazienteBean(pazienteSelezionato);}
 
-    public PazientiBean getSchedaPersonale(PazientiBean pazienteSelezionato) throws DAOException {
+    public PazienteBean getSchedaPersonale(PazienteBean pazienteSelezionato) throws DAOException {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
-        PazienteDAO pazienteDAO= daoFactoryFacade.getPazienteDAO();
+        PazienteDAO pazienteDAO = daoFactoryFacade.getPazienteDAO();
         try {
             Paziente paziente = pazienteDAO.getInfoSchedaPersonale(new Paziente(pazienteSelezionato.getUsername()));
 
             pazienteSelezionato.setAnni(paziente.getAnni());
             pazienteSelezionato.setDiagnosi(paziente.getDiagnosi());
-
         }catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
-
         return pazienteSelezionato;
     }
 
-    public Integer numTestSvoltiSenzaPrescrizione(PazientiBean pazienteSelezionato) throws DAOException {
+    public Integer numTestSvoltiSenzaPrescrizione(PazienteBean pazienteSelezionato) throws DAOException {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
         try {
@@ -48,7 +48,7 @@ public class SchedaPersonalePazienteController {
         }
     }
 
-    public Integer getNumTestOdiernoAssegnato(PazientiBean pazienteSelezionato) throws DAOException{
+    public Integer getNumTestOdiernoAssegnato(PazienteBean pazienteSelezionato) throws DAOException{
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
         try {
@@ -57,4 +57,5 @@ public class SchedaPersonalePazienteController {
             throw new DAOException(e.getMessage());
         }
     }
+
 }

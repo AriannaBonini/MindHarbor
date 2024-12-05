@@ -2,7 +2,7 @@ package com.example.mindharbor.graphic_controllers;
 
 import com.example.mindharbor.app_controllers.paziente.HomePazienteController;
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
@@ -34,7 +34,7 @@ public class HomePazienteGraphicController {
     private final HomePazienteController homePazienteController = new HomePazienteController();
     private static final Logger logger = LoggerFactory.getLogger(HomePazienteGraphicController.class);
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
-    private PazientiBean pazientiBean;
+    private PazienteBean pazienteBean;
 
     public void initialize() {
         InfoUtenteBean infoUtenteBean = homePazienteController.getInfoPaziente();
@@ -47,10 +47,10 @@ public class HomePazienteGraphicController {
 
     private void notificaNuoviAppuntamenti() {
         try {
-            pazientiBean= homePazienteController.cercaNuoviAppuntamenti();
-            if (pazientiBean.getNumNotifiche()>0) {
+            pazienteBean = homePazienteController.cercaNuoviAppuntamenti();
+            if (pazienteBean.getNumNotifiche()>0) {
                 notificaAppuntamenti.setVisible(true);
-                notificaAppuntamenti.setText(String.valueOf(pazientiBean.getNumNotifiche()));
+                notificaAppuntamenti.setText(String.valueOf(pazienteBean.getNumNotifiche()));
             }
 
         } catch (DAOException e) {
@@ -60,10 +60,10 @@ public class HomePazienteGraphicController {
 
     private void notificaNuoveTerapie() {
         try {
-            pazientiBean= homePazienteController.cercaNuoveTerapie();
-            if (pazientiBean.getNumNotifiche()>0) {
+            pazienteBean = homePazienteController.cercaNuoveTerapie();
+            if (pazienteBean.getNumNotifiche()>0) {
                 notificaTerapie.setVisible(true);
-                notificaTerapie.setText(String.valueOf(pazientiBean.getNumNotifiche()));
+                notificaTerapie.setText(String.valueOf(pazienteBean.getNumNotifiche()));
             }
         } catch (DAOException e) {
             logger.info("Errore nella ricerca delle nuove terapie assegnate al paziente ", e);
@@ -72,10 +72,10 @@ public class HomePazienteGraphicController {
 
     private void notificaNuoviTest() {
         try {
-            pazientiBean=homePazienteController.cercaNuoviTestDaSvolgere();
-            if (pazientiBean.getNumNotifiche()>0) {
+            pazienteBean =homePazienteController.cercaNuoviTestDaSvolgere();
+            if (pazienteBean.getNumNotifiche()>0) {
                 notificaTest.setVisible(true);
-                notificaTest.setText(String.valueOf(pazientiBean.getNumNotifiche()));
+                notificaTest.setText(String.valueOf(pazienteBean.getNumNotifiche()));
             }
         } catch (DAOException e) {
             logger.info("Errore nella ricerca dei nuovi test assegnati al paziente ", e);

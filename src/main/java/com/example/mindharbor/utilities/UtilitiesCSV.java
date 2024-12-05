@@ -12,6 +12,9 @@ import java.util.List;
 public class UtilitiesCSV {
     private UtilitiesCSV(){}
 
+    public static final String IN_PROGRAMMA = "IN PROGRAMMA";
+    public static final String PASSATI = "PASSATI";
+
     /**
      * Scarta l'intestazione di un file CSV.
      * <p>

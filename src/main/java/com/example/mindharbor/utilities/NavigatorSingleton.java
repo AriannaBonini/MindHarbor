@@ -1,7 +1,7 @@
 package com.example.mindharbor.utilities;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.beans.TestBean;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +15,7 @@ public class NavigatorSingleton {
     private static NavigatorSingleton instance = null;
     protected Stage stg;
     private AppuntamentiBean appBean;
-    private PazientiBean pazienteBean;
+    private PazienteBean pazienteBean;
     private TestBean testBean;
     private PsicologoBean psicologoBean;
 
@@ -51,8 +51,8 @@ public class NavigatorSingleton {
     public void deleteAppuntamentoBean() {this.appBean =null;}
 
 
-    public PazientiBean getPazienteBean() {return pazienteBean;}
-    public void setPazienteBean(PazientiBean pazienteBean) {this.pazienteBean = pazienteBean;}
+    public PazienteBean getPazienteBean() {return pazienteBean;}
+    public void setPazienteBean(PazienteBean pazienteBean) {this.pazienteBean = pazienteBean;}
     //questo metodo viene utilizzato per caricare l'istanza di PazientiBean contenente il paziente selezionato dallo psicologo nella Lista dei suoi pazienti.
     public void deletePazienteBean() {this.pazienteBean=null;}
 
@@ -64,6 +64,4 @@ public class NavigatorSingleton {
     public PsicologoBean getPsicologoBean() {return psicologoBean;}
     public void setPsicologoBean(PsicologoBean psicologoBean) {this.psicologoBean=psicologoBean;}
     public void deletePsicologoBean(){this.psicologoBean=null;}
-
-
 }

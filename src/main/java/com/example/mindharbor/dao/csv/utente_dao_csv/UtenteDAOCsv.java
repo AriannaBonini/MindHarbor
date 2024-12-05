@@ -1,4 +1,4 @@
-package com.example.mindharbor.dao.csv;
+package com.example.mindharbor.dao.csv.utente_dao_csv;
 
 import com.example.mindharbor.dao.UtenteDAO;
 import com.example.mindharbor.exceptions.DAOException;
@@ -30,8 +30,6 @@ import java.util.Objects;
  * </p>
  */
 public class UtenteDAOCsv implements UtenteDAO {
-    protected static final String FILE_PATH="MindHarborDB/csv/utente.csv";
-    protected static final String ERRORE_LETTURA="Errore nella lettura del file CSV";
 
     /**
      * Verifica le credenziali di accesso di un utente contro i dati presenti nel file CSV e,
@@ -54,19 +52,19 @@ public class UtenteDAOCsv implements UtenteDAO {
         List<String> righe;
 
         try {
-            righe = Files.readAllLines(Paths.get(FILE_PATH));
+            righe = Files.readAllLines(Paths.get(ConstantsUtenteCsv.FILE_PATH));
         } catch (IOException e) {
-            throw new DAOException(ERRORE_LETTURA + " " + e.getMessage());
+            throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
         for (String riga : righe) {
             String[] colonne = riga.split(",");
             // Supponiamo che l'username sia nella colonna 0 e la password nella colonna 1
-            if (colonne[0].equals(credenzialiUtenteLogin.getUsername()) &&
+            if (colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME].equals(credenzialiUtenteLogin.getUsername()) &&
                     colonne[1].equals(credenzialiUtenteLogin.getPassword())) {
                 if(Objects.equals(colonne[4], "Paziente")) {
-                    utente = new Utente(colonne[0], colonne[2], colonne[3], UserType.PAZIENTE);
+                    utente = new Utente(colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME], colonne[2], colonne[3], UserType.PAZIENTE);
                 } else {
-                    utente = new Utente(colonne[0], colonne[2], colonne[3], UserType.PSICOLOGO);
+                    utente = new Utente(colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME], colonne[2], colonne[3], UserType.PSICOLOGO);
                 }
                 break;
             }
@@ -91,13 +89,13 @@ public class UtenteDAOCsv implements UtenteDAO {
         Utente infoUtente = null;
         List<String> righe;
         try {
-            righe = Files.readAllLines(Paths.get(FILE_PATH));
+            righe = Files.readAllLines(Paths.get(ConstantsUtenteCsv.FILE_PATH));
         } catch (IOException e) {
-            throw new DAOException(ERRORE_LETTURA + " " + e.getMessage());
+            throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
         for (String riga : righe) {
             String[] colonne = riga.split(",");
-            if (colonne[0].equals(utente.getUsername())) {
+            if (colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME].equals(utente.getUsername())) {
                 infoUtente = new Utente("", colonne[2], colonne[3], ""); // Crea l'oggetto Utente
                 break;
             }
@@ -128,17 +126,17 @@ public class UtenteDAOCsv implements UtenteDAO {
         List<String> righe;
 
         try {
-            righe = Files.readAllLines(Paths.get(FILE_PATH));
+            righe = Files.readAllLines(Paths.get(ConstantsUtenteCsv.FILE_PATH));
         } catch (IOException e) {
-            throw new DAOException(ERRORE_LETTURA + " " + e.getMessage());
+            throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
         for (String riga : righe) {
             String[] colonne = riga.split(",");
             if (colonne[4].equals("Psicologo")) { // Controlla il ruolo
-                if (usernamePsicologo != null && !colonne[0].equals(usernamePsicologo)) {
+                if (usernamePsicologo != null && !colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME].equals(usernamePsicologo)) {
                     continue;
                 }
-                Psicologo psicologo = new Psicologo(colonne[0], colonne[2], colonne[3], colonne[5]); // Crea l'oggetto Psicologo
+                Psicologo psicologo = new Psicologo(colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME], colonne[2], colonne[3], colonne[5]); // Crea l'oggetto Psicologo
                 listaPsicologi.add(psicologo); // Aggiungi alla lista
             }
         }
@@ -163,11 +161,11 @@ public class UtenteDAOCsv implements UtenteDAO {
      */
     @Override
     public List<Appuntamento> richiestaAppuntamentiInfoPaziente(List<Appuntamento> richiesteAppuntamenti) throws DAOException {
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(ConstantsUtenteCsv.FILE_PATH))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] colonne = line.split(",");
-                String username= colonne[0];
+                String username = colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME];
                 String nome = colonne[2];
                 String cognome = colonne[3];
                 String genere = colonne[5];
@@ -203,15 +201,16 @@ public class UtenteDAOCsv implements UtenteDAO {
         List<String> righe;
 
         try {
-            righe = Files.readAllLines(Paths.get(FILE_PATH));
+            righe = Files.readAllLines(Paths.get(ConstantsUtenteCsv.FILE_PATH));
         } catch (IOException e) {
-            throw new DAOException(ERRORE_LETTURA + " " + e.getMessage());
+            throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
+
         for (String riga : righe) {
-            String[] colonne = riga.split(",");
+            String[] colonne = riga.split(",",-1);
             // Assumendo che l'username si trovi nella prima colonna (0)
-            if (colonne[0].equals(paziente.getUsername())) {
-                infoUtente = new Utente("", colonne[2], colonne[3], colonne[5]); // Nome, Cognome, Genere
+            if (colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME].equals(paziente.getUsername())) {
+                infoUtente = new Utente(paziente.getUsername(), colonne[2], colonne[3], colonne[5]); // Nome, Cognome, Genere
                 break; // Esci dal ciclo una volta trovata l'informazione
             }
         }

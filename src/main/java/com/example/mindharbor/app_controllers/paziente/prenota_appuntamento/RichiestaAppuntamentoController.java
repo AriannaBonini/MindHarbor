@@ -2,7 +2,7 @@ package com.example.mindharbor.app_controllers.paziente.prenota_appuntamento;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Paziente;
@@ -30,7 +30,7 @@ public class RichiestaAppuntamentoController {
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
     public InfoUtenteBean getInfoPaziente() {return new SetInfoUtente().getInfo();}
 
-    public boolean controllaInformazioniPaziente(PazientiBean pazienteBean) throws DAOException {
+    public boolean controllaInformazioniPaziente(PazienteBean pazienteBean) throws DAOException {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         PazienteDAO pazienteDAO= daoFactoryFacade.getPazienteDAO();
         try {

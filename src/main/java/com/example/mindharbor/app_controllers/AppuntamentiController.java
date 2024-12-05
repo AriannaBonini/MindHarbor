@@ -2,7 +2,7 @@ package com.example.mindharbor.app_controllers;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.dao.AppuntamentoDAO;
 import com.example.mindharbor.dao.UtenteDAO;
@@ -70,7 +70,7 @@ public class AppuntamentiController {
                 AppuntamentiBean appuntamentiPsicologoBean = new AppuntamentiBean(
                         app.getData(),
                         app.getOra(),
-                        new PazientiBean(app.getPaziente().getNome(),app.getPaziente().getCognome())
+                        new PazienteBean(app.getPaziente().getNome(),app.getPaziente().getCognome())
                 );
 
                 appuntamentiPsicologoBeanList.add(appuntamentiPsicologoBean);

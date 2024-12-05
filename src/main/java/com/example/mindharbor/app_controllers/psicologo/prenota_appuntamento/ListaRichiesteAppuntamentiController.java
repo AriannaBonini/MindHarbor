@@ -2,7 +2,7 @@ package com.example.mindharbor.app_controllers.psicologo.prenota_appuntamento;
 
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.dao.AppuntamentoDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Appuntamento;
@@ -29,7 +29,7 @@ public class ListaRichiesteAppuntamentiController {
 
             for(Appuntamento ric: listaRichieste) {
                 AppuntamentiBean ricBean= new AppuntamentiBean(
-                        new PazientiBean(ric.getPaziente().getUsername(),ric.getPaziente().getNome(),ric.getPaziente().getCognome(),ric.getPaziente().getGenere()),
+                        new PazienteBean(ric.getPaziente().getUsername(),ric.getPaziente().getNome(),ric.getPaziente().getCognome(),ric.getPaziente().getGenere()),
                         ric.getIdAppuntamento(),
                         ric.getNotificaRichiesta());
 

@@ -1,7 +1,7 @@
 package com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia;
 
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.exceptions.DAOException;
@@ -22,7 +22,7 @@ public class ScegliTestController {
     public InfoUtenteBean getInfoPsicologo() {
         return new SetInfoUtente().getInfo();
     }
-    public PazientiBean getPazienteSelezionato() {return navigator.getPazienteBean();}
+    public PazienteBean getPazienteSelezionato() {return navigator.getPazienteBean();}
     public void eliminaPazienteSelezionato() {navigator.deletePazienteBean();}
 
     public boolean controlloNumTest(Integer contatore,String nomeTest) throws DAOException{

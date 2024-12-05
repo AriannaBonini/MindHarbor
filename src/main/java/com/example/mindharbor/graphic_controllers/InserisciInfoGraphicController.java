@@ -3,7 +3,7 @@ package com.example.mindharbor.graphic_controllers;
 import com.example.mindharbor.app_controllers.paziente.prenota_appuntamento.RichiestaAppuntamentoController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.beans.PazientiBean;
+import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -39,7 +39,7 @@ public class InserisciInfoGraphicController {
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private final RichiestaAppuntamentoController richiestaAppuntamentoController = new RichiestaAppuntamentoController();
     private AppuntamentiBean appuntamentoBean;
-    private PazientiBean pazienteBean;
+    private PazienteBean pazienteBean;
 
     public void initialize() {
         InfoUtenteBean infoUtenteBean = richiestaAppuntamentoController.getInfoPaziente();
@@ -60,7 +60,7 @@ public class InserisciInfoGraphicController {
             new LabelDuration().duration(info,"Compila tutti i campi");
         } else {
             try {
-                pazienteBean=new PazientiBean(campoNome.getText(), campoCognome.getText(), Integer.valueOf(campoAnni.getText()));
+                pazienteBean=new PazienteBean(campoNome.getText(), campoCognome.getText(), Integer.valueOf(campoAnni.getText()));
                 if (richiestaAppuntamentoController.controllaInformazioniPaziente(pazienteBean)) {
                     caricaListaPsicologi();
                 }else {
