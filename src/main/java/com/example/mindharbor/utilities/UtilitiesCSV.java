@@ -1,8 +1,13 @@
 package com.example.mindharbor.utilities;
 
 import com.example.mindharbor.exceptions.DAOException;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class UtilitiesCSV {
+    private static final Logger logger = LoggerFactory.getLogger(UtilitiesCSV.class);
     private UtilitiesCSV(){}
 
     public static final String IN_PROGRAMMA = "IN PROGRAMMA";
@@ -94,21 +100,27 @@ public class UtilitiesCSV {
      */
     public static int contaNotifichePaziente(String filePath, String username, int indicePaziente, int indiceNotifica) throws DAOException {
         int contatore = 0;
-        List<String> righeCSV;
 
-        try {
-            righeCSV = Files.readAllLines(Paths.get(filePath));
-        } catch (IOException e) {
+        try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
+            String[] colonne; // Array per contenere i dati di ogni riga
+
+            // Legge riga per riga
+            while ((colonne = reader.readNext()) != null) {
+                // Verifica che la riga abbia abbastanza colonne
+                if (colonne.length > Math.max(indicePaziente, indiceNotifica)) {
+                    // Controlla se la notifica è attiva per il paziente specifico
+                    if (colonne[indicePaziente].equals(username) && colonne[indiceNotifica].equals("1")) {
+                        contatore++;
+                    }
+                } else {
+                    String rigaMalformata = (colonne.length > 0) ? String.join(",", colonne) : "Riga vuota o nulla";
+                    logger.warn("Riga malformata: {}", rigaMalformata);
+                }
+            }
+        } catch (IOException | CsvValidationException e) {
             throw new DAOException("Errore nella lettura del file CSV: " + e.getMessage(), e);
         }
-        // Conteggio delle notifiche per il paziente
-        for (String riga : righeCSV) {
-            String[] colonne = riga.split(","); // Assumiamo che il CSV utilizzi la virgola come delimitatore
-            // Verifica se la riga corrisponde al paziente e se la notifica è attiva
-            if (colonne[indicePaziente].equals(username) && colonne[indiceNotifica].equals("1")) {
-                contatore++;
-            }
-        }
+
         return contatore;
     }
 }

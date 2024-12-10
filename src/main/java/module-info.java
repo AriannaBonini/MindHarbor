@@ -4,6 +4,7 @@ module com.example.mindharbor {
     requires java.sql;
     requires org.slf4j;
     requires wiremock.jre8.standalone;
+    requires com.opencsv;
 
     opens com.example.mindharbor to javafx.fxml;
     opens com.example.mindharbor.graphic_controllers to javafx.fxml;
