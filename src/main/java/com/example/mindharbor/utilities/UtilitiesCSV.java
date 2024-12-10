@@ -119,8 +119,9 @@ public class UtilitiesCSV {
             }
         } catch (IOException | CsvValidationException e) {
             throw new DAOException("Errore nella lettura del file CSV: " + e.getMessage(), e);
-        }
 
+        }
+// PORCO SATANA
         return contatore;
     }
 }
