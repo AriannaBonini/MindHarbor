@@ -81,8 +81,8 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * Se `tipo` è `false`, il metodo filtra gli appuntamenti per un paziente specifico.
      * </p>
      *
-     * @param user            Un oggetto {@link Utente} che rappresenta l'utente (psicologo o paziente) di cui si vogliono recuperare gli appuntamenti.
-     * @param selectedTabName Una stringa che indica la scheda selezionata ("IN PROGRAMMA" per appuntamenti futuri,
+     * @param utente            Un oggetto {@link Utente} che rappresenta l'utente (psicologo o paziente) di cui si vogliono recuperare gli appuntamenti.
+     * @param tabSelezionato Una stringa che indica la scheda selezionata ("IN PROGRAMMA" per appuntamenti futuri,
      *                        "PASSATI" per appuntamenti già avvenuti).
      * @param dataCorrente    La data corrente utilizzata per filtrare gli appuntamenti in base alla scheda selezionata.
      * @param tipo            Un booleano che determina se l'utente è uno psicologo (true) o un paziente (false).
@@ -90,25 +90,29 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * @throws IOException    Se si verifica un errore durante la lettura del file CSV.
      * @throws DAOException   Se si verifica un errore specifico durante l'elaborazione dei dati dal file CSV.
      */
-    private List<Appuntamento> leggiAppuntamentiDaCsv(Utente user, String selectedTabName, LocalDate dataCorrente, boolean tipo) throws IOException, DAOException {
+    private List<Appuntamento> leggiAppuntamentiDaCsv(Utente utente, String tabSelezionato, LocalDate dataCorrente, boolean tipo) throws IOException, DAOException {
         UtenteDAOCsv utenteDAOCsv = new UtenteDAOCsv();
         List<Appuntamento> appuntamenti = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(ConstantsAppuntamentoCsv.FILE_PATH))) {
-            UtilitiesCSV.scartaIntestazione(br);
-            String line;
+        // Utilizziamo il metodo leggiRigheDaCsv per leggere tutte le righe del file CSV
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
 
-            while ((line = br.readLine()) != null) {
-                String[] colonne = line.split(",");
-                if (isUserMatch(user, colonne, tipo)) {
-                    LocalDate dataAppuntamento = LocalDate.parse(colonne[ConstantsAppuntamentoCsv.INDICE_DATA]);
-                    if (isAppuntamentoValido(dataAppuntamento, dataCorrente, selectedTabName)) {
-                        Appuntamento appuntamento = creaAppuntamento(colonne, tipo, utenteDAOCsv);
-                        appuntamenti.add(appuntamento);
-                    }
+        // Itera attraverso le righe lette
+        for (String[] colonne : righe) {
+            // Verifica se l'utente corrisponde con i dati nella riga, utilizzando il tipo come filtro
+            if (TipoUtente(utente, colonne, tipo)) {
+                // Parsing della data dell'appuntamento
+                LocalDate dataAppuntamento = LocalDate.parse(colonne[ConstantsAppuntamentoCsv.INDICE_DATA]);
+
+                // Verifica se l'appuntamento è valido
+                if (AppuntamentoValido(dataAppuntamento, dataCorrente, tabSelezionato)) {
+                    // Crea l'appuntamento e aggiungilo alla lista
+                    Appuntamento appuntamento = creaAppuntamento(colonne, tipo, utenteDAOCsv);
+                    appuntamenti.add(appuntamento);
                 }
             }
         }
+
         return appuntamenti;
     }
 
@@ -120,15 +124,15 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * il metodo confronta l'username dello psicologo; se `false`, confronta l'username del paziente.
      * </p>
      *
-     * @param user   L'oggetto {@link Utente} di cui si vuole verificare la corrispondenza dell'username.
+     * @param utente   L'oggetto {@link Utente} di cui si vuole verificare la corrispondenza dell'username.
      * @param colonne Un array di stringhe contenente i valori delle colonne di un record CSV.
      * @param tipo   Un booleano che indica il tipo di utente. Se `true`, confronta lo psicologo; se `false`, confronta il paziente.
      * @return `true` se l'username dell'utente corrisponde a quello specificato nel CSV, `false` altrimenti.
      */
-    private boolean isUserMatch(Utente user, String[] colonne, boolean tipo) {
+    private boolean TipoUtente(Utente utente, String[] colonne, boolean tipo) {
         String usernamePaziente = colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE];
         String usernamePsicologo = colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO];
-        return tipo ? usernamePsicologo.equals(user.getUsername()) : usernamePaziente.equals(user.getUsername());
+        return tipo ? usernamePsicologo.equals(utente.getUsername()) : usernamePaziente.equals(utente.getUsername());
     }
 
     /**
@@ -145,7 +149,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * @param selectedTabName  Il nome della scheda selezionata ("IN PROGRAMMA" o "PASSATI").
      * @return `true` se l'appuntamento è valido in base ai criteri di verifica; `false` altrimenti.
      */
-    private boolean isAppuntamentoValido(LocalDate dataAppuntamento, LocalDate dataCorrente, String selectedTabName) {
+    private boolean AppuntamentoValido(LocalDate dataAppuntamento, LocalDate dataCorrente, String selectedTabName) {
         return (selectedTabName.equals(UtilitiesCSV.IN_PROGRAMMA) && dataAppuntamento.isAfter(dataCorrente)) ||
                 (selectedTabName.equals(UtilitiesCSV.PASSATI) && dataAppuntamento.isBefore(dataCorrente));
     }
@@ -181,26 +185,26 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     public void insertRichiestaAppuntamento(Appuntamento appuntamento) throws DAOException {
         // bisogna aggiungere i controlli se quella richiesta puo essere aggiunta.
 
-        // Apre il file CSV in modalità append
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ConstantsAppuntamentoCsv.FILE_PATH, true))) {
-            // Crea una stringa per il record da scrivere nel CSV
-            String nuovoRecord = String.join(",",
-                    String.valueOf(calcolaIDAppuntamento()),
-                    appuntamento.getData(),
-                    appuntamento.getOra(),
-                    appuntamento.getPaziente().getUsername(),
-                    appuntamento.getPsicologo().getUsername(),
-                    "0",
-                    "1",
-                    "0"
-            );
+        // Legge tutte le righe del CSV
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
 
-            // Scrive il record nel file CSV
-            bw.write(nuovoRecord);
-            bw.newLine(); // Aggiunge una nuova riga
-        } catch (IOException e) {
-            throw new DAOException(e.getMessage());
-        }
+        // Crea una nuova riga per l'appuntamento
+        String[] nuovoRecord = new String[] {
+                String.valueOf(calcolaIDAppuntamento()), // Calcolo ID unico per l'appuntamento
+                appuntamento.getData(),                  // Data dell'appuntamento
+                appuntamento.getOra(),                   // Ora dell'appuntamento
+                appuntamento.getPaziente().getUsername(),// Username del paziente
+                appuntamento.getPsicologo().getUsername(),// Username dello psicologo
+                ConstantsAppuntamentoCsv.RICHIESTA_IN_ATTESA,       // Stato iniziale
+                ConstantsAppuntamentoCsv.NOTIFICA_PSICOLOGO_ATTIVA,  // Notifica attiva per lo psicologo
+                ConstantsAppuntamentoCsv.NOTIFICA_PAZIENTE_NON_ATTIVA // Notifica non attiva per il paziente
+        };
+
+        // Aggiunge il nuovo record alla lista delle righe
+        righe.add(nuovoRecord);
+
+        // Scrive tutte le righe aggiornate nel file CSV
+        UtilitiesCSV.scriviRigheAggiornate(ConstantsAppuntamentoCsv.FILE_PATH, righe);
     }
 
     /**
@@ -378,12 +382,11 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      */
     @Override
     public void updateRichiesta(Appuntamento appuntamento) throws DAOException {
-        List<String> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
-        List<String> righeAggiornate = new ArrayList<>();
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> righeAggiornate = new ArrayList<>();
 
         // Aggiornamento dello stato dell'appuntamento
-        for (String riga : righe) {
-            String[] colonne = riga.split(","); // Supponiamo che il CSV utilizzi la virgola come delimitatore
+        for (String[] colonne : righe) {
 
             // Controlla se la riga corrisponde all'appuntamento che vogliamo aggiornare
             if (Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) == appuntamento.getIdAppuntamento()) {
@@ -392,7 +395,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
             }
 
             // Aggiungi la riga (aggiornata o meno) alla lista
-            righeAggiornate.add(String.join(",", colonne));
+            righeAggiornate.add(colonne);
         }
 
         // Scrittura delle righe aggiornate nel file CSV

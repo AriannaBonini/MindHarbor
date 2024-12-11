@@ -6,12 +6,7 @@ import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.user_type.UserType;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import com.example.mindharbor.utilities.UtilitiesCSV;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,27 +44,31 @@ public class UtenteDAOCsv implements UtenteDAO {
     @Override
     public Utente trovaUtente(Utente credenzialiUtenteLogin) throws DAOException {
         Utente utente = null;
-        List<String> righe;
+        List<String[]> righe;
 
         try {
-            righe = Files.readAllLines(Paths.get(ConstantsUtenteCsv.FILE_PATH));
-        } catch (IOException e) {
+            // Leggi tutte le righe del CSV utilizzando CSVReader
+            righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH);
+        } catch (DAOException e) {
             throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
-        for (String riga : righe) {
-            String[] colonne = riga.split(",");
-            // Supponiamo che l'username sia nella colonna 0 e la password nella colonna 1
+
+        // Itera attraverso le righe del file CSV
+        for (String[] colonne : righe) {
+            // Controlla se l'username e la password corrispondono
             if (colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME].equals(credenzialiUtenteLogin.getUsername()) &&
-                    colonne[1].equals(credenzialiUtenteLogin.getPassword())) {
-                if(Objects.equals(colonne[4], "Paziente")) {
-                    utente = new Utente(colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME], colonne[2], colonne[3], UserType.PAZIENTE);
+                    colonne[ConstantsUtenteCsv.INDICE_UTENTE_PASSWORD].equals(credenzialiUtenteLogin.getPassword())) {
+                // Se il tipo di utente è "Paziente" o "Psicologo", crea l'oggetto Utente
+                if(Objects.equals(colonne[ConstantsUtenteCsv.INDICE_UTENTE_CATEGORIA], "Paziente")) {
+                    utente = new Utente(colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME], colonne[ConstantsUtenteCsv.INDICE_UTENTE_NOME], colonne[ConstantsUtenteCsv.INDICE_UTENTE_COGNOME], UserType.PAZIENTE);
                 } else {
-                    utente = new Utente(colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME], colonne[2], colonne[3], UserType.PSICOLOGO);
+                    utente = new Utente(colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME], colonne[ConstantsUtenteCsv.INDICE_UTENTE_NOME], colonne[ConstantsUtenteCsv.INDICE_UTENTE_COGNOME], UserType.PSICOLOGO);
                 }
-                break;
+                break;  // Interrompe il ciclo se l'utente è stato trovato
             }
         }
-        return utente;
+
+        return utente;  // Ritorna l'utente trovato o null se non esiste
     }
 
     /**
@@ -87,19 +86,25 @@ public class UtenteDAOCsv implements UtenteDAO {
     @Override
     public Utente trovaNomeCognome(Utente utente) throws DAOException {
         Utente infoUtente = null;
-        List<String> righe;
+        List<String[]> righe;
+
+        // Leggi le righe dal CSV utilizzando il metodo che usa CSVReader
         try {
-            righe = Files.readAllLines(Paths.get(ConstantsUtenteCsv.FILE_PATH));
-        } catch (IOException e) {
+            righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH); // Chiamata al metodo che usa CSVReader
+        } catch (DAOException e) {
             throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
-        for (String riga : righe) {
-            String[] colonne = riga.split(",");
+
+        // Cerca l'utente nella lista delle righe lette
+        for (String[] colonne : righe) {
+            // Verifica se l'username corrisponde
             if (colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME].equals(utente.getUsername())) {
-                infoUtente = new Utente("", colonne[2], colonne[3], ""); // Crea l'oggetto Utente
+                // Crea l'oggetto Utente con il nome e il cognome trovati
+                infoUtente = new Utente("", colonne[ConstantsUtenteCsv.INDICE_UTENTE_NOME], colonne[ConstantsUtenteCsv.INDICE_UTENTE_COGNOME], "");
                 break;
             }
         }
+
         return infoUtente;
     }
 
@@ -123,23 +128,27 @@ public class UtenteDAOCsv implements UtenteDAO {
     @Override
     public List<Psicologo> listaUtentiDiTipoPsicologo(String usernamePsicologo) throws DAOException {
         List<Psicologo> listaPsicologi = new ArrayList<>();
-        List<String> righe;
+        List<String[]> righe;
 
         try {
-            righe = Files.readAllLines(Paths.get(ConstantsUtenteCsv.FILE_PATH));
-        } catch (IOException e) {
+            // Leggi le righe dal CSV usando CSVReader
+            righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH);  // Metodo che usa CSVReader
+        } catch (DAOException e) {
             throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
-        for (String riga : righe) {
-            String[] colonne = riga.split(",");
-            if (colonne[4].equals("Psicologo")) { // Controlla il ruolo
+
+        // Itera attraverso le righe lette
+        for (String[] colonne : righe) {
+            if (colonne[ConstantsUtenteCsv.INDICE_UTENTE_CATEGORIA].equals("Psicologo")) { // Controlla se il ruolo è "Psicologo"
                 if (usernamePsicologo != null && !colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME].equals(usernamePsicologo)) {
-                    continue;
+                    continue; // Salta gli utenti che non corrispondono al nome utente richiesto
                 }
-                Psicologo psicologo = new Psicologo(colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME], colonne[2], colonne[3], colonne[5]); // Crea l'oggetto Psicologo
-                listaPsicologi.add(psicologo); // Aggiungi alla lista
+                // Crea l'oggetto Psicologo e aggiungilo alla lista
+                Psicologo psicologo = new Psicologo(colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME], colonne[ConstantsUtenteCsv.INDICE_UTENTE_NOME], colonne[ConstantsUtenteCsv.INDICE_UTENTE_COGNOME], colonne[ConstantsUtenteCsv.INDICE_UTENTE_GENERE]);
+                listaPsicologi.add(psicologo);
             }
         }
+
         return listaPsicologi;
     }
 
@@ -161,25 +170,30 @@ public class UtenteDAOCsv implements UtenteDAO {
      */
     @Override
     public List<Appuntamento> richiestaAppuntamentiInfoPaziente(List<Appuntamento> richiesteAppuntamenti) throws DAOException {
-        try (BufferedReader br = new BufferedReader(new FileReader(ConstantsUtenteCsv.FILE_PATH))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] colonne = line.split(",");
+        try {
+            // Leggi le righe dal CSV usando CSVReader
+            List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH);
+
+            // Itera attraverso le righe lette
+            for (String[] colonne : righe) {
                 String username = colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME];
-                String nome = colonne[2];
-                String cognome = colonne[3];
-                String genere = colonne[5];
-                for(Appuntamento app: richiesteAppuntamenti) {
-                    if(username.equals(app.getPaziente().getUsername())) {
+                String nome = colonne[ConstantsUtenteCsv.INDICE_UTENTE_NOME];
+                String cognome = colonne[ConstantsUtenteCsv.INDICE_UTENTE_COGNOME];
+                String genere = colonne[ConstantsUtenteCsv.INDICE_UTENTE_GENERE];
+
+                // Per ogni appuntamento, controlla se l'utente corrisponde
+                for (Appuntamento app : richiesteAppuntamenti) {
+                    if (username.equals(app.getPaziente().getUsername())) {
+                        // Aggiorna le informazioni del paziente nell'appuntamento
                         app.getPaziente().setNome(nome);
                         app.getPaziente().setCognome(cognome);
                         app.getPaziente().setGenere(genere);
-                        break;
+                        break; // Esce dal ciclo se l'utente è stato trovato
                     }
                 }
             }
-        } catch (IOException e) {
-            throw new DAOException(e.getMessage());
+        } catch (DAOException e) {
+            throw new DAOException("Errore nella lettura del file CSV: " + e.getMessage(), e);
         }
         return richiesteAppuntamenti;
     }
@@ -198,22 +212,24 @@ public class UtenteDAOCsv implements UtenteDAO {
     @Override
     public Utente trovaInfoUtente(Utente paziente) throws DAOException {
         Utente infoUtente = null;
-        List<String> righe;
 
         try {
-            righe = Files.readAllLines(Paths.get(ConstantsUtenteCsv.FILE_PATH));
-        } catch (IOException e) {
-            throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
+            // Leggi le righe dal CSV usando CSVReader
+            List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH);
+
+            // Itera attraverso le righe lette
+            for (String[] colonne : righe) {
+                // Assumendo che l'username si trovi nella colonna indicata
+                if (colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME].equals(paziente.getUsername())) {
+                    // Crea l'oggetto Utente con le informazioni trovate
+                    infoUtente = new Utente(paziente.getUsername(), colonne[ConstantsUtenteCsv.INDICE_UTENTE_NOME], colonne[ConstantsUtenteCsv.INDICE_UTENTE_COGNOME], colonne[ConstantsUtenteCsv.INDICE_UTENTE_GENERE]); // Nome, Cognome, Genere
+                    break; // Esci dal ciclo una volta trovata l'informazione
+                }
+            }
+        } catch (DAOException e) {
+            throw new DAOException("Errore nella lettura del file CSV: " + e.getMessage(), e);
         }
 
-        for (String riga : righe) {
-            String[] colonne = riga.split(",",-1);
-            // Assumendo che l'username si trovi nella prima colonna (0)
-            if (colonne[ConstantsUtenteCsv.INDICE_UTENTE_USERNAME].equals(paziente.getUsername())) {
-                infoUtente = new Utente(paziente.getUsername(), colonne[2], colonne[3], colonne[5]); // Nome, Cognome, Genere
-                break; // Esci dal ciclo una volta trovata l'informazione
-            }
-        }
         return infoUtente;
     }
 }

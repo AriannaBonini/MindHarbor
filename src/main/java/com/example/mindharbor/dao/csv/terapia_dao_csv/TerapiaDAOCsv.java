@@ -7,75 +7,73 @@ import com.example.mindharbor.model.Terapia;
 import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.utilities.UtilitiesCSV;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.mindharbor.utilities.UtilitiesCSV.leggiRigheDaCsv;
+import static com.example.mindharbor.utilities.UtilitiesCSV.scriviRigheAggiornate;
+
 public class TerapiaDAOCsv implements TerapiaDAO {
+
+    private static final Logger logger = LoggerFactory.getLogger(TerapiaDAOCsv.class);
 
     @Override
     public void insertTerapia(Terapia terapia) throws DAOException {
-        List<String> righeCSV;
-
         // Creazione della nuova riga da aggiungere al CSV
-        String nuovaRiga = String.join(",",
+        String[] nuovaRiga = {
                 terapia.getTestPsicologico().getPsicologo().getUsername(),
                 terapia.getTestPsicologico().getPaziente().getUsername(),
                 terapia.getTerapia(),
                 new java.sql.Date(terapia.getDataTerapia().getTime()).toString(), // Data terapia
                 new java.sql.Date(terapia.getTestPsicologico().getData().getTime()).toString(), // Data test
                 String.valueOf(1) // Notifica paziente (DEFAULT)
-        );
+        };
 
-        // Lettura delle righe esistenti nel CSV
-        Path path = Paths.get(ConstantsTerapiaCsv.FILE_PATH);
-        try {
-            righeCSV = Files.readAllLines(path);
-        } catch (IOException e) {
-            throw new DAOException(ConstantsTerapiaCsv.ERRORE_LETTURA + " " + e.getMessage());
-        }
+        // Lettura delle righe esistenti nel CSV tramite la funzione leggiRigheDaCsv
+        List<String[]> righeCSV = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH);
 
         // Aggiungi la nuova riga
         righeCSV.add(nuovaRiga);
 
-        // Scrittura delle righe aggiornate nel file CSV
-        try {
-            Files.write(path, righeCSV);
-        } catch (IOException e) {
-            throw new DAOException(ConstantsTerapiaCsv.ERRORE_SCRITTURA + " " + e.getMessage());
-        }
+        // Scrittura delle righe aggiornate nel file CSV tramite la funzione scriviRigheAggiornate
+        scriviRigheAggiornate(ConstantsTerapiaCsv.FILE_PATH, righeCSV);
     }
 
     @Override
     public List<Terapia> getTerapie(Utente utente) throws DAOException {
         List<Terapia> terapie = new ArrayList<>();
-        List<String> righeCSV;
 
-        // Lettura delle righe dal file CSV
-        try {
-            righeCSV = Files.readAllLines(Paths.get(ConstantsTerapiaCsv.FILE_PATH));
-        } catch (IOException e) {
-            throw new DAOException(ConstantsTerapiaCsv.ERRORE_LETTURA + " " + e.getMessage());
-        }
+        // Utilizzo del metodo leggiRigheDaCsv per leggere tutte le righe dal file CSV
+        List<String[]> righeCsv = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH);
 
-        // Elaborazione delle righe lette
-        for (String riga : righeCSV) {
-            String[] colonne = riga.split(","); // Supponiamo che il CSV utilizzi la virgola come delimitatore
+        // Elabora le righe lette dal CSV
+        for (String[] colonne : righeCsv) {
+            // Verifica che la riga abbia abbastanza colonne
+            if (colonne.length > Math.max(
+                    ConstantsTerapiaCsv.INDICE_PAZIENTE,
+                    Math.max(ConstantsTerapiaCsv.INDICE_PSICOLOGO,
+                            Math.max(ConstantsTerapiaCsv.INDICE_TERAPIA, ConstantsTerapiaCsv.INDICE_DATA_TERAPIA)))) {
 
-            // Controllo se l'utente è il paziente
-            if (colonne[ConstantsTerapiaCsv.INDICE_PAZIENTE].equals(utente.getUsername())) {
-                Terapia terapia = new Terapia(
-                        new TestPsicologico(new Psicologo(colonne[ConstantsTerapiaCsv.INDICE_PSICOLOGO])),
-                        colonne[ConstantsTerapiaCsv.INDICE_TERAPIA],
-                        java.sql.Date.valueOf(colonne[ConstantsTerapiaCsv.INDICE_DATA_TERAPIA])
-                );
-                terapie.add(terapia);
+                // Controllo se l'utente è il paziente
+                if (colonne[ConstantsTerapiaCsv.INDICE_PAZIENTE].equals(utente.getUsername())) {
+                    // Crea un'istanza di Terapia e la aggiunge alla lista
+                    Terapia terapia = new Terapia(
+                            new TestPsicologico(new Psicologo(colonne[ConstantsTerapiaCsv.INDICE_PSICOLOGO])),
+                            colonne[ConstantsTerapiaCsv.INDICE_TERAPIA],
+                            java.sql.Date.valueOf(colonne[ConstantsTerapiaCsv.INDICE_DATA_TERAPIA])
+                    );
+                    terapie.add(terapia);
+                }
+            } else {
+                // Gestione delle righe malformattate
+                String rigaMalformata = (colonne.length > 0) ? String.join(",", colonne) : "Riga vuota o nulla";
+                logger.warn("Riga malformata: {}", rigaMalformata);
             }
         }
+
+        // Aggiorna lo stato della notifica del paziente
         aggiornaStatoNotificaPaziente(utente);
         return terapie;
     }
@@ -97,12 +95,11 @@ public class TerapiaDAOCsv implements TerapiaDAO {
      * @throws DAOException Se si verifica un errore durante la lettura o la scrittura del file CSV.
      */
     private void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
-        List<String> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH);
-        List<String> righeAggiornate = new ArrayList<>();
+        List<String[]> righeCSV = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH);
+        List<String[]> righeAggiornate = new ArrayList<>();
 
         // Aggiornamento delle righe esistenti
-        for (String riga : righeCSV) {
-            String[] colonne = riga.split(","); // Supponiamo che il CSV utilizzi la virgola come delimitatore
+        for (String[] colonne : righeCSV) { // Ogni riga è già un array di stringhe
 
             // Controlla se la riga corrisponde all'utente paziente
             if (colonne[ConstantsTerapiaCsv.INDICE_PAZIENTE].equals(utente.getUsername())) {
@@ -111,11 +108,11 @@ public class TerapiaDAOCsv implements TerapiaDAO {
             }
 
             // Aggiungi la riga (aggiornata o meno) alla lista
-            righeAggiornate.add(String.join(",", colonne));
+            righeAggiornate.add(colonne); // Aggiungi direttamente l'array di stringhe
         }
 
         // Scrittura delle righe aggiornate nel file CSV
-        UtilitiesCSV.scriviRigheAggiornate(ConstantsTerapiaCsv.FILE_PATH, righeAggiornate);
+        scriviRigheAggiornate(ConstantsTerapiaCsv.FILE_PATH, righeAggiornate);
     }
 
     @Override

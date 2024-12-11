@@ -73,10 +73,8 @@ public class LoginGraphicController {
     public void homePaziente() {
         try {
             Stage loginstage = (Stage) accediButton.getScene().getWindow();
-            System.out.println("Caricamento homepage paziente: " + usernameTextField.getText());
             loginstage.close();
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
-            System.out.println("Homepage paziente caricata con successo.");
         } catch (IOException e) {
             logger.error("Impossibile caricare la Home del paziente", e);
         }

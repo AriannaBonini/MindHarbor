@@ -2,16 +2,21 @@ package com.example.mindharbor.utilities;
 
 import com.example.mindharbor.exceptions.DAOException;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class UtilitiesCSV {
@@ -51,12 +56,17 @@ public class UtilitiesCSV {
      * @return Una lista di stringhe, dove ciascuna stringa rappresenta una riga del file CSV.
      * @throws DAOException Se si verifica un errore durante la lettura del file CSV.
      */
-    public static List<String> leggiRigheDaCsv(String filePath) throws DAOException {
-        List<String> righe;
-        Path path = Paths.get(filePath);
-        try {
-            righe = Files.readAllLines(path);
-        } catch (IOException e) {
+    public static List<String[]> leggiRigheDaCsv(String filePath) throws DAOException {
+        List<String[]> righe = new ArrayList<>();
+        try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
+            reader.readNext();  // Questo legge e scarta la prima riga (intestazione)
+
+            String[] colonne;
+            while ((colonne = reader.readNext()) != null) {
+                // Unisci i valori delle colonne in una riga (unendo i valori con la virgola)
+                righe.add(colonne);
+            }
+        } catch (IOException | CsvValidationException e) {
             throw new DAOException("Errore nella lettura del file CSV: " + e.getMessage(), e);
         }
         return righe;
@@ -74,10 +84,12 @@ public class UtilitiesCSV {
      * @param righeAggiornate Una lista di stringhe, dove ciascuna stringa rappresenta una riga da scrivere nel file CSV.
      * @throws DAOException Se si verifica un errore durante la scrittura nel file CSV.
      */
-    public static void scriviRigheAggiornate(String filePath, List<String> righeAggiornate) throws DAOException {
-        Path path = Paths.get(filePath);
-        try {
-            Files.write(path, righeAggiornate);
+    public static void scriviRigheAggiornate(String filePath, List<String[]> righeAggiornate) throws DAOException {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(filePath))) {
+            // Scrivi ogni riga (che è una singola stringa) nel CSV
+            for (String[] riga : righeAggiornate) {
+                writer.writeNext(riga);  // Scrivi la riga come un array di stringhe, dove ogni stringa è una colonna
+            }
         } catch (IOException e) {
             throw new DAOException("Errore nella scrittura nel file CSV: " + e.getMessage(), e);
         }
@@ -101,27 +113,24 @@ public class UtilitiesCSV {
     public static int contaNotifichePaziente(String filePath, String username, int indicePaziente, int indiceNotifica) throws DAOException {
         int contatore = 0;
 
-        try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
-            String[] colonne; // Array per contenere i dati di ogni riga
+        // Ottieni le righe dal CSV
+        List<String[]> righeCSV = leggiRigheDaCsv(filePath);
 
-            // Legge riga per riga
-            while ((colonne = reader.readNext()) != null) {
-                // Verifica che la riga abbia abbastanza colonne
-                if (colonne.length > Math.max(indicePaziente, indiceNotifica)) {
-                    // Controlla se la notifica è attiva per il paziente specifico
-                    if (colonne[indicePaziente].equals(username) && colonne[indiceNotifica].equals("1")) {
-                        contatore++;
-                    }
-                } else {
-                    String rigaMalformata = (colonne.length > 0) ? String.join(",", colonne) : "Riga vuota o nulla";
-                    logger.warn("Riga malformata: {}", rigaMalformata);
+        // Scorri tutte le righe
+        for (String[] colonne : righeCSV) {
+            // Verifica che la riga abbia abbastanza colonne
+            if (colonne.length > Math.max(indicePaziente, indiceNotifica)) {
+
+                // Controlla se la notifica è attiva per il paziente specifico
+                if (colonne[indicePaziente].equals(username) && colonne[indiceNotifica].equals("1")) {
+                    contatore++;
                 }
+            } else {
+                String rigaMalformata = (colonne.length > 0) ? String.join(",", colonne) : "Riga vuota o nulla";
+                logger.warn("Riga malformata: {}", rigaMalformata);
             }
-        } catch (IOException | CsvValidationException e) {
-            throw new DAOException("Errore nella lettura del file CSV: " + e.getMessage(), e);
-
         }
-// PORCO SATANA
+
         return contatore;
     }
 }

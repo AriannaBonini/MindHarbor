@@ -1,9 +1,9 @@
 "Età","Diagnosi","Paziente_Username","Username_Psicologo"
-27,,Gargamella,Sph97
-35,Alcolismo di secondo grado,Giacomino,Ciccio
-27,,Ginny_98,Ciccio
-27,Comportamento aggressivo passivo,IlSole,Mars
-31,Isolamento sociale,Jo_92,Ciccio
-35,Depressione Acuta,Luigi@67,Mars
-29,,Ros98,
-31,,Susy,Sph97
+27,,"Gargamella","Sph97"
+35,"Alcolismo di secondo grado","Giacomino","Ciccio"
+27,,"Ginny_98","Ciccio"
+27,"Comportamento aggressivo passivo","IlSole","Mars"
+31,"Isolamento sociale","Jo_92","Ciccio"
+35,"Depressione Acuta","Luigi@67","Mars"
+29,,"Ros98",
+31,,"Susy","Sph97"
