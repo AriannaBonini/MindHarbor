@@ -39,11 +39,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         List<Appuntamento> appuntamentoPsicologoList;
         LocalDate dataCorrente = LocalDate.now();
 
-        try {
-            appuntamentoPsicologoList = leggiAppuntamentiDaCsv(paziente, selectedTabName, dataCorrente, false);
-        } catch (IOException e) {
-            throw new DAOException(e.getMessage());
-        }
+        appuntamentoPsicologoList = leggiAppuntamentiDaCsv(paziente, selectedTabName, dataCorrente, false);
         return appuntamentoPsicologoList;
     }
 
@@ -65,11 +61,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         List<Appuntamento> appuntamentoPsicologoList;
         LocalDate dataCorrente = LocalDate.now();
 
-        try {
-            appuntamentoPsicologoList = leggiAppuntamentiDaCsv(psicologo, selectedTabName, dataCorrente, true);
-        } catch (IOException e) {
-            throw new DAOException(e.getMessage());
-        }
+        appuntamentoPsicologoList = leggiAppuntamentiDaCsv(psicologo, selectedTabName, dataCorrente, true);
         return appuntamentoPsicologoList;
     }
 
@@ -90,7 +82,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * @throws IOException    Se si verifica un errore durante la lettura del file CSV.
      * @throws DAOException   Se si verifica un errore specifico durante l'elaborazione dei dati dal file CSV.
      */
-    private List<Appuntamento> leggiAppuntamentiDaCsv(Utente utente, String tabSelezionato, LocalDate dataCorrente, boolean tipo) throws IOException, DAOException {
+    private List<Appuntamento> leggiAppuntamentiDaCsv(Utente utente, String tabSelezionato, LocalDate dataCorrente, boolean tipo) throws DAOException {
         UtenteDAOCsv utenteDAOCsv = new UtenteDAOCsv();
         List<Appuntamento> appuntamenti = new ArrayList<>();
 
