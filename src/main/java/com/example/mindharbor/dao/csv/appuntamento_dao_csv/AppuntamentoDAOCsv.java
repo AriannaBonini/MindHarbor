@@ -11,11 +11,10 @@ import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AppuntamentoDAOCsv implements AppuntamentoDAO {
 
@@ -211,16 +210,15 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      */
     private Integer calcolaIDAppuntamento() throws DAOException {
         int maxId = 0;
-        try (BufferedReader br = new BufferedReader(new FileReader(ConstantsAppuntamentoCsv.FILE_PATH))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] colonne = line.split(","); // Assumiamo che il CSV sia separato da virgole
-                int id = Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]);
+        try {
+            List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+            for (String[] riga : righe) {
+                int id = Integer.parseInt(riga[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]);
                 if (id > maxId) {
                     maxId = id; // Aggiorna il massimo ID trovato
                 }
             }
-        } catch (IOException e) {
+        } catch (DAOException e) {
             throw new DAOException(e.getMessage());
         }
         return maxId + 1;
@@ -229,25 +227,14 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     @Override
     public Integer getNumRicAppDaNotificare(Utente utente) throws DAOException {
         int count = 0;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(ConstantsAppuntamentoCsv.FILE_PATH))) {
-            UtilitiesCSV.scartaIntestazione(br);
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] colonne = line.split(",");
-
-                // Verifica se l'utente è un paziente e se l'username corrisponde
-                if (utente.getUserType().equals(UserType.PAZIENTE) && colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE].equals("1")) {
-                    count++;
-                }
-
-                // Verifica Se l'utente è uno psicologo, controlla se l'username corrisponde
-                if (utente.getUserType().equals(UserType.PSICOLOGO) && colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PSICOLOGO].equals("1")) {
-                    count++;
-                }
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        for (String[] colonne : righe) {
+            if (utente.getUserType().equals(UserType.PAZIENTE) && colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE].equals("1")) {
+                count++;
             }
-        } catch (IOException e) {
-            throw new DAOException(e.getMessage());
+            if (utente.getUserType().equals(UserType.PSICOLOGO) && colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PSICOLOGO].equals("1")) {
+                count++;
+            }
         }
         return count;
     }
@@ -267,12 +254,11 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      */
     @Override
     public List<Appuntamento> trovaRichiesteAppuntamento(Utente utente) throws DAOException {
-        List<Appuntamento> richiesteAppuntamento = new ArrayList<>();
+            List<Appuntamento> richiesteAppuntamento = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(ConstantsAppuntamentoCsv.FILE_PATH))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] colonne = line.split(",");
+            List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+
+            for(String[] colonne: risultati) {
                 // Controlla se l'username dello psicologo corrisponde e se lo stato appuntamento è pari a 0
                 if (colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(utente.getUsername()) && Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_STATO_APPUNTAMENTO]) == 0) {
                     Appuntamento richiesta = new Appuntamento(
@@ -283,11 +269,9 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
                     richiesteAppuntamento.add(richiesta);
                 }
             }
-        } catch (IOException e) {
-            throw new DAOException(e.getMessage());
-        }
-        richiesteAppuntamento = new UtenteDAOCsv().richiestaAppuntamentiInfoPaziente(richiesteAppuntamento);
-        return richiesteAppuntamento;
+
+            richiesteAppuntamento = new UtenteDAOCsv().richiestaAppuntamentiInfoPaziente(richiesteAppuntamento);
+            return richiesteAppuntamento;
     }
 
     /**
@@ -304,53 +288,34 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      */
     @Override
     public void updateStatoNotifica(Appuntamento richiestaAppuntamento) throws DAOException {
-        StringBuilder recordAggiornato = new StringBuilder();
+        List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> recordAggiornati = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(ConstantsAppuntamentoCsv.FILE_PATH))) {
-            // Scarta l'intestazione
-            UtilitiesCSV.scartaIntestazione(br);
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] colonne = line.split(",");
-                if (Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) == richiestaAppuntamento.getIdAppuntamento()) {
-                    colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PSICOLOGO] = "0"; // Imposta stato notifica psicologo a 0
-                }
-                recordAggiornato.append(String.join(",", colonne)).append(System.lineSeparator());
+        for(String[] colonne: risultati) {
+            if (Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) == richiestaAppuntamento.getIdAppuntamento()) {
+                colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PSICOLOGO] = "0"; // bisogna rimuovere la stringa "0" e usare una costante
             }
-        } catch (IOException e) {
-            throw new DAOException(ConstantsAppuntamentoCsv.ERRORE_LETTURA + " " + e.getMessage());
+            recordAggiornati.add(colonne);
         }
-        // Scrittura delle righe aggiornate nel file CSV
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ConstantsAppuntamentoCsv.FILE_PATH))) {
-            writer.write(recordAggiornato.toString());
-        } catch (IOException e) {
-            throw new DAOException(ConstantsAppuntamentoCsv.ERRORE_SCRITTURA + " " + e.getMessage());
-        }
+
+        UtilitiesCSV.scriviRigheAggiornate(ConstantsAppuntamentoCsv.FILE_PATH, recordAggiornati);
     }
 
     @Override
     public Appuntamento getInfoRichiesta(Appuntamento richiestaAppuntamento) throws DAOException {
         Appuntamento richiesta = null;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(ConstantsAppuntamentoCsv.FILE_PATH))) {
+        List<String[]> recordLetti = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
 
-            UtilitiesCSV.scartaIntestazione(br);
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] colonne = line.split(",");
-
-                // Verifica se l'ID corrisponde
-                if (colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO].equals(String.valueOf(richiestaAppuntamento.getIdAppuntamento()))) {
-                    String data = colonne[ConstantsAppuntamentoCsv.INDICE_DATA];
-                    String ora = colonne[ConstantsAppuntamentoCsv.INDICE_ORA];
-
-                    richiesta = new Appuntamento(data, ora);
-                    break; // Esci dal ciclo una volta trovata la richiesta
-                }
+        for(String[] colonne : recordLetti) {
+            if(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO].equals(String.valueOf(richiestaAppuntamento.getIdAppuntamento()))) {
+                String data = colonne[ConstantsAppuntamentoCsv.INDICE_DATA];
+                String ora = colonne[ConstantsAppuntamentoCsv.INDICE_ORA];
+                richiesta = new Appuntamento(data, ora);
+                break;
             }
-        } catch (IOException e) {
-            throw new DAOException(e.getMessage());
         }
+
         return richiesta;
     }
 
@@ -400,140 +365,83 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     @Override
     public void eliminaRichiesteDiAppuntamentoPerAltriPsicologi(Appuntamento appuntamento) throws DAOException {
         // Leggi tutte le righe del file CSV
-        List<String> righe;
-        try {
-            righe = Files.readAllLines(Paths.get(ConstantsAppuntamentoCsv.FILE_PATH));
-        } catch (IOException e) {
-            throw new DAOException(ConstantsAppuntamentoCsv.ERRORE_LETTURA + " " + e.getMessage());
-        }
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
 
-        // Stringa per costruire il nuovo contenuto del file
-        StringBuilder nuovoContenuto = new StringBuilder();
-
-        // Filtra le righe che devono essere mantenute
-        for (String riga : righe) {
-            String[] colonne = riga.split(",");
-
+        // Lista per memorizzare le righe aggiornate
+        List<String[]> righeAggiornate = righe.stream().filter(colonne -> {
             // Controlla se il nome utente del paziente corrisponde e se il nome utente dello psicologo è diverso
-            if (colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(appuntamento.getPaziente().getUsername()) && !colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(appuntamento.getPsicologo().getUsername())) {
-                continue;
-            }
-
-            nuovoContenuto.append(String.join(",", colonne)).append(System.lineSeparator());
-        }
+            return !colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(appuntamento.getPaziente().getUsername())
+                    || colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(appuntamento.getPsicologo().getUsername());
+        }).collect(Collectors.toList());
 
         // Scrivi il contenuto aggiornato nel file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ConstantsAppuntamentoCsv.FILE_PATH))) {
-            writer.write(nuovoContenuto.toString());
-        } catch (IOException e) {
-            throw new DAOException(ConstantsAppuntamentoCsv.ERRORE_SCRITTURA + " " + e.getMessage());
-        }
+        UtilitiesCSV.scriviRigheAggiornate(ConstantsAppuntamentoCsv.FILE_PATH, righeAggiornate);
     }
 
     @Override
     public void eliminaRichiesta(Appuntamento appuntamento) throws DAOException {
         // Leggi tutte le righe del file CSV
-        List<String> righe;
-        try {
-            righe = Files.readAllLines(Paths.get(ConstantsAppuntamentoCsv.FILE_PATH));
-        } catch (IOException e) {
-            throw new DAOException(ConstantsAppuntamentoCsv.ERRORE_LETTURA + " " + e.getMessage());
-        }
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
 
-        // Stringa per costruire il nuovo contenuto del file
-        StringBuilder nuovoContenuto = new StringBuilder();
-
-        // Filtra le righe che devono essere mantenute
-        for (String riga : righe) {
-            String[] colonne = riga.split(",");
-
-            // Se l'ID dell'appuntamento corrisponde, salta questa riga
-            if (Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) == appuntamento.getIdAppuntamento()) {
-                continue; // Salta questa riga
-            }
-
-            // Mantieni questa riga
-            nuovoContenuto.append(String.join(",", colonne)).append(System.lineSeparator());
-        }
+        // Usa lo streaming e il metodo filter per ottenere una lista di tutti gli appuntamenti eccetto quello da eliminare
+        List<String[]> righeAggiornate = righe.stream().filter(colonne ->
+                        Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) != appuntamento.getIdAppuntamento())
+                .collect(Collectors.toList());
 
         // Scrivi il contenuto aggiornato nel file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ConstantsAppuntamentoCsv.FILE_PATH))) {
-            writer.write(nuovoContenuto.toString());
-        } catch (IOException e) {
-            throw new DAOException(ConstantsAppuntamentoCsv.ERRORE_SCRITTURA + " " + e.getMessage());
-        }
+        UtilitiesCSV.scriviRigheAggiornate(ConstantsAppuntamentoCsv.FILE_PATH, righeAggiornate);
     }
 
     @Override
     public boolean getDisp(Integer idAppuntamento, Utente utente) throws DAOException {
 
         // Leggi tutte le righe del file CSV
-        List<String> righe;
-        try {
-            righe = Files.readAllLines(Paths.get(ConstantsAppuntamentoCsv.FILE_PATH));
-        } catch (IOException e) {
-            throw new DAOException(ConstantsAppuntamentoCsv.ERRORE_LETTURA + " " + e.getMessage());
-        }
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
 
         // Verifica la disponibilità dell'appuntamento
-        for (String riga : righe) {
-            String[] colonne = riga.split(",");
+        for (String[] colonne : righe) {
 
             // Controlla se l'appuntamento corrisponde e se è associato all'utente
             if (Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) == idAppuntamento && colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(utente.getUsername())) {
 
                 // Ora verifichiamo se esiste un conflitto
-                for (String innerRiga : righe) {
-                    String[] innerColonne = innerRiga.split(",");
+                /*
+                all'interno del blocco che verifica la disponibilità dell'appuntamento,
+                abbiamo sostituito il ciclo for interno che verifica i conflitti con uno stream e metodo `anyMatch()`.
+                Se `anyMatch()` restituisce `true`, significa che è stato trovato un conflitto e l'appuntamento non è disponibile.
+                Se non viene trovato alcun conflitto, `anyMatch()` restituisce `false` e l'appuntamento è disponibile.
+                 */
+                boolean conflitto = righe.stream()
+                        .anyMatch(innerColonne ->
+                                Integer.parseInt(innerColonne[ConstantsAppuntamentoCsv.INDICE_STATO_APPUNTAMENTO]) == 1 &&
+                                        innerColonne[ConstantsAppuntamentoCsv.INDICE_DATA].equals(colonne[ConstantsAppuntamentoCsv.INDICE_DATA]) &&
+                                        innerColonne[ConstantsAppuntamentoCsv.INDICE_ORA].equals(colonne[ConstantsAppuntamentoCsv.INDICE_ORA]) &&
+                                        innerColonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO]));
 
-                    // Controlla se l'appuntamento è confermato (stato = 1) e ha la stessa data, ora e psicologo
-                    if (Integer.parseInt(innerColonne[ConstantsAppuntamentoCsv.INDICE_STATO_APPUNTAMENTO]) == 1 &&
-                            innerColonne[ConstantsAppuntamentoCsv.INDICE_DATA].equals(colonne[ConstantsAppuntamentoCsv.INDICE_DATA]) && // Data
-                            innerColonne[ConstantsAppuntamentoCsv.INDICE_ORA].equals(colonne[ConstantsAppuntamentoCsv.INDICE_ORA]) && // Ora
-                            innerColonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO])) { // Psicologo
-                        return false; // Appuntamento non disponibile a causa di conflitto
-                    }
-                }
-                // Se siamo arrivati qui, significa che non ci sono conflitti
-                return true; // Appuntamento disponibile
+                // Appuntamento disponibile
+                return !conflitto; // Appuntamento non disponibile a causa di conflitto
             }
         }
-        // Se non abbiamo trovato l'appuntamento, restituendo false
-        return false;
+
+        return false; // Se non abbiamo trovato l'appuntamento, restituendo false
     }
 
     @Override
     public void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
         // Leggi tutte le righe del file CSV
-        List<String> file;
-        try {
-            file = Files.readAllLines(Paths.get(ConstantsAppuntamentoCsv.FILE_PATH));
-        } catch (IOException e) {
-            throw new DAOException(ConstantsAppuntamentoCsv.ERRORE_LETTURA + " " + e.getMessage());
-        }
-
-        // StringBuilder per costruire il nuovo contenuto del file
-        StringBuilder nuovoContenuto = new StringBuilder();
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
 
         // Aggiorna lo stato di notifica nel CSV
-        for (String riga : file) {
-            String[] colonne = riga.split(",");
-
-
+        List<String[]> righeAggiornate = new ArrayList<>();
+        for (String[] colonne : righe) {
             // Se il nome utente del paziente corrisponde e lo stato di notifica è 1, aggiorna lo stato a 0
             if (colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE].equals("1")) {
                 colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE] = "0"; // Aggiorna lo stato di notifica del paziente a 0
             }
-
-            // Ricostruisci la riga e aggiungila al contenuto aggiornato
-            nuovoContenuto.append(String.join(",", colonne)).append(System.lineSeparator());
+            righeAggiornate.add(colonne);
         }
 
         // Scrivi il contenuto aggiornato nel file
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ConstantsAppuntamentoCsv.FILE_PATH))) {
-            writer.write(nuovoContenuto.toString());
-        } catch (IOException e) {
-            throw new DAOException(ConstantsAppuntamentoCsv.ERRORE_SCRITTURA + " " + e.getMessage());
-        }
+        UtilitiesCSV.scriviRigheAggiornate(ConstantsAppuntamentoCsv.FILE_PATH, righeAggiornate);
     }
 }
