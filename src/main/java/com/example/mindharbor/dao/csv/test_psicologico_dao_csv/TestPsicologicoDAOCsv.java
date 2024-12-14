@@ -1,15 +1,17 @@
 package com.example.mindharbor.dao.csv.test_psicologico_dao_csv;
 
 import com.example.mindharbor.dao.TestPsicologicoDAO;
-import com.example.mindharbor.dao.csv.terapia_dao_csv.TerapiaDAOCsv;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.utilities.UtilitiesCSV;
+
+
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
@@ -72,16 +74,19 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
 
     @Override
     public List<TestPsicologico> trovaListaTest(Utente paziente) throws DAOException {
+
         List<TestPsicologico> testPsicologicoList = new ArrayList<>();
 
-        // Leggi tutte le righe del file CSV come array di colonne
         List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH);
 
-        // Filtra le righe in base all'username del paziente
         for (String[] colonne : righeCSV) {
             if (colonne[ConstantsTestPsicologicoCsv.INDICE_PAZIENTE].equals(paziente.getUsername())) {
+                // Converti la data da String a java.sql.Date
+                LocalDate localDate = LocalDate.parse(colonne[ConstantsTestPsicologicoCsv.INDICE_DATA]);
+                Date data = java.sql.Date.valueOf(localDate);
+
                 TestPsicologico test = new TestPsicologico(
-                        java.sql.Date.valueOf(colonne[ConstantsTestPsicologicoCsv.INDICE_DATA]),
+                        data,
                         Integer.parseInt(colonne[ConstantsTestPsicologicoCsv.INDICE_RISULTATO]),
                         colonne[ConstantsTestPsicologicoCsv.INDICE_TEST],
                         Integer.parseInt(colonne[ConstantsTestPsicologicoCsv.INDICE_SVOLTO])
@@ -117,7 +122,9 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
                 }
             }
         }
+
         aggiornaTestAppenaSvolto(testDaAggiungere);
+
         return testPassati;
     }
 
@@ -160,39 +167,19 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
                 count++;
             }
         }
+
         return count; // Restituisce il conteggio
     }
 
     @Override
-    public Integer getNumTestSvoltiSenzaPrescrizione(Utente utentePsicologo, Paziente paziente) throws DAOException {
+    public Integer getNumTestSvoltiSenzaPrescrizione(Utente utentePsicologo, Paziente paziente) {
         //da modificare la query poiché tocca sia la tabella test psicologico che la tabella terapia.
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH);
-        int numeroTest=0;
-
-        for (String[] colonna : righeCSV) {
-            if (colonna[ConstantsTestPsicologicoCsv.INDICE_PSICOLOGO].equals(utentePsicologo.getUsername()) && colonna[ConstantsTestPsicologicoCsv.INDICE_PAZIENTE].equals(paziente.getUsername()) && colonna[ConstantsTestPsicologicoCsv.INDICE_SVOLTO].equals("1") && new TerapiaDAOCsv().controlloEsistenzaTerapiaPerUnTest(utentePsicologo.getUsername(), paziente.getUsername(), colonna[ConstantsTestPsicologicoCsv.INDICE_DATA])) {
-                    numeroTest++;
-                }
-        }
-
-        return numeroTest;
+        return 0;
     }
 
-    public List<TestPsicologico> listaTestSvoltiSenzaPrescrizione(String usernamePaziente, String usernamePsicologo) throws DAOException {
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH);
-        List<TestPsicologico> listaTest=new ArrayList<>();
-
-        for (String[] colonna : righeCSV) {
-            if (colonna[ConstantsTestPsicologicoCsv.INDICE_PSICOLOGO].equals(usernamePsicologo) && colonna[ConstantsTestPsicologicoCsv.INDICE_PAZIENTE].equals(usernamePaziente) && colonna[ConstantsTestPsicologicoCsv.INDICE_SVOLTO].equals("1") && new TerapiaDAOCsv().controlloEsistenzaTerapiaPerUnTest(usernamePsicologo, usernamePaziente, colonna[ConstantsTestPsicologicoCsv.INDICE_DATA])) {
-                TestPsicologico testPsicologico= new TestPsicologico(
-                        java.sql.Date.valueOf(colonna[ConstantsTestPsicologicoCsv.INDICE_DATA]),
-                        Integer.parseInt(colonna[ConstantsTestPsicologicoCsv.INDICE_RISULTATO]),
-                        colonna[ConstantsTestPsicologicoCsv.INDICE_TEST]);
-
-                listaTest.add(testPsicologico);
-            }
-        }
-        return listaTest;
+    public List<TestPsicologico> listaTestSvoltiSenzaPrescrizione(String usernamePaziente, String usernamePsicologo) {
+        //anche questo metodo (per lo stesso motivo di quello sopra) va sistemato.
+        return null;
     }
 
     @Override
@@ -229,8 +216,8 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
                 contatore++;
             }
         }
+
         return contatore;
     }
-
 }
 

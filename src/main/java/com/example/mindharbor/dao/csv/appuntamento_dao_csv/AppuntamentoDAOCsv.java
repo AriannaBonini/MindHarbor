@@ -10,11 +10,11 @@ import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.user_type.UserType;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 
-import java.io.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class AppuntamentoDAOCsv implements AppuntamentoDAO {
 
@@ -78,7 +78,6 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * @param dataCorrente    La data corrente utilizzata per filtrare gli appuntamenti in base alla scheda selezionata.
      * @param tipo            Un booleano che determina se l'utente è uno psicologo (true) o un paziente (false).
      * @return Una lista di oggetti {@link Appuntamento} che rappresentano gli appuntamenti dell'utente in base ai criteri di ricerca.
-     * @throws IOException    Se si verifica un errore durante la lettura del file CSV.
      * @throws DAOException   Se si verifica un errore specifico durante l'elaborazione dei dati dal file CSV.
      */
     private List<Appuntamento> leggiAppuntamentiDaCsv(Utente utente, String tabSelezionato, LocalDate dataCorrente, boolean tipo) throws DAOException {
@@ -91,12 +90,12 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         // Itera attraverso le righe lette
         for (String[] colonne : righe) {
             // Verifica se l'utente corrisponde con i dati nella riga, utilizzando il tipo come filtro
-            if (TipoUtente(utente, colonne, tipo)) {
+            if (tipoUtente(utente, colonne, tipo)) {
                 // Parsing della data dell'appuntamento
                 LocalDate dataAppuntamento = LocalDate.parse(colonne[ConstantsAppuntamentoCsv.INDICE_DATA]);
 
                 // Verifica se l'appuntamento è valido
-                if (AppuntamentoValido(dataAppuntamento, dataCorrente, tabSelezionato)) {
+                if (appuntamentoValido(dataAppuntamento, dataCorrente, tabSelezionato)) {
                     // Crea l'appuntamento e aggiungilo alla lista
                     Appuntamento appuntamento = creaAppuntamento(colonne, tipo, utenteDAOCsv);
                     appuntamenti.add(appuntamento);
@@ -120,7 +119,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * @param tipo   Un booleano che indica il tipo di utente. Se `true`, confronta lo psicologo; se `false`, confronta il paziente.
      * @return `true` se l'username dell'utente corrisponde a quello specificato nel CSV, `false` altrimenti.
      */
-    private boolean TipoUtente(Utente utente, String[] colonne, boolean tipo) {
+    private boolean tipoUtente(Utente utente, String[] colonne, boolean tipo) {
         String usernamePaziente = colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE];
         String usernamePsicologo = colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO];
         return tipo ? usernamePsicologo.equals(utente.getUsername()) : usernamePaziente.equals(utente.getUsername());
@@ -140,7 +139,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * @param selectedTabName  Il nome della scheda selezionata ("IN PROGRAMMA" o "PASSATI").
      * @return `true` se l'appuntamento è valido in base ai criteri di verifica; `false` altrimenti.
      */
-    private boolean AppuntamentoValido(LocalDate dataAppuntamento, LocalDate dataCorrente, String selectedTabName) {
+    private boolean appuntamentoValido(LocalDate dataAppuntamento, LocalDate dataCorrente, String selectedTabName) {
         return (selectedTabName.equals(UtilitiesCSV.IN_PROGRAMMA) && dataAppuntamento.isAfter(dataCorrente)) ||
                 (selectedTabName.equals(UtilitiesCSV.PASSATI) && dataAppuntamento.isBefore(dataCorrente));
     }
@@ -368,11 +367,10 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
 
         // Lista per memorizzare le righe aggiornate
-        List<String[]> righeAggiornate = righe.stream().filter(colonne -> {
-            // Controlla se il nome utente del paziente corrisponde e se il nome utente dello psicologo è diverso
-            return !colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(appuntamento.getPaziente().getUsername())
-                    || colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(appuntamento.getPsicologo().getUsername());
-        }).collect(Collectors.toList());
+        List<String[]> righeAggiornate = righe.stream().filter(colonne ->
+                !colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(appuntamento.getPaziente().getUsername())
+                        || colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(appuntamento.getPsicologo().getUsername())
+        ).toList();
 
         // Scrivi il contenuto aggiornato nel file
         UtilitiesCSV.scriviRigheAggiornate(ConstantsAppuntamentoCsv.FILE_PATH, righeAggiornate);
@@ -386,7 +384,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         // Usa lo streaming e il metodo filter per ottenere una lista di tutti gli appuntamenti eccetto quello da eliminare
         List<String[]> righeAggiornate = righe.stream().filter(colonne ->
                         Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) != appuntamento.getIdAppuntamento())
-                .collect(Collectors.toList());
+                .toList();  // Modifica qui
 
         // Scrivi il contenuto aggiornato nel file
         UtilitiesCSV.scriviRigheAggiornate(ConstantsAppuntamentoCsv.FILE_PATH, righeAggiornate);

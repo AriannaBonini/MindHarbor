@@ -1,4 +1,5 @@
 package com.example.mindharbor.utilities;
+
 import com.example.mindharbor.exceptions.DAOException;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -17,6 +18,8 @@ public class UtilitiesCSV {
 
     public static final String IN_PROGRAMMA = "IN PROGRAMMA";
     public static final String PASSATI = "PASSATI";
+
+
 
     /**
      * Legge tutte le righe da un file CSV specificato e le restituisce come una lista di stringhe.
@@ -68,8 +71,6 @@ public class UtilitiesCSV {
             throw new DAOException("Errore nella scrittura nel file CSV: " + e.getMessage(), e);
         }
     }
-
-
 
     /**
      * Conta il numero di notifiche attive per un paziente specifico in un file CSV.
