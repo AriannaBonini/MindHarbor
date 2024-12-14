@@ -1,6 +1,7 @@
 package com.example.mindharbor.dao.csv.test_psicologico_dao_csv;
 
 import com.example.mindharbor.dao.TestPsicologicoDAO;
+import com.example.mindharbor.dao.csv.terapia_dao_csv.TerapiaDAOCsv;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.TestPsicologico;
@@ -172,14 +173,36 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
     }
 
     @Override
-    public Integer getNumTestSvoltiSenzaPrescrizione(Utente utentePsicologo, Paziente paziente) {
+    public Integer getNumTestSvoltiSenzaPrescrizione(Utente utentePsicologo, Paziente paziente) throws DAOException {
         //da modificare la query poiché tocca sia la tabella test psicologico che la tabella terapia.
-        return 0;
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH);
+        int numeroTest=0;
+
+        for (String[] colonna : righeCSV) {
+            if (colonna[ConstantsTestPsicologicoCsv.INDICE_PSICOLOGO].equals(utentePsicologo.getUsername()) && colonna[ConstantsTestPsicologicoCsv.INDICE_PAZIENTE].equals(paziente.getUsername()) && colonna[ConstantsTestPsicologicoCsv.INDICE_SVOLTO].equals("1") && new TerapiaDAOCsv().controlloEsistenzaTerapiaPerUnTest(utentePsicologo.getUsername(), paziente.getUsername(), colonna[ConstantsTestPsicologicoCsv.INDICE_DATA])) {
+                numeroTest++;
+            }
+        }
+
+        return numeroTest;
     }
 
-    public List<TestPsicologico> listaTestSvoltiSenzaPrescrizione(String usernamePaziente, String usernamePsicologo) {
-        //anche questo metodo (per lo stesso motivo di quello sopra) va sistemato.
-        return null;
+
+    public List<TestPsicologico> listaTestSvoltiSenzaPrescrizione(String usernamePaziente, String usernamePsicologo) throws DAOException {
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH);
+        List<TestPsicologico> listaTest=new ArrayList<>();
+
+        for (String[] colonna : righeCSV) {
+            if (colonna[ConstantsTestPsicologicoCsv.INDICE_PSICOLOGO].equals(usernamePsicologo) && colonna[ConstantsTestPsicologicoCsv.INDICE_PAZIENTE].equals(usernamePaziente) && colonna[ConstantsTestPsicologicoCsv.INDICE_SVOLTO].equals("1") && new TerapiaDAOCsv().controlloEsistenzaTerapiaPerUnTest(usernamePsicologo, usernamePaziente, colonna[ConstantsTestPsicologicoCsv.INDICE_DATA])) {
+                TestPsicologico testPsicologico= new TestPsicologico(
+                        java.sql.Date.valueOf(colonna[ConstantsTestPsicologicoCsv.INDICE_DATA]),
+                        Integer.parseInt(colonna[ConstantsTestPsicologicoCsv.INDICE_RISULTATO]),
+                        colonna[ConstantsTestPsicologicoCsv.INDICE_TEST]);
+
+                listaTest.add(testPsicologico);
+            }
+        }
+        return listaTest;
     }
 
     @Override

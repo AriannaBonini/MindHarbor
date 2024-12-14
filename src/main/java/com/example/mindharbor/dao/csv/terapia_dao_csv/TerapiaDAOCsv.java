@@ -119,4 +119,15 @@ public class TerapiaDAOCsv implements TerapiaDAO {
     public Integer getNuoveTerapie(Utente paziente) throws DAOException {
         return UtilitiesCSV.contaNotifichePaziente(ConstantsTerapiaCsv.FILE_PATH, paziente.getUsername(), ConstantsTerapiaCsv.INDICE_PAZIENTE, ConstantsTerapiaCsv.INDICE_NOTIFICA_PAZIENTE);
     }
+
+    public boolean controlloEsistenzaTerapiaPerUnTest(String usernamePsicologo, String usernamePaziente, String dataTestPsicologico) throws DAOException {
+        List<String[]> righeCSV = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH);
+        for (String[] colonna : righeCSV) { // Ogni riga è già un array di stringhe
+            if (colonna[ConstantsTerapiaCsv.INDICE_PSICOLOGO].equals(usernamePsicologo) && colonna[ConstantsTerapiaCsv.INDICE_PAZIENTE].equals(usernamePaziente) && colonna[ConstantsTerapiaCsv.INDICE_DATA_TEST].equals(dataTestPsicologico)) {
+                //è stata trovata una prescrizione per il test
+                return false;
+            }
+        }
+        return true;
+    }
 }
