@@ -1,12 +1,10 @@
 package com.example.mindharbor.utilities;
-
 import com.example.mindharbor.exceptions.DAOException;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,24 +17,6 @@ public class UtilitiesCSV {
 
     public static final String IN_PROGRAMMA = "IN PROGRAMMA";
     public static final String PASSATI = "PASSATI";
-
-    /**
-     * Scarta l'intestazione di un file CSV.
-     * <p>
-     * Questo metodo legge la prima riga del file CSV associato al {@link BufferedReader} fornito,
-     * che si presuppone sia l'intestazione. Se la riga di intestazione è vuota o il file CSV è vuoto,
-     * viene lanciata un'eccezione {@link IOException}.
-     * </p>
-     *
-     * @param br Il {@link BufferedReader} associato al file CSV da cui scartare l'intestazione.
-     * @throws IOException Se il file CSV è vuoto o non ha un'intestazione valida.
-     */
-    public static void scartaIntestazione(BufferedReader br) throws IOException {
-        String headerLine = br.readLine();
-        if (headerLine == null || headerLine.isEmpty()) {
-            throw new IOException("Il file CSV è vuoto o non ha un'intestazione valida.");
-        }
-    }
 
     /**
      * Legge tutte le righe da un file CSV specificato e le restituisce come una lista di stringhe.
@@ -88,6 +68,8 @@ public class UtilitiesCSV {
             throw new DAOException("Errore nella scrittura nel file CSV: " + e.getMessage(), e);
         }
     }
+
+
 
     /**
      * Conta il numero di notifiche attive per un paziente specifico in un file CSV.
