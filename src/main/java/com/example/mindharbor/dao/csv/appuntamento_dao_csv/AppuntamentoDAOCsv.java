@@ -92,7 +92,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         // Itera attraverso le righe lette
         for (String[] colonne : righe) {
             // Verifica se l'utente corrisponde con i dati nella riga, utilizzando il tipo come filtro
-            if (tipoUtente(utente, colonne, tipo)) {
+            if (Objects.equals(colonne[ConstantsAppuntamentoCsv.INDICE_STATO_APPUNTAMENTO], ConstantsAppuntamentoCsv.APPUNTAMENTO_ACCETTATO) && tipoUtente(utente, colonne, tipo)) {
                 // Parsing della data dell'appuntamento
                 LocalDate dataAppuntamento = LocalDate.parse(colonne[ConstantsAppuntamentoCsv.INDICE_DATA]);
 
