@@ -3,6 +3,7 @@ package com.example.mindharbor.dao.csv.psicologo_dao_csv;
 import com.example.mindharbor.dao.PsicologoDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Psicologo;
+import com.example.mindharbor.utilities.ConstantReadWrite;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class PsicologoDAOCsv implements PsicologoDAO {
     public Psicologo getInfoPsicologo(Psicologo psicologo) throws DAOException {
         // Leggi le righe dal file CSV usando il CSVReader
         try {
-            List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPsicologoCsv.FILE_PATH);
+            List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPsicologoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
 
             // Cerca le informazioni dello psicologo
             for (String[] colonne : righeCSV) {

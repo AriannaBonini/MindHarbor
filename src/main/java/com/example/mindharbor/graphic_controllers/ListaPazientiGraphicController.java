@@ -109,7 +109,6 @@ public class ListaPazientiGraphicController {
             Node nodo = listViewPazienti.getSelectionModel().getSelectedItem();
             if(nodo!=null) {
                 PazienteBean pazienteSelezionato = (PazienteBean) nodo.getUserData();
-                System.out.println("username: " + pazienteSelezionato.getUsername());
                 listaPazientiController.setPazienteSelezionato(pazienteSelezionato);
 
                 Stage listaPazienti = (Stage) listViewPazienti.getScene().getWindow();

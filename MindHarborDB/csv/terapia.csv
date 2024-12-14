@@ -1,3 +1,4 @@
+"Psicologo","Paziente","Terapia","DataOdierna","DataTest","NotificaPaziente"
 "Ciccio","Giacomino","Questo test non è andato molto bene purtroppo.
 Ti aumento la dose del farmaco Y invece che 1 volta al giorno,
 2 volte al giorno mattina e sera.","2024-06-20","2024-06-14","0"
@@ -10,4 +11,5 @@ la prossima settimana ci risentiamo in modo che vediamo come
 procedono le cose.","2024-07-05","2024-06-26","0"
 "Ciccio","_Venere@_","Il tuo test è andato benissimo! Complimenti!","2024-07-05","2024-07-01","1"
 "Ciccio","Giacomino","Il test non è andato molto bene, continua con la cura che ti ho prescritto
-e inviami una richiesta di appuntamento. ","2024-12-14","2024-06-19","1"
+e inviami una richiesta di appuntamento. ","2024-12-14","2024-06-19","0"
+"Ciccio","Giacomino","Sei un grande! Prendi appuntamento per salutarci. Buone feste. ","2024-12-14","2024-12-14","0"

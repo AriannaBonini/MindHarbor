@@ -10,4 +10,6 @@ public class ConstantsTerapiaCsv {
     protected static final Integer INDICE_DATA_TERAPIA =3;
     protected static final Integer INDICE_NOTIFICA_PAZIENTE=5;
     protected static final Integer INDICE_DATA_TEST = 4;
+    protected static final String NOTIFICA_PAZIENTE_CONSEGNATA = "0";
+    protected static final String NOTIFICA_PAZIENTE_DA_CONSEGNARE = "1";
 }

@@ -33,11 +33,13 @@ public class UtilitiesCSV {
      * @return Una lista di stringhe, dove ciascuna stringa rappresenta una riga del file CSV.
      * @throws DAOException Se si verifica un errore durante la lettura del file CSV.
      */
-    public static List<String[]> leggiRigheDaCsv(String filePath) throws DAOException {
+    public static List<String[]> leggiRigheDaCsv(String filePath, int x) throws DAOException {
         List<String[]> righe = new ArrayList<>();
         try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
-            reader.readNext();  // Questo legge e scarta la prima riga (intestazione)
-
+            if(x==0) { //solo lettura
+                reader.readNext();  // Questo legge e scarta la prima riga (intestazione)
+            }
+            //altrimenti lettura e scrittura
             String[] colonne;
             while ((colonne = reader.readNext()) != null) {
                 // Unisci i valori delle colonne in una riga (unendo i valori con la virgola)
@@ -91,7 +93,7 @@ public class UtilitiesCSV {
         int contatore = 0;
 
         // Ottieni le righe dal CSV
-        List<String[]> righeCSV = leggiRigheDaCsv(filePath);
+        List<String[]> righeCSV = leggiRigheDaCsv(filePath, ConstantReadWrite.SOLO_LETTURA);
 
         // Scorri tutte le righe
         for (String[] colonne : righeCSV) {

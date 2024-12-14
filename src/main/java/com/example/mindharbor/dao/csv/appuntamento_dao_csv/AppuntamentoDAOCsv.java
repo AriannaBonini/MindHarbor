@@ -8,12 +8,14 @@ import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.user_type.UserType;
+import com.example.mindharbor.utilities.ConstantReadWrite;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class AppuntamentoDAOCsv implements AppuntamentoDAO {
@@ -85,7 +87,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         List<Appuntamento> appuntamenti = new ArrayList<>();
 
         // Utilizziamo il metodo leggiRigheDaCsv per leggere tutte le righe del file CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
 
         // Itera attraverso le righe lette
         for (String[] colonne : righe) {
@@ -176,7 +178,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         // bisogna aggiungere i controlli se quella richiesta puo essere aggiunta.
 
         // Legge tutte le righe del CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH,ConstantReadWrite.LETTURA_SCRITTURA);
 
         // Crea una nuova riga per l'appuntamento
         String[] nuovoRecord = new String[] {
@@ -210,7 +212,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     private Integer calcolaIDAppuntamento() throws DAOException {
         int maxId = 0;
         try {
-            List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+            List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
             for (String[] riga : righe) {
                 int id = Integer.parseInt(riga[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]);
                 if (id > maxId) {
@@ -226,12 +228,12 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     @Override
     public Integer getNumRicAppDaNotificare(Utente utente) throws DAOException {
         int count = 0;
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
         for (String[] colonne : righe) {
-            if (utente.getUserType().equals(UserType.PAZIENTE) && colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE].equals("1")) {
+            if (utente.getUserType().equals(UserType.PAZIENTE) && colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE].equals(ConstantsAppuntamentoCsv.NOTIFICA_PAZIENTE_DA_CONSEGNARE)) {
                 count++;
             }
-            if (utente.getUserType().equals(UserType.PSICOLOGO) && colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PSICOLOGO].equals("1")) {
+            if (utente.getUserType().equals(UserType.PSICOLOGO) && colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PSICOLOGO].equals(ConstantsAppuntamentoCsv.NOTIFICA_PSICOLOGO_DA_CONSEGNARE)) {
                 count++;
             }
         }
@@ -255,11 +257,11 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     public List<Appuntamento> trovaRichiesteAppuntamento(Utente utente) throws DAOException {
             List<Appuntamento> richiesteAppuntamento = new ArrayList<>();
 
-            List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+            List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
 
             for(String[] colonne: risultati) {
                 // Controlla se l'username dello psicologo corrisponde e se lo stato appuntamento è pari a 0
-                if (colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(utente.getUsername()) && Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_STATO_APPUNTAMENTO]) == 0) {
+                if (colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(utente.getUsername()) && Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_STATO_APPUNTAMENTO]) == ConstantsAppuntamentoCsv.APPUNTAMENTO_NON_ACCETTATO) {
                     Appuntamento richiesta = new Appuntamento(
                             Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]),
                             new Paziente(colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE]),
@@ -287,12 +289,12 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      */
     @Override
     public void updateStatoNotifica(Appuntamento richiestaAppuntamento) throws DAOException {
-        List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH,ConstantReadWrite.LETTURA_SCRITTURA);
         List<String[]> recordAggiornati = new ArrayList<>();
 
         for(String[] colonne: risultati) {
             if (Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) == richiestaAppuntamento.getIdAppuntamento()) {
-                colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PSICOLOGO] = "0"; // bisogna rimuovere la stringa "0" e usare una costante
+                colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PSICOLOGO] = ConstantsAppuntamentoCsv.NOTIFICA_PSICOLOGO_CONSEGNATA; // bisogna rimuovere la stringa "0" e usare una costante
             }
             recordAggiornati.add(colonne);
         }
@@ -304,7 +306,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     public Appuntamento getInfoRichiesta(Appuntamento richiestaAppuntamento) throws DAOException {
         Appuntamento richiesta = null;
 
-        List<String[]> recordLetti = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> recordLetti = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH,ConstantReadWrite.SOLO_LETTURA);
 
         for(String[] colonne : recordLetti) {
             if(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO].equals(String.valueOf(richiestaAppuntamento.getIdAppuntamento()))) {
@@ -338,7 +340,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      */
     @Override
     public void updateRichiesta(Appuntamento appuntamento) throws DAOException {
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH,ConstantReadWrite.LETTURA_SCRITTURA);
         List<String[]> righeAggiornate = new ArrayList<>();
 
         // Aggiornamento dello stato dell'appuntamento
@@ -346,8 +348,8 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
 
             // Controlla se la riga corrisponde all'appuntamento che vogliamo aggiornare
             if (Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) == appuntamento.getIdAppuntamento()) {
-                colonne[ConstantsAppuntamentoCsv.INDICE_STATO_APPUNTAMENTO] = "1"; // Stato appuntamento accettato
-                colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE] = "1"; // Notifica paziente aggiornata
+                colonne[ConstantsAppuntamentoCsv.INDICE_STATO_APPUNTAMENTO] = ConstantsAppuntamentoCsv.APPUNTAMENTO_ACCETTATO; // Stato appuntamento accettato
+                colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE] = ConstantsAppuntamentoCsv.NOTIFICA_PAZIENTE_DA_CONSEGNARE; // Notifica paziente aggiornata
             }
 
             // Aggiungi la riga (aggiornata o meno) alla lista
@@ -364,7 +366,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     @Override
     public void eliminaRichiesteDiAppuntamentoPerAltriPsicologi(Appuntamento appuntamento) throws DAOException {
         // Leggi tutte le righe del file CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
 
         // Lista per memorizzare le righe aggiornate
         List<String[]> righeAggiornate = righe.stream().filter(colonne ->
@@ -379,7 +381,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     @Override
     public void eliminaRichiesta(Appuntamento appuntamento) throws DAOException {
         // Leggi tutte le righe del file CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
 
         // Usa lo streaming e il metodo filter per ottenere una lista di tutti gli appuntamenti eccetto quello da eliminare
         List<String[]> righeAggiornate = righe.stream().filter(colonne ->
@@ -394,7 +396,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     public boolean getDisp(Integer idAppuntamento, Utente utente) throws DAOException {
 
         // Leggi tutte le righe del file CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
 
         // Verifica la disponibilità dell'appuntamento
         for (String[] colonne : righe) {
@@ -411,7 +413,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
                  */
                 boolean conflitto = righe.stream()
                         .anyMatch(innerColonne ->
-                                Integer.parseInt(innerColonne[ConstantsAppuntamentoCsv.INDICE_STATO_APPUNTAMENTO]) == 1 &&
+                                        Objects.equals(innerColonne[ConstantsAppuntamentoCsv.INDICE_STATO_APPUNTAMENTO], ConstantsAppuntamentoCsv.APPUNTAMENTO_ACCETTATO) &&
                                         innerColonne[ConstantsAppuntamentoCsv.INDICE_DATA].equals(colonne[ConstantsAppuntamentoCsv.INDICE_DATA]) &&
                                         innerColonne[ConstantsAppuntamentoCsv.INDICE_ORA].equals(colonne[ConstantsAppuntamentoCsv.INDICE_ORA]) &&
                                         innerColonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO].equals(colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PSICOLOGO]));
@@ -427,14 +429,14 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     @Override
     public void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
         // Leggi tutte le righe del file CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
 
         // Aggiorna lo stato di notifica nel CSV
         List<String[]> righeAggiornate = new ArrayList<>();
         for (String[] colonne : righe) {
             // Se il nome utente del paziente corrisponde e lo stato di notifica è 1, aggiorna lo stato a 0
-            if (colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE].equals("1")) {
-                colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE] = "0"; // Aggiorna lo stato di notifica del paziente a 0
+            if (colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE].equals(ConstantsAppuntamentoCsv.NOTIFICA_PAZIENTE_DA_CONSEGNARE)) {
+                colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE] = ConstantsAppuntamentoCsv.NOTIFICA_PAZIENTE_CONSEGNATA; // Aggiorna lo stato di notifica del paziente a 0
             }
             righeAggiornate.add(colonne);
         }

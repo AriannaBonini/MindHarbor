@@ -7,6 +7,7 @@ import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Utente;
+import com.example.mindharbor.utilities.ConstantReadWrite;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +23,11 @@ public class PazienteDAOCsv implements PazienteDAO {
 
         try {
             // Usa il CSVReader per leggere le righe del CSV
-            List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH);
-
-            // Scarta l'intestazione (la prima riga) nel CSV
-            // Le righe restanti sono quelle dei pazienti
-            righeCSV.removeFirst();  // Rimuove la prima riga che contiene l'intestazione
+            List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
 
             for (String[] colonne : righeCSV) {
-                String pazienteUsername = colonne[2].trim();
-                String usernamePsicologo = colonne[3].trim();
+                String pazienteUsername = colonne[ConstantsPazienteCsv.INDICE_PAZIENTE_USERNAME];
+                String usernamePsicologo = colonne[ConstantsPazienteCsv.INDICE_PSICOLOGO_USERNAME];
                 if (!pazienteUsername.isBlank() && !usernamePsicologo.isEmpty()) {
                     Paziente paziente = new Paziente(pazienteUsername);
                     utente = utenteDAOCsv.trovaInfoUtente(paziente);
@@ -61,7 +58,7 @@ public class PazienteDAOCsv implements PazienteDAO {
         // Leggi tutte le righe del file CSV
         List<String[]> righeCSV;
         try {
-            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH); // Usa il metodo leggiRigheDaCsv per leggere con CSVReader
+            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA); // Usa il metodo leggiRigheDaCsv per leggere con CSVReader
         } catch (DAOException e) {
             throw new DAOException(ConstantsPazienteCsv.ERRORE_LETTURA + " " + e.getMessage(), e);
         }
@@ -84,7 +81,7 @@ public class PazienteDAOCsv implements PazienteDAO {
         // Leggi tutte le righe del file CSV
         List<String[]> righeCSV;
         try {
-            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH); // Usa CSVReader tramite leggiRigheDaCsv
+            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA); // Usa CSVReader tramite leggiRigheDaCsv
         } catch (DAOException e) {
             throw new DAOException(ConstantsPazienteCsv.ERRORE_LETTURA + " " + e.getMessage(), e);
         }
@@ -108,7 +105,7 @@ public class PazienteDAOCsv implements PazienteDAO {
         // Leggi tutte le righe del file CSV utilizzando CSVReader
         List<String[]> righeCSV;
         try {
-            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH); // Usa il metodo leggiRigheDaCsv
+            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA); // Usa il metodo leggiRigheDaCsv
         } catch (DAOException e) {
             throw new DAOException(ConstantsPazienteCsv.ERRORE_LETTURA + " " + e.getMessage(), e);
         }
@@ -132,7 +129,7 @@ public class PazienteDAOCsv implements PazienteDAO {
         // Leggi tutte le righe del file CSV utilizzando CSVReader
         List<String[]> righeCSV;
         try {
-            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH); // Usa il metodo leggiRigheDaCsv
+            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA); // Usa il metodo leggiRigheDaCsv
         } catch (DAOException e) {
             throw new DAOException(ConstantsPazienteCsv.ERRORE_LETTURA + " " + e.getMessage(), e);
         }
@@ -166,8 +163,8 @@ public class PazienteDAOCsv implements PazienteDAO {
     private Paziente creaIstanzaPaziente(Utente utente, String[] rigaPaziente) {
         Paziente paziente = new Paziente(utente.getUsername(), utente.getNome(), utente.getCognome());
         paziente.setGenere(utente.getGenere());
-        paziente.setAnni(Integer.parseInt(rigaPaziente[0]));
-        paziente.setDiagnosi(rigaPaziente[1]);
+        paziente.setAnni(Integer.parseInt(rigaPaziente[ConstantsPazienteCsv.INDICE_ANNI]));
+        paziente.setDiagnosi(rigaPaziente[ConstantsPazienteCsv.INDICE_DIAGNOSI]);
         return paziente;
     }
 }

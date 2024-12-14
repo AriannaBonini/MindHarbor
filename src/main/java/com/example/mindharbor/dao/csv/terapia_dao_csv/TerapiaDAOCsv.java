@@ -3,6 +3,7 @@ package com.example.mindharbor.dao.csv.terapia_dao_csv;
 import com.example.mindharbor.dao.TerapiaDAO;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.model.*;
+import com.example.mindharbor.utilities.ConstantReadWrite;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +25,11 @@ public class TerapiaDAOCsv implements TerapiaDAO {
                 terapia.getTerapia(),
                 new java.sql.Date(terapia.getDataTerapia().getTime()).toString(), // Data terapia
                 new java.sql.Date(terapia.getTestPsicologico().getData().getTime()).toString(), // Data test
-                String.valueOf(1) // Notifica paziente (DEFAULT)
+                ConstantsTerapiaCsv.NOTIFICA_PAZIENTE_DA_CONSEGNARE // Notifica paziente (DEFAULT)
         };
 
         // Lettura delle righe esistenti nel CSV tramite la funzione leggiRigheDaCsv
-        List<String[]> righeCSV = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH);
+        List<String[]> righeCSV = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
 
         // Aggiungi la nuova riga
         righeCSV.add(nuovaRiga);
@@ -42,7 +43,7 @@ public class TerapiaDAOCsv implements TerapiaDAO {
         List<Terapia> terapie = new ArrayList<>();
 
         // Utilizzo del metodo leggiRigheDaCsv per leggere tutte le righe dal file CSV
-        List<String[]> righeCsv = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH);
+        List<String[]> righeCsv = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
 
         // Elabora le righe lette dal CSV
         for (String[] colonne : righeCsv) {
@@ -91,7 +92,7 @@ public class TerapiaDAOCsv implements TerapiaDAO {
      * @throws DAOException Se si verifica un errore durante la lettura o la scrittura del file CSV.
      */
     private void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
-        List<String[]> righeCSV = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH);
+        List<String[]> righeCSV = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
         List<String[]> righeAggiornate = new ArrayList<>();
 
         // Aggiornamento delle righe esistenti
@@ -100,7 +101,7 @@ public class TerapiaDAOCsv implements TerapiaDAO {
             // Controlla se la riga corrisponde all'utente paziente
             if (colonne[ConstantsTerapiaCsv.INDICE_PAZIENTE].equals(utente.getUsername())) {
                 // Aggiorna lo stato di notifica del paziente
-                colonne[ConstantsTerapiaCsv.INDICE_NOTIFICA_PAZIENTE] = String.valueOf(0); // Supponiamo che 0 significhi "non notificato"
+                colonne[ConstantsTerapiaCsv.INDICE_NOTIFICA_PAZIENTE] = ConstantsTerapiaCsv.NOTIFICA_PAZIENTE_CONSEGNATA; // Supponiamo che 0 significhi "non notificato"
             }
 
             // Aggiungi la riga (aggiornata o meno) alla lista
@@ -117,7 +118,7 @@ public class TerapiaDAOCsv implements TerapiaDAO {
     }
 
     public boolean controlloEsistenzaTerapiaPerUnTest(String usernamePsicologo, String usernamePaziente, String dataTestPsicologico) throws DAOException {
-        List<String[]> righeCSV = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH);
+        List<String[]> righeCSV = leggiRigheDaCsv(ConstantsTerapiaCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
         for (String[] colonna : righeCSV) { // Ogni riga è già un array di stringhe
             if (colonna[ConstantsTerapiaCsv.INDICE_PSICOLOGO].equals(usernamePsicologo) && colonna[ConstantsTerapiaCsv.INDICE_PAZIENTE].equals(usernamePaziente) && colonna[ConstantsTerapiaCsv.INDICE_DATA_TEST].equals(dataTestPsicologico)) {
                 //è stata trovata una prescrizione per il test

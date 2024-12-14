@@ -45,9 +45,13 @@ public class TestPsicologico {
 
     public LocalDate convertiInLocalDate(Date date) {
         // Converti java.util.Date a LocalDate
-        return date.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+        if (!(date instanceof java.sql.Date)) {
+            return date.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+        }
+        // Converte la java.sql.Date in java.util.Date
+        return ((java.sql.Date) date).toLocalDate();
     }
 
 
