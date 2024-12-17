@@ -189,7 +189,6 @@ public class UtenteDAOCsv implements UtenteDAO {
                         app.getPaziente().setNome(nome);
                         app.getPaziente().setCognome(cognome);
                         app.getPaziente().setGenere(genere);
-                        break; // Esce dal ciclo se l'utente è stato trovato
                     }
                 }
             }

@@ -40,9 +40,11 @@ public class HomePazienteGraphicController {
         InfoUtenteBean infoUtenteBean = homePazienteController.getInfoPaziente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        notificaNuoviTest();
-        notificaNuoveTerapie();
-        notificaNuoviAppuntamenti();
+        if(homePazienteController.getPsicologo()) {
+            notificaNuoviTest();
+            notificaNuoveTerapie();
+            notificaNuoviAppuntamenti();
+        }
     }
 
     private void notificaNuoviAppuntamenti() {

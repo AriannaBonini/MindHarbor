@@ -51,6 +51,8 @@ public class HomePazienteController {
         return pazienteBean;
     }
 
+    public boolean getPsicologo() {return SessionManager.getInstance().getUsernamePsicologo() !=null; }
+
     public void logout() {
         SessionManager sessionManager = SessionManager.getInstance();
         sessionManager.logout();

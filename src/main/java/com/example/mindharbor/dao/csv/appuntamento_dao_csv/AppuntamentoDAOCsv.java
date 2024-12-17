@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class AppuntamentoDAOCsv implements AppuntamentoDAO {
@@ -291,10 +292,17 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     public void updateStatoNotifica(Appuntamento richiestaAppuntamento) throws DAOException {
         List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH,ConstantReadWrite.LETTURA_SCRITTURA);
         List<String[]> recordAggiornati = new ArrayList<>();
+        boolean saltaIntestazione=true;
 
         for(String[] colonne: risultati) {
+            if (saltaIntestazione) {
+                // Aggiungi l'intestazione senza fare il controllo nell'if
+                recordAggiornati.add(colonne);
+                saltaIntestazione = false;
+                continue;
+            }
             if (Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) == richiestaAppuntamento.getIdAppuntamento()) {
-                colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PSICOLOGO] = ConstantsAppuntamentoCsv.NOTIFICA_PSICOLOGO_CONSEGNATA; // bisogna rimuovere la stringa "0" e usare una costante
+                colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PSICOLOGO] = ConstantsAppuntamentoCsv.NOTIFICA_PSICOLOGO_CONSEGNATA;
             }
             recordAggiornati.add(colonne);
         }
@@ -342,9 +350,16 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     public void updateRichiesta(Appuntamento appuntamento) throws DAOException {
         List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH,ConstantReadWrite.LETTURA_SCRITTURA);
         List<String[]> righeAggiornate = new ArrayList<>();
+        boolean saltaIntestazione=true;
 
         // Aggiornamento dello stato dell'appuntamento
         for (String[] colonne : righe) {
+            if (saltaIntestazione) {
+                // Aggiungi l'intestazione senza fare il controllo nell'if
+                righeAggiornate.add(colonne);
+                saltaIntestazione = false;
+                continue;
+            }
 
             // Controlla se la riga corrisponde all'appuntamento che vogliamo aggiornare
             if (Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) == appuntamento.getIdAppuntamento()) {
@@ -382,11 +397,16 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     public void eliminaRichiesta(Appuntamento appuntamento) throws DAOException {
         // Leggi tutte le righe del file CSV
         List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
+        // Memorizza l'intestazione separatamente
+        String[] intestazione = righe.getFirst();
 
         // Usa lo streaming e il metodo filter per ottenere una lista di tutti gli appuntamenti eccetto quello da eliminare
-        List<String[]> righeAggiornate = righe.stream().filter(colonne ->
+        List<String[]> righeAggiornate = righe.stream().skip(1).filter(colonne ->
                         Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) != appuntamento.getIdAppuntamento())
-                .toList();  // Modifica qui
+                        .collect(Collectors.toList()); //lista mutabile per poter fare l'inserimento in testa
+
+        // Aggiungi l'intestazione all'inizio della lista aggiornata
+        righeAggiornate.addFirst(intestazione);
 
         // Scrivi il contenuto aggiornato nel file
         UtilitiesCSV.scriviRigheAggiornate(ConstantsAppuntamentoCsv.FILE_PATH, righeAggiornate);

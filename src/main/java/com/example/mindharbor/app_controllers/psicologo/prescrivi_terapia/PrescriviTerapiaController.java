@@ -23,6 +23,7 @@ public class PrescriviTerapiaController {
         return new SetInfoUtente().getInfo();
     }
     public PazienteBean getPazienteSelezionato() {return navigator.getPazienteBean();}
+    public void azzeraIlNumeroDiTestSvolti() {navigator.getPazienteBean().setNumTestSvolti(0);}
 
     public void modificaStatoTestSvolto(PazienteBean pazienteSelezionato) throws DAOException {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();

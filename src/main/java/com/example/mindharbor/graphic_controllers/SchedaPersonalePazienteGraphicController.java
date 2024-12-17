@@ -77,6 +77,8 @@ public class SchedaPersonalePazienteGraphicController {
     private void notificaStatoTest() {
         if (pazienteSelezionato.getNumTestSvolti()>0) {
             notificaTest.setText(String.valueOf(pazienteSelezionato.getNumTestSvolti()));
+        }else {
+            notificaTest.setVisible(false);
         }
     }
 

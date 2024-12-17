@@ -105,7 +105,7 @@ public class PazienteDAOCsv implements PazienteDAO {
         // Leggi tutte le righe del file CSV utilizzando CSVReader
         List<String[]> righeCSV;
         try {
-            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA); // Usa il metodo leggiRigheDaCsv
+            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
         } catch (DAOException e) {
             throw new DAOException(ConstantsPazienteCsv.ERRORE_LETTURA + " " + e.getMessage(), e);
         }
@@ -114,11 +114,12 @@ public class PazienteDAOCsv implements PazienteDAO {
         for (String[] colonne : righeCSV) {
             // Verifica che lo username del paziente corrisponda a quello cercato
             if (colonne[ConstantsPazienteCsv.INDICE_PAZIENTE_USERNAME].equals(paziente.getUsername())) {
-                usernamePsicologo = colonne[ConstantsPazienteCsv.INDICE_PSICOLOGO_USERNAME]; // Ottieni l'username dello psicologo
+                if (!colonne[ConstantsPazienteCsv.INDICE_PSICOLOGO_USERNAME].isEmpty()) {
+                    usernamePsicologo = colonne[ConstantsPazienteCsv.INDICE_PSICOLOGO_USERNAME]; // Ottieni l'username dello psicologo
+                }
                 break; // Esci dal ciclo una volta trovato
             }
         }
-
         return usernamePsicologo; // Restituisce l'username dello psicologo o null se non trovato
     }
 

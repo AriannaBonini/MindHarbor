@@ -74,7 +74,7 @@ public class AppuntamentiPazienteGraphicController {
     public void tab2Selezionato() {ricercaAppuntamentiPaziente("PASSATI", listaVuotaPassati, listViewPassati);}
 
     private void ricercaAppuntamentiPaziente(String selectedTabName, Text text, ListView<Node> listView) {
-           if(appuntamentiController.getPsicologo()) {
+        if(appuntamentiController.getPsicologo()) {
                try {
                    List<AppuntamentiBean> appuntamenti = appuntamentiController.getAppuntamentiPaziente(selectedTabName);
                    if (appuntamenti.isEmpty()) {

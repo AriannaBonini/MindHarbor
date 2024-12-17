@@ -16,9 +16,7 @@ public class SchedaPersonalePazienteController {
 
 
     public void deletePazienteSelezionato() {navigator.deletePazienteBean();}
-    public InfoUtenteBean getInfoPsicologo() {
-        return new SetInfoUtente().getInfo();
-    }
+    public InfoUtenteBean getInfoPsicologo() {return new SetInfoUtente().getInfo();}
     public PazienteBean getPazienteSelezionato(){
         return navigator.getPazienteBean();
     }

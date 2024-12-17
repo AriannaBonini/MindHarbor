@@ -127,6 +127,8 @@ public class PrescriviTerapiaGraphicController {
     @FXML
     public void clickLabelTornaIndietro() {
         try {
+            prescriviTerapiaController.azzeraIlNumeroDiTestSvolti();
+
             Stage prescriviTerapia = (Stage) tornaIndietro.getScene().getWindow();
             prescriviTerapia.close();
 
