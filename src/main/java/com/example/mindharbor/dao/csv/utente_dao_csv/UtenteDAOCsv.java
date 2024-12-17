@@ -1,12 +1,12 @@
 package com.example.mindharbor.dao.csv.utente_dao_csv;
 
 import com.example.mindharbor.dao.UtenteDAO;
-import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.eccezioni.DAOException;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.model.Utente;
-import com.example.mindharbor.user_type.UserType;
-import com.example.mindharbor.utilities.ConstantReadWrite;
+import com.example.mindharbor.tipo_utente.UserType;
+import com.example.mindharbor.utilities.CostantiLetturaScrittura;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class UtenteDAOCsv implements UtenteDAO {
 
         try {
             // Leggi tutte le righe del CSV utilizzando CSVReader
-            righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+            righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
         } catch (DAOException e) {
             throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
@@ -91,7 +91,7 @@ public class UtenteDAOCsv implements UtenteDAO {
 
         // Leggi le righe dal CSV utilizzando il metodo che usa CSVReader
         try {
-            righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA); // Chiamata al metodo che usa CSVReader
+            righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA); // Chiamata al metodo che usa CSVReader
         } catch (DAOException e) {
             throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
@@ -133,7 +133,7 @@ public class UtenteDAOCsv implements UtenteDAO {
 
         try {
             // Leggi le righe dal CSV usando CSVReader
-            righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);  // Metodo che usa CSVReader
+            righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);  // Metodo che usa CSVReader
         } catch (DAOException e) {
             throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
@@ -173,7 +173,7 @@ public class UtenteDAOCsv implements UtenteDAO {
     public List<Appuntamento> richiestaAppuntamentiInfoPaziente(List<Appuntamento> richiesteAppuntamenti) throws DAOException {
         try {
             // Leggi le righe dal CSV usando CSVReader
-            List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+            List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
 
             // Itera attraverso le righe lette
             for (String[] colonne : righe) {
@@ -215,7 +215,7 @@ public class UtenteDAOCsv implements UtenteDAO {
 
         try {
             // Leggi le righe dal CSV usando CSVReader
-            List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+            List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
 
             // Itera attraverso le righe lette
             for (String[] colonne : righe) {

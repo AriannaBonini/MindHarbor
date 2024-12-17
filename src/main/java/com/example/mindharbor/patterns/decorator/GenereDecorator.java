@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.Objects;
 
-public class GenereDecorator extends ImageDecorator {
+public class GenereDecorator extends ImmagineDecorator {
     private final String genere;
 
     public GenereDecorator(ImageView imageView, String genere) {
@@ -15,13 +15,13 @@ public class GenereDecorator extends ImageDecorator {
     }
 
     public void caricaImmagine() {
+        Image immagine;
         if (genere.equalsIgnoreCase("M")) {
-            Image immagine= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaMaschio.png")));
-            imageView.setImage(immagine);
+            immagine = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaMaschio.png")));
 
         } else {
-            Image immagine= new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaFemmina.png")));
-            imageView.setImage(immagine);
+            immagine = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/IconaFemmina.png")));
         }
+        imageView.setImage(immagine);
     }
 }

@@ -2,11 +2,11 @@ package com.example.mindharbor.dao.mysql;
 
 import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.dao.mysql.query_sql.QuerySQLPazienteDAO;
-import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.eccezioni.DAOException;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Utente;
-import com.example.mindharbor.session.ConnectionFactory;
+import com.example.mindharbor.sessione.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

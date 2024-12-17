@@ -1,6 +1,6 @@
 package com.example.mindharbor.dao;
 
-import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.eccezioni.DAOException;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.model.Utente;

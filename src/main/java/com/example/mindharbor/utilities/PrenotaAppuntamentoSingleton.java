@@ -1,6 +1,6 @@
 package com.example.mindharbor.utilities;
 
-import com.example.mindharbor.app_controllers.paziente.PrenotaAppuntamento;
+import com.example.mindharbor.controller_applicativi.paziente.PrenotaAppuntamento;
 
 public class PrenotaAppuntamentoSingleton {
     private static PrenotaAppuntamento prenotaAppuntamento=null;

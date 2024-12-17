@@ -2,12 +2,12 @@ package com.example.mindharbor.dao.csv.test_psicologico_dao_csv;
 
 import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.dao.csv.terapia_dao_csv.TerapiaDAOCsv;
-import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.eccezioni.DAOException;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.model.Utente;
-import com.example.mindharbor.user_type.UserType;
-import com.example.mindharbor.utilities.ConstantReadWrite;
+import com.example.mindharbor.tipo_utente.UserType;
+import com.example.mindharbor.utilities.CostantiLetturaScrittura;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 import java.time.LocalDate;
 import java.util.*;
@@ -17,7 +17,7 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
     @Override
     public void assegnaTest(TestPsicologico test) throws DAOException {
         // Leggi tutte le righe del file CSV come array di colonne
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
 
         // Crea un nuovo array per rappresentare il test da aggiungere
         String[] nuovoTest = new String[8];
@@ -46,7 +46,7 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
     @Override
     public void modificaStatoNotificaTest(Utente utente, Paziente pazienteSelezionato) throws DAOException {
         // Leggi tutte le righe del file CSV
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
 
         // Verifica il tipo di utente e modifica il contenuto di conseguenza
         for (String[] colonne : righeCSV) {
@@ -75,7 +75,7 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
 
         List<TestPsicologico> testPsicologicoList = new ArrayList<>();
 
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
 
         for (String[] colonne : righeCSV) {
             if (colonne[ConstantsTestPsicologicoCsv.INDICE_PAZIENTE].equals(paziente.getUsername())) {
@@ -100,7 +100,7 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
         Integer testPassati = null;
 
         // Leggi tutte le righe del file CSV
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
 
         // Variabile per tenere traccia del massimo della data
         LocalDate maxData = null;
@@ -129,7 +129,7 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
 
     private void aggiornaTestAppenaSvolto(TestPsicologico testDaAggiungere) throws DAOException {
         // Lettura del file CSV esistente
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
         List<String[]> righeAggiornate = new ArrayList<>();
 
 
@@ -158,7 +158,7 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
         int count = 0;
 
         // Leggi tutte le righe del file CSV
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
 
         // Conta i test da notificare
         for (String[] colonne : righeCSV) {
@@ -173,7 +173,7 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
     @Override
     public Integer getNumTestSvoltiSenzaPrescrizione(Utente utentePsicologo, Paziente paziente) throws DAOException {
         //da modificare la query poiché tocca sia la tabella test psicologico che la tabella terapia.
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
         int numeroTest=0;
 
         for (String[] colonna : righeCSV) {
@@ -187,7 +187,7 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
 
 
     public List<TestPsicologico> listaTestSvoltiSenzaPrescrizione(String usernamePaziente, String usernamePsicologo) throws DAOException {
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
         List<TestPsicologico> listaTest=new ArrayList<>();
 
         for (String[] colonna : righeCSV) {
@@ -206,7 +206,7 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
     @Override
     public Paziente numTestSvoltiPerPaziente(Utente paziente) throws DAOException {
         // Lettura del file CSV esistente
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
         int numeroTestSvolti = 0;
 
         // Calcola il numero di test svolti dal paziente
@@ -225,7 +225,7 @@ public class TestPsicologicoDAOCsv implements TestPsicologicoDAO {
         int contatore = 0;
 
         // Leggi tutte le righe del file CSV
-        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsTestPsicologicoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
 
         // Data odierna in formato YYYY-MM-DD
         String dataOdierna = java.time.LocalDate.now().toString();

@@ -86,6 +86,5 @@ public class PazienteBean {
     }
     public void setNumTestSvolti(Integer numTestSvolti) {this.numTestSvolti = numTestSvolti;}
     public Integer getNumNotifiche() {return numNotifiche;}
-    public void setNumNotifiche(Integer numNotifiche) {this.numNotifiche = numNotifiche;}
 }
 

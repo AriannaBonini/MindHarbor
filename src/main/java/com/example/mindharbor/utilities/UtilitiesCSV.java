@@ -1,6 +1,6 @@
 package com.example.mindharbor.utilities;
 
-import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.eccezioni.DAOException;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
@@ -93,7 +93,7 @@ public class UtilitiesCSV {
         int contatore = 0;
 
         // Ottieni le righe dal CSV
-        List<String[]> righeCSV = leggiRigheDaCsv(filePath, ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> righeCSV = leggiRigheDaCsv(filePath, CostantiLetturaScrittura.SOLO_LETTURA);
 
         // Scorri tutte le righe
         for (String[] colonne : righeCSV) {

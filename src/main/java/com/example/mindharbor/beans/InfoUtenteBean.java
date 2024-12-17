@@ -1,6 +1,6 @@
 package com.example.mindharbor.beans;
 
-import com.example.mindharbor.user_type.UserType;
+import com.example.mindharbor.tipo_utente.UserType;
 
 public class InfoUtenteBean {
     private String nome;

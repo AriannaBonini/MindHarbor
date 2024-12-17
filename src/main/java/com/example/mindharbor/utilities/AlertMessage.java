@@ -5,7 +5,7 @@ import javafx.scene.control.ButtonType;
 
 public class AlertMessage {
 
-    public Alert Errore(String messaggio) {
+    public Alert errore(String messaggio) {
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Messaggio d'errore");
@@ -19,11 +19,11 @@ public class AlertMessage {
         return alert;
     }
 
-    public Alert Informazione(String Titolo, String Header, String messaggio) {
+    public Alert informazione(String titolo, String intestazione, String messaggio) {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(Titolo);
-        alert.setHeaderText(Header);
+        alert.setTitle(titolo);
+        alert.setHeaderText(intestazione);
         alert.setContentText(messaggio);
 
         alert.getDialogPane().setPrefWidth(300);
@@ -33,7 +33,7 @@ public class AlertMessage {
         return alert;
     }
 
-    public Integer Avvertenza(String messaggio) {
+    public Integer avvertenza(String messaggio) {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("AVVERTENZA");
@@ -46,9 +46,9 @@ public class AlertMessage {
 
         alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
-        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+        ButtonType risultato = alert.showAndWait().orElse(ButtonType.NO);
 
-        if (result == ButtonType.YES) {
+        if (risultato == ButtonType.YES) {
             return 1;
         } else {
             return 0;

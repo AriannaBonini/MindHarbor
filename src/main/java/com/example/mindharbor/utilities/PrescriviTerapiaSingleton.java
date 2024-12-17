@@ -1,6 +1,6 @@
 package com.example.mindharbor.utilities;
 
-import com.example.mindharbor.app_controllers.psicologo.PrescriviTerapia;
+import com.example.mindharbor.controller_applicativi.psicologo.PrescriviTerapia;
 
 public class PrescriviTerapiaSingleton {
     private static PrescriviTerapia prescriviTerapia=null;

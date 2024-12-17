@@ -1,22 +1,19 @@
 package com.example.mindharbor.dao.csv.appuntamento_dao_csv;
 
 import com.example.mindharbor.dao.AppuntamentoDAO;
+import com.example.mindharbor.dao.csv.paziente_dao_csv.PazienteDAOCsv;
 import com.example.mindharbor.dao.csv.utente_dao_csv.UtenteDAOCsv;
-import com.example.mindharbor.dao.mysql.PazienteDAOMySql;
-import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.eccezioni.DAOException;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Utente;
-import com.example.mindharbor.user_type.UserType;
-import com.example.mindharbor.utilities.ConstantReadWrite;
+import com.example.mindharbor.tipo_utente.UserType;
+import com.example.mindharbor.utilities.CostantiLetturaScrittura;
 import com.example.mindharbor.utilities.UtilitiesCSV;
-
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 
 public class AppuntamentoDAOCsv implements AppuntamentoDAO {
@@ -88,7 +85,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         List<Appuntamento> appuntamenti = new ArrayList<>();
 
         // Utilizziamo il metodo leggiRigheDaCsv per leggere tutte le righe del file CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
 
         // Itera attraverso le righe lette
         for (String[] colonne : righe) {
@@ -179,7 +176,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         // bisogna aggiungere i controlli se quella richiesta puo essere aggiunta.
 
         // Legge tutte le righe del CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH,ConstantReadWrite.LETTURA_SCRITTURA);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
 
         // Crea una nuova riga per l'appuntamento
         String[] nuovoRecord = new String[] {
@@ -213,7 +210,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     private Integer calcolaIDAppuntamento() throws DAOException {
         int maxId = 0;
         try {
-            List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+            List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
             for (String[] riga : righe) {
                 int id = Integer.parseInt(riga[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]);
                 if (id > maxId) {
@@ -229,7 +226,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     @Override
     public Integer getNumRicAppDaNotificare(Utente utente) throws DAOException {
         int count = 0;
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
         for (String[] colonne : righe) {
             if (utente.getUserType().equals(UserType.PAZIENTE) && colonne[ConstantsAppuntamentoCsv.INDICE_USERNAME_PAZIENTE].equals(utente.getUsername()) && colonne[ConstantsAppuntamentoCsv.INDICE_STATO_NOTIFICA_PAZIENTE].equals(ConstantsAppuntamentoCsv.NOTIFICA_PAZIENTE_DA_CONSEGNARE)) {
                 count++;
@@ -258,7 +255,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     public List<Appuntamento> trovaRichiesteAppuntamento(Utente utente) throws DAOException {
             List<Appuntamento> richiesteAppuntamento = new ArrayList<>();
 
-            List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+            List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
 
             for(String[] colonne: risultati) {
                 // Controlla se l'username dello psicologo corrisponde e se lo stato appuntamento è pari a 0
@@ -290,7 +287,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      */
     @Override
     public void updateStatoNotifica(Appuntamento richiestaAppuntamento) throws DAOException {
-        List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH,ConstantReadWrite.LETTURA_SCRITTURA);
+        List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
         List<String[]> recordAggiornati = new ArrayList<>();
         boolean saltaIntestazione=true;
 
@@ -314,7 +311,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     public Appuntamento getInfoRichiesta(Appuntamento richiestaAppuntamento) throws DAOException {
         Appuntamento richiesta = null;
 
-        List<String[]> recordLetti = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH,ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> recordLetti = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
 
         for(String[] colonne : recordLetti) {
             if(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO].equals(String.valueOf(richiestaAppuntamento.getIdAppuntamento()))) {
@@ -348,7 +345,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      */
     @Override
     public void updateRichiesta(Appuntamento appuntamento) throws DAOException {
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH,ConstantReadWrite.LETTURA_SCRITTURA);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
         List<String[]> righeAggiornate = new ArrayList<>();
         boolean saltaIntestazione=true;
 
@@ -375,13 +372,13 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
         UtilitiesCSV.scriviRigheAggiornate(ConstantsAppuntamentoCsv.FILE_PATH, righeAggiornate);
 
         // Chiamata al metodo per aggiungere lo psicologo al paziente
-        new PazienteDAOMySql().aggiungiPsicologoAlPaziente(appuntamento);
+        new PazienteDAOCsv().aggiungiPsicologoAlPaziente(appuntamento);
     }
 
     @Override
     public void eliminaRichiesteDiAppuntamentoPerAltriPsicologi(Appuntamento appuntamento) throws DAOException {
         // Leggi tutte le righe del file CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
 
         // Lista per memorizzare le righe aggiornate
         List<String[]> righeAggiornate = righe.stream().filter(colonne ->
@@ -396,18 +393,22 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     @Override
     public void eliminaRichiesta(Appuntamento appuntamento) throws DAOException {
         // Leggi tutte le righe del file CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
-        // Memorizza l'intestazione separatamente
-        String[] intestazione = righe.getFirst();
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
+        List<String[]> righeAggiornate = new ArrayList<>();
+        boolean saltaIntestazione=true;
 
-        // Usa lo streaming e il metodo filter per ottenere una lista di tutti gli appuntamenti eccetto quello da eliminare
-        List<String[]> righeAggiornate = righe.stream().skip(1).filter(colonne ->
-                        Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) != appuntamento.getIdAppuntamento())
-                        .collect(Collectors.toList()); //lista mutabile per poter fare l'inserimento in testa
+        for (String[] colonne : righe) {
+            if (saltaIntestazione) {
+                // Aggiungi l'intestazione senza fare il controllo nell'if
+                righeAggiornate.add(colonne);
+                saltaIntestazione = false;
+                continue;
+            }
 
-        // Aggiungi l'intestazione all'inizio della lista aggiornata
-        righeAggiornate.addFirst(intestazione);
-
+            if(Integer.parseInt(colonne[ConstantsAppuntamentoCsv.INDICE_ID_APPUNTAMENTO]) != appuntamento.getIdAppuntamento()) {
+                righeAggiornate.add(colonne);
+            }
+        }
         // Scrivi il contenuto aggiornato nel file
         UtilitiesCSV.scriviRigheAggiornate(ConstantsAppuntamentoCsv.FILE_PATH, righeAggiornate);
     }
@@ -416,7 +417,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     public boolean getDisp(Integer idAppuntamento, Utente utente) throws DAOException {
 
         // Leggi tutte le righe del file CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
 
         // Verifica la disponibilità dell'appuntamento
         for (String[] colonne : righe) {
@@ -449,7 +450,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     @Override
     public void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
         // Leggi tutte le righe del file CSV
-        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA);
+        List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
 
         // Aggiorna lo stato di notifica nel CSV
         List<String[]> righeAggiornate = new ArrayList<>();

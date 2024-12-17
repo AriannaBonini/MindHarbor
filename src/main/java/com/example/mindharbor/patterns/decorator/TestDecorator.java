@@ -1,12 +1,11 @@
 package com.example.mindharbor.patterns.decorator;
 
-import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.Objects;
 
-public class TestDecorator extends ImageDecorator {
+public class TestDecorator extends ImmagineDecorator {
     private final Integer testSvolto;
 
     public TestDecorator(ImageView imageView, Integer testSvolto) {
@@ -15,12 +14,12 @@ public class TestDecorator extends ImageDecorator {
     }
 
     public void caricaImmagine() {
+        Image immagine;
         if (testSvolto==0) {
-            Image immagine = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/NonCompletato.png")));
-            imageView.setImage(immagine);
+            immagine = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/NonCompletato.png")));
         } else {
-            Image immagine = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/Completato.png")));
-            imageView.setImage(immagine);
+            immagine = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/com/example/mindharbor/Img/Completato.png")));
         }
+        imageView.setImage(immagine);
     }
 }

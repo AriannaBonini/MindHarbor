@@ -3,11 +3,11 @@ package com.example.mindharbor.dao.csv.paziente_dao_csv;
 import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.dao.csv.test_psicologico_dao_csv.TestPsicologicoDAOCsv;
 import com.example.mindharbor.dao.csv.utente_dao_csv.UtenteDAOCsv;
-import com.example.mindharbor.exceptions.DAOException;
+import com.example.mindharbor.eccezioni.DAOException;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Utente;
-import com.example.mindharbor.utilities.ConstantReadWrite;
+import com.example.mindharbor.utilities.CostantiLetturaScrittura;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class PazienteDAOCsv implements PazienteDAO {
 
         try {
             // Usa il CSVReader per leggere le righe del CSV
-            List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+            List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
 
             for (String[] colonne : righeCSV) {
                 String pazienteUsername = colonne[ConstantsPazienteCsv.INDICE_PAZIENTE_USERNAME];
@@ -58,7 +58,7 @@ public class PazienteDAOCsv implements PazienteDAO {
         // Leggi tutte le righe del file CSV
         List<String[]> righeCSV;
         try {
-            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA); // Usa il metodo leggiRigheDaCsv per leggere con CSVReader
+            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA); // Usa il metodo leggiRigheDaCsv per leggere con CSVReader
         } catch (DAOException e) {
             throw new DAOException(ConstantsPazienteCsv.ERRORE_LETTURA + " " + e.getMessage(), e);
         }
@@ -81,7 +81,7 @@ public class PazienteDAOCsv implements PazienteDAO {
         // Leggi tutte le righe del file CSV
         List<String[]> righeCSV;
         try {
-            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA); // Usa CSVReader tramite leggiRigheDaCsv
+            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA); // Usa CSVReader tramite leggiRigheDaCsv
         } catch (DAOException e) {
             throw new DAOException(ConstantsPazienteCsv.ERRORE_LETTURA + " " + e.getMessage(), e);
         }
@@ -105,7 +105,7 @@ public class PazienteDAOCsv implements PazienteDAO {
         // Leggi tutte le righe del file CSV utilizzando CSVReader
         List<String[]> righeCSV;
         try {
-            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.SOLO_LETTURA);
+            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
         } catch (DAOException e) {
             throw new DAOException(ConstantsPazienteCsv.ERRORE_LETTURA + " " + e.getMessage(), e);
         }
@@ -130,7 +130,7 @@ public class PazienteDAOCsv implements PazienteDAO {
         // Leggi tutte le righe del file CSV utilizzando CSVReader
         List<String[]> righeCSV;
         try {
-            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, ConstantReadWrite.LETTURA_SCRITTURA); // Usa il metodo leggiRigheDaCsv
+            righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPazienteCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA); // Usa il metodo leggiRigheDaCsv
         } catch (DAOException e) {
             throw new DAOException(ConstantsPazienteCsv.ERRORE_LETTURA + " " + e.getMessage(), e);
         }
@@ -142,7 +142,7 @@ public class PazienteDAOCsv implements PazienteDAO {
         for (String[] colonne : righeCSV) {
             // Verifica se lo username del paziente è quello cercato
             if (colonne[ConstantsPazienteCsv.INDICE_PAZIENTE_USERNAME].equals(appuntamento.getPaziente().getUsername())) {
-                // Imposta il nome utente dello psicologo (supponiamo che sia nella colonna giusta)
+                // Imposta il nome utente dello psicologo
                 colonne[ConstantsPazienteCsv.INDICE_PSICOLOGO_USERNAME] = appuntamento.getPsicologo().getUsername(); // Imposta lo psicologo
                 recordUpdated = true;
                 break; // Esci non appena il record viene aggiornato
@@ -153,9 +153,8 @@ public class PazienteDAOCsv implements PazienteDAO {
             throw new DAOException("Paziente con username " + appuntamento.getPaziente().getUsername() + " non trovato nel file CSV.");
         }
 
-        // Scrivi il contenuto aggiornato nel file CSV utilizzando CSVWriter
         try {
-            UtilitiesCSV.scriviRigheAggiornate(ConstantsPazienteCsv.FILE_PATH, righeCSV); // Usa il metodo per scrivere nel CSV
+            UtilitiesCSV.scriviRigheAggiornate(ConstantsPazienteCsv.FILE_PATH, righeCSV);
         } catch (DAOException e) {
             throw new DAOException(ConstantsPazienteCsv.ERRORE_SCRITTURA + " " + e.getMessage(), e);
         }

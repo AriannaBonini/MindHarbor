@@ -44,5 +44,4 @@ public class PsicologoBean {
         return genere;
     }
     public Integer getNumNotifiche() {return numNotifiche;}
-    public void setNumNotifiche(Integer numNotifiche) {this.numNotifiche = numNotifiche;}
 }

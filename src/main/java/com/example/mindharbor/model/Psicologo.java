@@ -1,6 +1,6 @@
 package com.example.mindharbor.model;
 
-import com.example.mindharbor.user_type.UserType;
+import com.example.mindharbor.tipo_utente.UserType;
 
 
 public class Psicologo extends Utente {

@@ -1,7 +1,7 @@
 package com.example.mindharbor.utilities;
 
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.session.SessionManager;
+import com.example.mindharbor.sessione.SessionManager;
 
 public class SetInfoUtente {
     public InfoUtenteBean getInfo() {
