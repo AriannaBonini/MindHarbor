@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.paziente.prescrivi_terapia.ListaTestController;
+import com.example.mindharbor.app_controllers.psicologo.PrescriviTerapia;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.exceptions.DAOException;
@@ -8,6 +8,7 @@ import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import com.example.mindharbor.patterns.decorator.TestDecorator;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import com.example.mindharbor.utilities.PrescriviTerapiaSingleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -36,13 +37,13 @@ public class ListaTestGraphicController {
     private Label info;
     @FXML
     private Label home;
-    private final ListaTestController listaTestController= new ListaTestController();
+    private final PrescriviTerapia prescriviTerapiaController = PrescriviTerapiaSingleton.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(ListaTestGraphicController.class);
     private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
     private InfoUtenteBean infoUtenteBean;
 
     public void initialize() {
-        infoUtenteBean = listaTestController.getInfoPaziente();
+        infoUtenteBean = prescriviTerapiaController.getInfoUtente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
         trovaPsicologo();
@@ -51,7 +52,7 @@ public class ListaTestGraphicController {
 
     private void trovaPsicologo() {
         try {
-            infoUtenteBean = listaTestController.infoPsicologo();
+            infoUtenteBean = prescriviTerapiaController.infoPsicologo();
 
             if (infoUtenteBean != null) {
                 labelPsicologo.setText("PSICOLOGO " + infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
@@ -69,22 +70,18 @@ public class ListaTestGraphicController {
 
     private void modificaStatoNotifica()  {
         try {
-            listaTestController.modificaStatoTest();
+            prescriviTerapiaController.aggiornaStatoNotificaTest(null);
         } catch (DAOException e ) {
             logger.info("Errore durante la modifica dello stato dei test psicologici", e);
         }
     }
 
-    private void popolaLista() {
-        try {
-            List<TestBean> listaTest = listaTestController.getListaTest();
-            if (listaTest.isEmpty()) {
-                info.setText("Non hai test assegnati");
-            } else {
-                creaVBoxListaTest(listaTest);
-            }
-        }catch (DAOException e) {
-            logger.info("Errore durante la ricerca dei test ", e);
+    private void popolaLista() throws DAOException {
+        List<TestBean> listaTest = prescriviTerapiaController.getListaTestAssegnati();
+        if (listaTest.isEmpty()) {
+            info.setText("Non hai test assegnati");
+        } else {
+            creaVBoxListaTest(listaTest);
         }
     }
 
@@ -157,7 +154,7 @@ public class ListaTestGraphicController {
                 new LabelDuration().duration(info,"test già effettuato");
                 return;
             }
-            listaTestController.setTestSelezionato(test);
+            prescriviTerapiaController.setTestSelezionato(test);
 
             Stage listaTest = (Stage) listViewTest.getScene().getWindow();
             listaTest.close();

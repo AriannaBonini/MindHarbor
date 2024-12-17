@@ -1,9 +1,10 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.paziente.prenota_appuntamento.RichiestaAppuntamentoController;
+import com.example.mindharbor.app_controllers.paziente.PrenotaAppuntamento;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.constants.Constants;
+import com.example.mindharbor.utilities.PrenotaAppuntamentoSingleton;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
@@ -35,16 +36,17 @@ public class SelezionaDataEOraGraphicController {
 
     private static final Logger logger = LoggerFactory.getLogger(SelezionaDataEOraGraphicController.class);
     private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
-    private final RichiestaAppuntamentoController richiestaAppuntamentoController = new RichiestaAppuntamentoController();
+    private final PrenotaAppuntamento prenotaAppuntamentoController = PrenotaAppuntamentoSingleton.getInstance();
     private AppuntamentiBean appuntamento;
 
+
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = richiestaAppuntamentoController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = prenotaAppuntamentoController.getInfoUtente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
         dataRules();
 
-        if((appuntamento= richiestaAppuntamentoController.getRichiestaAppuntamentoScelta())!=null) {
+        if((appuntamento= prenotaAppuntamentoController.getRichiestaAppuntamento())!=null) {
             orario.setText(appuntamento.getOra());
             LocalDate dataLocale = LocalDate.parse(appuntamento.getData());
             this.data.setValue(dataLocale);
@@ -79,7 +81,7 @@ public class SelezionaDataEOraGraphicController {
     @FXML
     public void goToHome() {
         try {
-            richiestaAppuntamentoController.eliminaRichiestaAppuntamentoScelta();
+            prenotaAppuntamentoController.eliminaRichiestaAppuntamento();
             Stage selezionaDataEOra = (Stage) home.getScene().getWindow();
             selezionaDataEOra.close();
 
@@ -97,7 +99,7 @@ public class SelezionaDataEOraGraphicController {
         } else {
 
             try {
-                if (!richiestaAppuntamentoController.controllaOrario(orario.getText())) {
+                if (!prenotaAppuntamentoController.controllaOrario(orario.getText())) {
                     new LabelDuration().duration(info, "Orario non valido");
                 } else {
                     appuntamento.setData(String.valueOf(data.getValue()));
@@ -116,7 +118,7 @@ public class SelezionaDataEOraGraphicController {
             Stage selezionaDataEOra = (Stage) avanti.getScene().getWindow();
             selezionaDataEOra.close();
 
-            richiestaAppuntamentoController.setRichiestaAppuntamentoScelta(appuntamento);
+            prenotaAppuntamentoController.setRichiestaAppuntamento(appuntamento);
 
             navigator.gotoPage("/com/example/mindharbor/InserisciInfo.fxml");
         }catch (IOException e) {

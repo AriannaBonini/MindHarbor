@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia.SchedaPersonalePazienteController;
+import com.example.mindharbor.app_controllers.psicologo.PrescriviTerapia;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.constants.Constants;
@@ -8,6 +8,7 @@ import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import com.example.mindharbor.utilities.PrescriviTerapiaSingleton;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -43,14 +44,14 @@ public class SchedaPersonalePazienteGraphicController {
     private Label scegliTest;
 
     private PazienteBean pazienteSelezionato;
-    private final SchedaPersonalePazienteController schedaPersonaleController = new SchedaPersonalePazienteController();
+    private final PrescriviTerapia prescriviTerapiaController = PrescriviTerapiaSingleton.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(SchedaPersonalePazienteGraphicController.class);
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = schedaPersonaleController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoUtente();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        pazienteSelezionato = schedaPersonaleController.getPazienteSelezionato();
+        pazienteSelezionato = prescriviTerapiaController.getPazienteSelezionato();
         notificaStatoTest();
         abilitaPrescriviTerapia();
         abilitaAssegnaTest();
@@ -66,7 +67,7 @@ public class SchedaPersonalePazienteGraphicController {
 
     private void abilitaPrescriviTerapia() {
         try {
-            if (schedaPersonaleController.numTestSvoltiSenzaPrescrizione(pazienteSelezionato) > 0) {
+            if (prescriviTerapiaController.numeroTestSvoltiSenzaPrescrizione(pazienteSelezionato) > 0) {
                 prescriviTerapia.setDisable(false);
             }
         }catch (DAOException e) {
@@ -84,7 +85,7 @@ public class SchedaPersonalePazienteGraphicController {
 
     private void abilitaAssegnaTest() {
         try {
-            if (schedaPersonaleController.getNumTestOdiernoAssegnato(pazienteSelezionato)>0) {
+            if (prescriviTerapiaController.getNumeroTestOdiernoAssegnato(pazienteSelezionato)>0) {
                 scegliTest.setDisable(true);
             }
         }catch (DAOException e) {
@@ -96,7 +97,7 @@ public class SchedaPersonalePazienteGraphicController {
 
     private void popolaSchedaPersonale()  {
         try {
-            pazienteSelezionato = schedaPersonaleController.getSchedaPersonale(pazienteSelezionato);
+            pazienteSelezionato = prescriviTerapiaController.getSchedaPersonale(pazienteSelezionato);
             creaSchedaPersonale();
 
         } catch (DAOException e) {
@@ -129,7 +130,7 @@ public class SchedaPersonalePazienteGraphicController {
             Stage schedaPersonale = (Stage) home.getScene().getWindow();
             schedaPersonale.close();
 
-            schedaPersonaleController.deletePazienteSelezionato();
+            prescriviTerapiaController.eliminaPazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
         }catch(IOException e) {
             logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
@@ -142,7 +143,7 @@ public class SchedaPersonalePazienteGraphicController {
         try {
             Stage schedaPersonale = (Stage) tornaIndietro.getScene().getWindow();
             schedaPersonale.close();
-            schedaPersonaleController.deletePazienteSelezionato();
+            prescriviTerapiaController.eliminaPazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/ListaPazienti.fxml");
         }catch(IOException e) {
             logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
@@ -156,7 +157,7 @@ public class SchedaPersonalePazienteGraphicController {
         try {
             Stage schedaPersonale = (Stage) home.getScene().getWindow();
             schedaPersonale.close();
-            schedaPersonaleController.setPazienteSelezionato(pazienteSelezionato);
+            prescriviTerapiaController.setPazienteSelezionato(pazienteSelezionato);
             navigator.gotoPage("/com/example/mindharbor/ScegliTest.fxml");
         }catch(IOException e) {
             logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);
@@ -167,7 +168,7 @@ public class SchedaPersonalePazienteGraphicController {
         try {
             Stage schedaPersonale = (Stage) prescriviTerapia.getScene().getWindow();
             schedaPersonale.close();
-            schedaPersonaleController.setPazienteSelezionato(pazienteSelezionato);
+            prescriviTerapiaController.setPazienteSelezionato(pazienteSelezionato);
             navigator.gotoPage("/com/example/mindharbor/PrescrizioneTerapia.fxml");
         }catch(IOException e) {
             logger.error(Constants.IMPOSSIBILE_CARICARE_INTERFACCIA, e);

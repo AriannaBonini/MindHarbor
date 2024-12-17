@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia.ScegliTestController;
+import com.example.mindharbor.app_controllers.psicologo.PrescriviTerapia;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.beans.TestBean;
@@ -9,6 +9,7 @@ import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import com.example.mindharbor.utilities.PrescriviTerapiaSingleton;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -51,14 +52,14 @@ public class ScegliTestGraphicController {
     private PazienteBean pazienteSelezionato;
     private static final Logger logger = LoggerFactory.getLogger(ScegliTestGraphicController.class);
     private List<TestBean> listaTestPsicologiciBean;
-    private final  ScegliTestController scegliTestController = new ScegliTestController();
+    private final PrescriviTerapia prescriviTerapiaController = PrescriviTerapiaSingleton.getInstance();
     private final  NavigatorSingleton navigator= NavigatorSingleton.getInstance();
 
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = scegliTestController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoUtente();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        pazienteSelezionato= scegliTestController.getPazienteSelezionato();
+        pazienteSelezionato= prescriviTerapiaController.getPazienteSelezionato();
 
         aggiungiInformazioni();
         getTest();
@@ -82,7 +83,7 @@ public class ScegliTestGraphicController {
             Stage scegliTest = (Stage) home.getScene().getWindow();
             scegliTest.close();
 
-            scegliTestController.eliminaPazienteSelezionato();
+            prescriviTerapiaController.eliminaPazienteSelezionato();
             navigator.gotoPage("/com/example/mindharbor/HomePsicologo.fxml");
         }catch(IOException e) {
             logger.error("Impossibile caricare l'interfaccia Home dello psicologo", e);
@@ -106,7 +107,7 @@ public class ScegliTestGraphicController {
 
     @FXML
     public void getTest() {
-         listaTestPsicologiciBean = scegliTestController.getListaTest();
+         listaTestPsicologiciBean = prescriviTerapiaController.getListaTest();
 
         if (listaTestPsicologiciBean != null) {
             CheckBox[] checkBoxes = {test1, test2, test3, test4};
@@ -135,7 +136,7 @@ public class ScegliTestGraphicController {
             }
         }
         try {
-            if(!scegliTestController.controlloNumTest(contatore,nomeTest)){
+            if(!prescriviTerapiaController.controlloNumeroTestSelezionati(contatore,nomeTest)){
                 controlloFallito();
             }else {
                 controlloSuperato();

@@ -1,10 +1,11 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.paziente.prescrivi_terapia.PrescrizioniTerapiaPazienteController;
+import com.example.mindharbor.app_controllers.psicologo.PrescriviTerapia;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.TerapiaBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import com.example.mindharbor.utilities.PrescriviTerapiaSingleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -35,13 +36,13 @@ public class PrescrizioniPazienteGraphicController {
     public ListView<Node> listViewTerapia;
 
     private static final Logger logger = LoggerFactory.getLogger(PrescrizioniPazienteGraphicController.class);
-    private final PrescrizioniTerapiaPazienteController prescrizioniTerapiaPazienteController = new PrescrizioniTerapiaPazienteController();
+    private final PrescriviTerapia prescriviTerapiaController = PrescriviTerapiaSingleton.getInstance();
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = prescrizioniTerapiaPazienteController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoUtente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        if(prescrizioniTerapiaPazienteController.getPsicologo()) {
+        if(prescriviTerapiaController.controllaEsistenzaPsicologo()) {
             getListaTerapie();
         } else {
             listaVuota.setText("Non hai ancora uno psicologo");
@@ -50,7 +51,7 @@ public class PrescrizioniPazienteGraphicController {
 
     private void getListaTerapie() {
         try {
-            List<TerapiaBean> terapieBean= prescrizioniTerapiaPazienteController.trovaTerapie();
+            List<TerapiaBean> terapieBean= prescriviTerapiaController.trovaTerapie();
             if (terapieBean.isEmpty()) {
                 listaVuota.setText("Non ci sono terapie");
             } else {

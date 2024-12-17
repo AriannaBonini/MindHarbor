@@ -1,12 +1,13 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.paziente.prenota_appuntamento.RichiestaAppuntamentoController;
+import com.example.mindharbor.app_controllers.paziente.PrenotaAppuntamento;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import com.example.mindharbor.utilities.PrenotaAppuntamentoSingleton;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -37,15 +38,15 @@ public class InserisciInfoGraphicController {
 
     private static final Logger logger = LoggerFactory.getLogger(InserisciInfoGraphicController.class);
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-    private final RichiestaAppuntamentoController richiestaAppuntamentoController = new RichiestaAppuntamentoController();
+    private final PrenotaAppuntamento prenotaAppuntamentoController = PrenotaAppuntamentoSingleton.getInstance();
     private AppuntamentiBean appuntamentoBean;
     private PazienteBean pazienteBean;
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = richiestaAppuntamentoController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = prenotaAppuntamentoController.getInfoUtente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
-        appuntamentoBean = richiestaAppuntamentoController.getRichiestaAppuntamentoScelta();
+        appuntamentoBean = prenotaAppuntamentoController.getRichiestaAppuntamento();
 
         if(appuntamentoBean.getPaziente()!=null && appuntamentoBean.getPaziente().getNome()!=null && appuntamentoBean.getPaziente().getCognome()!=null && appuntamentoBean.getPaziente().getAnni()!=null) {
             campoNome.setText(appuntamentoBean.getPaziente().getNome());
@@ -61,7 +62,7 @@ public class InserisciInfoGraphicController {
         } else {
             try {
                 pazienteBean=new PazienteBean(campoNome.getText(), campoCognome.getText(), Integer.valueOf(campoAnni.getText()));
-                if (richiestaAppuntamentoController.controllaInformazioniPaziente(pazienteBean)) {
+                if (prenotaAppuntamentoController.controllaInformazioniPaziente(pazienteBean)) {
                     caricaListaPsicologi();
                 }else {
                     new LabelDuration().duration(info,"Dati errati");
@@ -74,7 +75,7 @@ public class InserisciInfoGraphicController {
     private void caricaListaPsicologi() {
         try {
             appuntamentoBean.setPaziente(pazienteBean);
-            richiestaAppuntamentoController.setRichiestaAppuntamentoScelta(appuntamentoBean);
+            prenotaAppuntamentoController.setRichiestaAppuntamento(appuntamentoBean);
 
             Stage inserisciInfo = (Stage) conferma.getScene().getWindow();
             inserisciInfo.close();
@@ -88,7 +89,7 @@ public class InserisciInfoGraphicController {
     @FXML
     public void clickLabelHome() {
         try {
-            richiestaAppuntamentoController.eliminaRichiestaAppuntamentoScelta();
+            prenotaAppuntamentoController.eliminaRichiestaAppuntamento();
 
             Stage inserisciInfo = (Stage) home.getScene().getWindow();
             inserisciInfo.close();

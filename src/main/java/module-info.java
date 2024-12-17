@@ -21,13 +21,5 @@ module com.example.mindharbor {
     opens com.example.mindharbor.app_controllers.paziente to javafx.fxml;
     exports com.example.mindharbor.app_controllers.psicologo;
     opens com.example.mindharbor.app_controllers.psicologo to javafx.fxml;
-    exports com.example.mindharbor.app_controllers.paziente.prescrivi_terapia;
-    opens com.example.mindharbor.app_controllers.paziente.prescrivi_terapia to javafx.fxml;
-    exports com.example.mindharbor.app_controllers.paziente.prenota_appuntamento;
-    opens com.example.mindharbor.app_controllers.paziente.prenota_appuntamento to javafx.fxml;
-    exports com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia;
-    opens com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia to javafx.fxml;
-    exports com.example.mindharbor.app_controllers.psicologo.prenota_appuntamento;
-    opens com.example.mindharbor.app_controllers.psicologo.prenota_appuntamento to javafx.fxml;
     exports com.example.mindharbor.dao.mysql;
 }

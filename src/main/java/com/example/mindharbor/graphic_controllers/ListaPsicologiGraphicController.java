@@ -1,12 +1,13 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.paziente.prenota_appuntamento.ListaPsicologiController;
+import com.example.mindharbor.app_controllers.paziente.PrenotaAppuntamento;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import com.example.mindharbor.utilities.PrenotaAppuntamentoSingleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -39,16 +40,16 @@ public class ListaPsicologiGraphicController {
 
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(ListaPsicologiGraphicController.class);
-    private final ListaPsicologiController listaPsicologiController= new ListaPsicologiController();
+    private final PrenotaAppuntamento prenotaAppuntamentoController = PrenotaAppuntamentoSingleton.getInstance();
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = listaPsicologiController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = prenotaAppuntamentoController.getInfoUtente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         popolaLista();
     }
     private void popolaLista() {
         try {
-            List<PsicologoBean> listaPsicologiBean = ListaPsicologiController.getListaPsicologi();
+            List<PsicologoBean> listaPsicologiBean = prenotaAppuntamentoController.getListaPsicologi();
             if(listaPsicologiBean.isEmpty()) {
                 listaVuota.setText("Non esistono psicologi");
             }else {
@@ -93,7 +94,7 @@ public class ListaPsicologiGraphicController {
     @FXML
     public void clickLabelHome() {
         try {
-            listaPsicologiController.eliminaAppuntamentoSelezionato();
+            prenotaAppuntamentoController.eliminaRichiestaAppuntamento();
 
             Stage listaPsicologi = (Stage) home.getScene().getWindow();
             listaPsicologi.close();
@@ -130,7 +131,7 @@ public class ListaPsicologiGraphicController {
             Stage listaPsicologi = (Stage) listViewPsicologo.getScene().getWindow();
             listaPsicologi.close();
 
-            listaPsicologiController.setPsicologoSelezionato(psicologoSelezionato);
+            prenotaAppuntamentoController.setPsicologoSelezionato(psicologoSelezionato);
 
             navigator.gotoPage("/com/example/mindharbor/RichiediPrenotazione.fxml");
         } catch (IOException e) {

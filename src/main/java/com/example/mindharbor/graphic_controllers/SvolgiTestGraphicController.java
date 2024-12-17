@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.paziente.prescrivi_terapia.SvolgiTestController;
+import com.example.mindharbor.app_controllers.psicologo.PrescriviTerapia;
 import com.example.mindharbor.beans.DomandeTestBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.TestBean;
@@ -9,6 +9,7 @@ import com.example.mindharbor.constants.Constants;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import com.example.mindharbor.utilities.PrescriviTerapiaSingleton;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -85,7 +86,7 @@ public class SvolgiTestGraphicController {
     @FXML
     private ImageView tornaIndietro;
 
-    private final SvolgiTestController svolgiTestController = new SvolgiTestController();
+    private final PrescriviTerapia prescriviTerapiaController = PrescriviTerapiaSingleton.getInstance();
     private DomandeTestBean domandeTestBean;
     private  Label[] labels;
     private CheckBox[][] risposteTest;
@@ -95,9 +96,9 @@ public class SvolgiTestGraphicController {
     private TestBean testSelezionato;
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = svolgiTestController.getInfoPaziente();
+        InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoUtente();
         labelNomePaziente.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
-        testSelezionato= svolgiTestController.getTestSelezionato();
+        testSelezionato= prescriviTerapiaController.getTestSelezionato();
 
         labels= new Label[]{domanda1, domanda2, domanda3, domanda4, domanda5, domanda6};
         risposteTest= new CheckBox[][]{{felice1, triste1, arrabbiata1}, {felice2, triste2, arrabbiata2},{felice3, triste3, arrabbiata3},
@@ -108,7 +109,7 @@ public class SvolgiTestGraphicController {
     }
 
     private void aggiungiDomande() {
-        domandeTestBean = svolgiTestController.cercaDomande(testSelezionato);
+        domandeTestBean = prescriviTerapiaController.cercaDomande(testSelezionato);
 
         int numLabels = Math.min(domandeTestBean.getDomande().size(), labels.length);
         for (int i = 0; i < numLabels; i++) {
@@ -128,7 +129,7 @@ public class SvolgiTestGraphicController {
         try {
             Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare alla Home?");
             if (risposta!=0) {
-                svolgiTestController.eliminaTestSelezionato();
+                prescriviTerapiaController.eliminaTestSelezionato();
 
                 Stage svolgiTest = (Stage) home.getScene().getWindow();
                 svolgiTest.close();
@@ -144,7 +145,7 @@ public class SvolgiTestGraphicController {
         try {
             Integer risposta= new AlertMessage().Avvertenza("Sei sicuro di voler tornare indietro?");
             if (risposta!=0) {
-                svolgiTestController.eliminaTestSelezionato();
+                prescriviTerapiaController.eliminaTestSelezionato();
 
                 Stage svolgiTest = (Stage) tornaIndietro.getScene().getWindow();
                 svolgiTest.close();
@@ -185,7 +186,7 @@ public class SvolgiTestGraphicController {
         }
 
         try {
-            TestResultBean risultatoTest = svolgiTestController.calcolaRisultato(punteggiBean,testSelezionato);
+            TestResultBean risultatoTest = prescriviTerapiaController.calcolaRisultato(punteggiBean,testSelezionato);
 
             if (risultatoTest.getRisultatoTestPrecedente() == null) {
                 notificaProgresso("Risultato test: " + risultatoTest.getRisultatoUltimoTest(), "Complimenti! Hai svolto il tuo primo test");
@@ -217,7 +218,7 @@ public class SvolgiTestGraphicController {
         Stage svolgiTest = (Stage) tornaIndietro.getScene().getWindow();
         svolgiTest.close();
         try {
-            svolgiTestController.eliminaTestSelezionato();
+            prescriviTerapiaController.eliminaTestSelezionato();
 
             navigator.gotoPage("/com/example/mindharbor/ListaTest.fxml");
         } catch (IOException e) {

@@ -1,12 +1,13 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia.ListaPazientiController;
+import com.example.mindharbor.app_controllers.psicologo.PrescriviTerapia;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import com.example.mindharbor.utilities.PrescriviTerapiaSingleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -33,19 +34,19 @@ public class ListaPazientiGraphicController {
     private Text listaVuota;
     @FXML
     private ListView<Node> listViewPazienti;
-    private final ListaPazientiController listaPazientiController = new ListaPazientiController();
+    private final PrescriviTerapia prescriviTerapiaController = PrescriviTerapiaSingleton.getInstance();
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(ListaPazientiGraphicController.class);
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = listaPazientiController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoUtente();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         popolaLista();
     }
 
     private void popolaLista() {
         try {
-            List<PazienteBean> listaPazienti = listaPazientiController.getListaPazienti();
+            List<PazienteBean> listaPazienti = prescriviTerapiaController.getListaPazienti();
             creaVBoxListaPazienti(listaPazienti);
         }catch (DAOException e) {
             logger.info("Non non ci sono pazienti", e);
@@ -109,7 +110,7 @@ public class ListaPazientiGraphicController {
             Node nodo = listViewPazienti.getSelectionModel().getSelectedItem();
             if(nodo!=null) {
                 PazienteBean pazienteSelezionato = (PazienteBean) nodo.getUserData();
-                listaPazientiController.setPazienteSelezionato(pazienteSelezionato);
+                prescriviTerapiaController.setPazienteSelezionato(pazienteSelezionato);
 
                 Stage listaPazienti = (Stage) listViewPazienti.getScene().getWindow();
                 listaPazienti.close();

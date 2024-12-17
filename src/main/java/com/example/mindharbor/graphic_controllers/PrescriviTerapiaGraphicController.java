@@ -1,6 +1,6 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.psicologo.prescrivi_terapia.PrescriviTerapiaController;
+import com.example.mindharbor.app_controllers.psicologo.PrescriviTerapia;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.beans.TerapiaBean;
@@ -9,6 +9,7 @@ import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.session.SessionManager;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import com.example.mindharbor.utilities.PrescriviTerapiaSingleton;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -55,11 +56,11 @@ public class PrescriviTerapiaGraphicController {
     private final   NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private PazienteBean pazienteSelezionato;
     private TestBean testbean;
-    private final PrescriviTerapiaController prescriviTerapiaController = new PrescriviTerapiaController();
+    private final PrescriviTerapia prescriviTerapiaController = PrescriviTerapiaSingleton.getInstance();
 
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoUtente();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
 
         pazienteSelezionato = prescriviTerapiaController.getPazienteSelezionato();
@@ -103,7 +104,7 @@ public class PrescriviTerapiaGraphicController {
 
     private void modificaStatoNotifica() {
         try {
-            prescriviTerapiaController.modificaStatoTestSvolto(pazienteSelezionato);
+            prescriviTerapiaController.aggiornaStatoNotificaTest(pazienteSelezionato);
         } catch (DAOException e ) {
             logger.info("Errore durante la modifica dello stato dei test psicologici", e);
         }
@@ -112,7 +113,7 @@ public class PrescriviTerapiaGraphicController {
     @FXML
     public void clickLabelHome() {
         try {
-            prescriviTerapiaController.deletePazienteSelezionato();
+            prescriviTerapiaController.eliminaPazienteSelezionato();
 
             Stage prescriviTerapia = (Stage) home.getScene().getWindow();
             prescriviTerapia.close();
@@ -168,8 +169,6 @@ public class PrescriviTerapiaGraphicController {
             Alert alert= new AlertMessage().Informazione("ESITO POSITIVO", "Operazione completata", "Terapia assegnata con successo");
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             alert.showAndWait();
-
-            // IL PROBLEMA DELLA NOTIFICA POST PRESCRIZIONE DOVREBBE STARE QUI
 
             clickLabelTornaIndietro();
 

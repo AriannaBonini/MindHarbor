@@ -1,12 +1,13 @@
 package com.example.mindharbor.graphic_controllers;
 
-import com.example.mindharbor.app_controllers.psicologo.prenota_appuntamento.ListaRichiesteAppuntamentiController;
+import com.example.mindharbor.app_controllers.paziente.PrenotaAppuntamento;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.exceptions.DAOException;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImageDecorator;
 import com.example.mindharbor.utilities.NavigatorSingleton;
+import com.example.mindharbor.utilities.PrenotaAppuntamentoSingleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -36,19 +37,19 @@ public class ListaRichiesteAppuntamentiGraphicController {
     @FXML
     private Text listaVuota;
 
-    private final ListaRichiesteAppuntamentiController listaRichiesteAppuntamentiController = new ListaRichiesteAppuntamentiController();
+    private final PrenotaAppuntamento prenotaAppuntamentoController = PrenotaAppuntamentoSingleton.getInstance();
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private static final Logger logger = LoggerFactory.getLogger(ListaRichiesteAppuntamentiGraphicController.class);
 
     public void initialize() {
-        InfoUtenteBean infoUtenteBean = listaRichiesteAppuntamentiController.getInfoPsicologo();
+        InfoUtenteBean infoUtenteBean = prenotaAppuntamentoController.getInfoUtente();
         labelNomePsicologo.setText(infoUtenteBean.getNome() + " " + infoUtenteBean.getCognome());
         popolaLista();
     }
 
     private void popolaLista() {
         try {
-            List<AppuntamentiBean> listaRichieste = listaRichiesteAppuntamentiController.getListaRichieste();
+            List<AppuntamentiBean> listaRichieste = prenotaAppuntamentoController.getListaRichieste();
             if(listaRichieste.isEmpty()) {
                 listaVuota.setText("Non ci sono richieste di appuntamento");
             }else {
@@ -118,7 +119,7 @@ public class ListaRichiesteAppuntamentiGraphicController {
             if(nodo!=null) {
 
                 AppuntamentiBean richiestaAppuntamentoSelezionato = (AppuntamentiBean) nodo.getUserData();
-                listaRichiesteAppuntamentiController.setRichiestaAppuntamentoSelezionato(richiestaAppuntamentoSelezionato);
+                prenotaAppuntamentoController.setRichiestaAppuntamento(richiestaAppuntamentoSelezionato);
 
                 Stage listaRichieste = (Stage) listViewPazienti.getScene().getWindow();
                 listaRichieste.close();

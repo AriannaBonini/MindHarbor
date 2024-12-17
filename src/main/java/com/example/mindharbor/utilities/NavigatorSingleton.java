@@ -48,20 +48,20 @@ public class NavigatorSingleton {
 
     public void setAppuntamentoBean(AppuntamentiBean app) {this.appBean =app;}
     public AppuntamentiBean getAppuntamentoBean() {return appBean;}
-    public void deleteAppuntamentoBean() {this.appBean =null;}
+    public void eliminaAppuntamentoBean() {this.appBean =null;}
 
 
     public PazienteBean getPazienteBean() {return pazienteBean;}
     public void setPazienteBean(PazienteBean pazienteBean) {this.pazienteBean = pazienteBean;}
     //questo metodo viene utilizzato per caricare l'istanza di PazientiBean contenente il paziente selezionato dallo psicologo nella Lista dei suoi pazienti.
-    public void deletePazienteBean() {this.pazienteBean=null;}
+    public void eliminaPazienteBean() {this.pazienteBean=null;}
 
 
     public TestBean getTestBean() {return testBean;}
     public void setTestBean(TestBean testBean) {this.testBean=testBean;}
-    public void deleteTestBean(){this.testBean=null;}
+    public void eliminaTestBean(){this.testBean=null;}
 
     public PsicologoBean getPsicologoBean() {return psicologoBean;}
     public void setPsicologoBean(PsicologoBean psicologoBean) {this.psicologoBean=psicologoBean;}
-    public void deletePsicologoBean(){this.psicologoBean=null;}
+    public void eliminaPsicologoBean(){this.psicologoBean=null;}
 }
