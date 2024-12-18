@@ -274,11 +274,11 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
 
     @Override
     public PreparedStatement createPreparedStatement(Connection conn, String sql, Utente utente) throws DAOException {
-        String sqlQuery;
+        String sqlQuery = sql;
         if (utente.getUserType().equals(UserType.PSICOLOGO)) {
-            sqlQuery = sql + QuerySQLAppuntamentoDAO.CONFRONTO_USERNAME_PSICOLOGO;
+            sqlQuery += QuerySQLAppuntamentoDAO.CONFRONTO_USERNAME_PSICOLOGO;
         } else {
-            sqlQuery = sql + QuerySQLAppuntamentoDAO.CONFRONTO_USERNAME_PAZIENTE;
+            sqlQuery += QuerySQLAppuntamentoDAO.CONFRONTO_USERNAME_PAZIENTE;
         }
 
         try {

@@ -5,7 +5,7 @@ import com.example.mindharbor.beans.DomandeTestBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.beans.RisultatiTestBean;
-import com.example.mindharbor.costanti.Costanti;
+import com.example.mindharbor.utilities.costanti.Costanti;
 import com.example.mindharbor.eccezioni.DAOException;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;

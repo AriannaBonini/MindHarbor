@@ -1,4 +1,4 @@
-package com.example.mindharbor.utilities;
+package com.example.mindharbor.utilities.costanti;
 
 public class CostantiLetturaScrittura {
 

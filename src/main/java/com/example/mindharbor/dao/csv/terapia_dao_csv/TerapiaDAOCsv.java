@@ -3,7 +3,7 @@ package com.example.mindharbor.dao.csv.terapia_dao_csv;
 import com.example.mindharbor.dao.TerapiaDAO;
 import com.example.mindharbor.eccezioni.DAOException;
 import com.example.mindharbor.model.*;
-import com.example.mindharbor.utilities.CostantiLetturaScrittura;
+import com.example.mindharbor.utilities.costanti.CostantiLetturaScrittura;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

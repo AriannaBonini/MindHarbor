@@ -7,7 +7,7 @@ import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.tipo_utente.UserType;
-import com.example.mindharbor.utilities.CostantiLetturaScrittura;
+import com.example.mindharbor.utilities.costanti.CostantiLetturaScrittura;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 import java.time.LocalDate;
 import java.util.*;

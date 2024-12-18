@@ -3,7 +3,7 @@ package com.example.mindharbor.dao.csv.psicologo_dao_csv;
 import com.example.mindharbor.dao.PsicologoDAO;
 import com.example.mindharbor.eccezioni.DAOException;
 import com.example.mindharbor.model.Psicologo;
-import com.example.mindharbor.utilities.CostantiLetturaScrittura;
+import com.example.mindharbor.utilities.costanti.CostantiLetturaScrittura;
 import com.example.mindharbor.utilities.UtilitiesCSV;
 import java.util.List;
 
