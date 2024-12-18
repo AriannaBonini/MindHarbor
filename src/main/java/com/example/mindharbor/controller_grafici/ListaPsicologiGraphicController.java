@@ -4,8 +4,7 @@ import com.example.mindharbor.controller_applicativi.paziente.PrenotaAppuntament
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;
 import com.example.mindharbor.eccezioni.DAOException;
-import com.example.mindharbor.patterns.decorator.GenereDecorator;
-import com.example.mindharbor.patterns.decorator.ImmagineDecorator;
+import com.example.mindharbor.utilities.ListaGraphicControllerHelper;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.PrenotaAppuntamentoSingleton;
 import javafx.collections.FXCollections;
@@ -16,8 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -61,34 +58,17 @@ public class ListaPsicologiGraphicController {
     }
     private void creaVBoxListaPsicologi(List<PsicologoBean> listaPsicologiBean) {
         listViewPsicologo.getItems().clear();
-
         ObservableList<Node> nodi = FXCollections.observableArrayList();
-        for(PsicologoBean psiBean : listaPsicologiBean) {
 
-            VBox boxPsicologo =new VBox();
-            HBox hBoxPsicologo =new HBox();
+        for (PsicologoBean psiBean : listaPsicologiBean) {
             ImageView immaginePsicologo = new ImageView();
-
-            Label nomePsicologo = new Label("\n     NOME:" + " " + psiBean.getNome());
-            Label cognomePsicologo = new Label("     COGNOME:" + " " + psiBean.getCognome());
-
-            nomePsicologo.setTextFill(Color.WHITE);
-            cognomePsicologo.setTextFill(Color.WHITE);
-
-            boxPsicologo.getChildren().addAll(nomePsicologo, cognomePsicologo);
-
-            ImmagineDecorator immagineDecorator = new GenereDecorator(immaginePsicologo,psiBean.getGenere());
-            immagineDecorator.caricaImmagine();
-
-            hBoxPsicologo.getChildren().addAll(immaginePsicologo, boxPsicologo);
+            HBox hBoxPsicologo = ListaGraphicControllerHelper.createPersonBox(immaginePsicologo, psiBean.getNome(), psiBean.getCognome(), psiBean.getGenere());
             nodi.add(hBoxPsicologo);
-
             hBoxPsicologo.setUserData(psiBean);
-
         }
+
         listViewPsicologo.setFixedCellSize(100);
         listViewPsicologo.getItems().addAll(nodi);
-
     }
 
     @FXML

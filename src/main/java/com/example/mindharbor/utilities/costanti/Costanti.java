@@ -1,4 +1,4 @@
-package com.example.mindharbor.costanti;
+package com.example.mindharbor.utilities.costanti;
 
 public class Costanti {
 

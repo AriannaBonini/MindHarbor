@@ -4,8 +4,7 @@ import com.example.mindharbor.controller_applicativi.psicologo.PrescriviTerapia;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.eccezioni.DAOException;
-import com.example.mindharbor.patterns.decorator.GenereDecorator;
-import com.example.mindharbor.patterns.decorator.ImmagineDecorator;
+import com.example.mindharbor.utilities.ListaGraphicControllerHelper;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.PrescriviTerapiaSingleton;
 import javafx.collections.FXCollections;
@@ -16,8 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -56,37 +53,13 @@ public class ListaPazientiGraphicController {
 
     private void creaVBoxListaPazienti(List<PazienteBean> listaPazienti) {
         listViewPazienti.getItems().clear();
-
         ObservableList<Node> nodi = FXCollections.observableArrayList();
 
         for (PazienteBean paz : listaPazienti) {
-
-            VBox boxPaziente = new VBox();
-            HBox hBoxPaziente = new HBox();
             ImageView immaginePaziente = new ImageView();
-
-            Label nomePaziente = new Label("\n     NOME:" + " " + paz.getNome());
-            Label cognomePaziente = new Label("     COGNOME:" + " " + paz.getCognome());
-
-            if(paz.getNumTestSvolti()>0) {
-                nomePaziente.setStyle("-fx-font-weight: bold;");
-                cognomePaziente.setStyle("-fx-font-weight: bold;");
-
-            }
-
-            nomePaziente.setTextFill(Color.WHITE);
-            cognomePaziente.setTextFill(Color.WHITE);
-
-            boxPaziente.getChildren().addAll(nomePaziente, cognomePaziente);
-
-            ImmagineDecorator immagineDecorator = new GenereDecorator(immaginePaziente,paz.getGenere());
-            immagineDecorator.caricaImmagine();
-
-            hBoxPaziente.getChildren().addAll(immaginePaziente, boxPaziente);
+            HBox hBoxPaziente = ListaGraphicControllerHelper.createPersonBox(immaginePaziente, paz.getNome(), paz.getCognome(), paz.getGenere());
             nodi.add(hBoxPaziente);
-
             hBoxPaziente.setUserData(paz);
-
         }
 
         listViewPazienti.setFixedCellSize(100);
