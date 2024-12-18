@@ -31,6 +31,11 @@ public class PrenotaAppuntamento {
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
     public InfoUtenteBean getInfoUtente() {return new SetInfoUtente().getInfo();}
 
+    public boolean controlloFormatoAnni(String anni) {
+        //controlla se la stringa anni è formata solo da cifre numeriche.
+        return anni.matches("\\d+");
+    }
+
     private final List<LocalTime> timeRules = List.of(
             LocalTime.of(8, 30),
             LocalTime.of(18, 30),

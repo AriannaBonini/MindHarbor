@@ -60,6 +60,10 @@ public class InserisciInfoGraphicController {
         if(campoNome.getText().isEmpty() || campoCognome.getText().isEmpty() || campoAnni.getText().isEmpty()) {
             new LabelDuration().duration(info,"Compila tutti i campi");
         } else {
+            if(!prenotaAppuntamentoController.controlloFormatoAnni(campoAnni.getText())) {
+                new LabelDuration().duration(info,"Formato anni errato");
+                return;
+            }
             try {
                 pazienteBean=new PazienteBean(campoNome.getText(), campoCognome.getText(), Integer.valueOf(campoAnni.getText()));
                 if (prenotaAppuntamentoController.controllaInformazioniPaziente(pazienteBean)) {
