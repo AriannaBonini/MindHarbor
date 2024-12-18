@@ -308,6 +308,6 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
             throw new DAOException(e.getMessage());
         }
     }
-
 }
 
+// Commento per commit
