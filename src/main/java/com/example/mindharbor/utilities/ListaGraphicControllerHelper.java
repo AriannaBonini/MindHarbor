@@ -9,6 +9,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class ListaGraphicControllerHelper {
+
+    private ListaGraphicControllerHelper() {//costruttore privato//
+    }
+
     public static HBox createPersonBox(ImageView imageView, String nome, String cognome, String genere) {
         Label labelNome = new Label("\n     NOME: " + nome);
         Label labelCognome = new Label("     COGNOME: " + cognome);

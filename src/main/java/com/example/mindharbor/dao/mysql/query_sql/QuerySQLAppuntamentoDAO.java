@@ -72,7 +72,7 @@ public abstract class QuerySQLAppuntamentoDAO {
             "WHERE " + ID_APPUNTAMENTO + " = ?";
 
 
-    protected static final String RICHIESTA_DI_APPPUNTAMENTO_ACCETTATA="UPDATE " + TABELLA_APPUNTAMENTO + " " +
+    protected static final String RICHIESTA_DI_APPUNTAMENTO_ACCETTATA ="UPDATE " + TABELLA_APPUNTAMENTO + " " +
             "SET " + STATO_APPUNTAMENTO +  " = 1 " + " , " + STATO_NOTIFICA_PAZIENTE + " = 1 " + " " +
             "WHERE " + ID_APPUNTAMENTO + " = ? ";
 

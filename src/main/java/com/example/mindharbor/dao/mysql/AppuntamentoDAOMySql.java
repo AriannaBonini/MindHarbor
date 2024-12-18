@@ -195,7 +195,7 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
     public void updateRichiesta(Appuntamento appuntamento) throws DAOException {
 
         Connection conn = ConnectionFactory.getConnection();
-        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.RICHIESTA_DI_APPPUNTAMENTO_ACCETTATA)) {
+        try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.RICHIESTA_DI_APPUNTAMENTO_ACCETTATA)) {
 
             stmt.setInt(1, appuntamento.getIdAppuntamento());
             stmt.executeUpdate();
