@@ -10,14 +10,13 @@ public abstract class AbsGestoreInput implements InterfacciaControllerGraficiCLI
         Scanner input = new Scanner(System.in);
         int choice;
         while (true) {
-            GestoreOutput.stampaMessaggio("Inserisci la tua scelta: ");
+            GestoreOutput.stampaMessaggio("\nInserisci la tua scelta: ");
             choice = input.nextInt();
             if (choice >= min && choice <= max) {
                 break;
             }
             GestoreOutput.stampaMessaggio("Scelta non valida\n");
         }
-
         return choice;
     }
 }

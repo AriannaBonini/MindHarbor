@@ -10,12 +10,14 @@ import org.slf4j.LoggerFactory;
 public class ControllerGraficoHomePazienteCLI extends AbsGestoreInput{
 
     private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoHomePazienteCLI.class);
-    private final HomePazienteController homePazienteController= new HomePazienteController();
+    private final HomePazienteController homePazienteController = new HomePazienteController();
+
     @Override
     public void start() {
-        GestoreOutput.pulisciPagina();
 
-        boolean esci=false;
+        GestoreOutput.pulisciPagina();
+        boolean esci = false;
+
         while(!esci) {
             int opzione;
             try {
@@ -23,9 +25,9 @@ public class ControllerGraficoHomePazienteCLI extends AbsGestoreInput{
                 switch(opzione) {
                     case 1 -> System.out.println("Prenota Appuntamento");
                     case 2 -> listaAppuntamenti();
-                    case 3 ->System.out.println("Terapia");
-                    case 4 ->System.out.println("Test");
-                    case 5 -> esci=true;
+                    case 3 -> System.out.println("Terapia");
+                    case 4 -> System.out.println("Test");
+                    case 5 -> esci = true;
                     default -> throw new EccezioneFormatoNonValido("Scelta non valida");
                 }
             } catch (EccezioneFormatoNonValido e) {
@@ -38,7 +40,7 @@ public class ControllerGraficoHomePazienteCLI extends AbsGestoreInput{
 
     @Override
     public int mostraMenu() {
-        GestoreOutput.stampaMessaggio(CodiciAnsi.ANSI_GRASSETTO +"HOME PAGE\n"+ CodiciAnsi.ANSI_RIPRISTINA_GRASSETTO);
+        GestoreOutput.stampaMessaggio(CodiciAnsi.ANSI_GRASSETTO + "HOME PAGE\n" + CodiciAnsi.ANSI_RIPRISTINA_GRASSETTO);
         GestoreOutput.stampaMessaggio("1) Prenota Appuntamento");
         GestoreOutput.stampaMessaggio("2) Lista Appuntamenti");
         GestoreOutput.stampaMessaggio("3) Terapia");

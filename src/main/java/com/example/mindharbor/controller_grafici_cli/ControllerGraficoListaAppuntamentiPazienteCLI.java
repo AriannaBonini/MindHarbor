@@ -7,11 +7,8 @@ import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.eccezioni.EccezioneFormatoNonValido;
 import com.example.mindharbor.utilities.cli_helper.CodiciAnsi;
 import com.example.mindharbor.utilities.cli_helper.GestoreOutput;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
 public class ControllerGraficoListaAppuntamentiPazienteCLI extends AbsGestoreInput {
@@ -23,7 +20,6 @@ public class ControllerGraficoListaAppuntamentiPazienteCLI extends AbsGestoreInp
     @Override
     public void start() {
         GestoreOutput.pulisciPagina();
-
         if (appuntamentiController.getPsicologo()) {
             modificaStatoNotifica();
             boolean esci = false;
@@ -48,7 +44,7 @@ public class ControllerGraficoListaAppuntamentiPazienteCLI extends AbsGestoreInp
     }
 
     private void assenzaPsicologo() {
-        GestoreOutput.stampaMessaggio(CodiciAnsi.ANSI_GRASSETTO +"LISTA APPUNTAMENTI \n"+ CodiciAnsi.ANSI_RIPRISTINA_GRASSETTO);
+        GestoreOutput.stampaMessaggio(CodiciAnsi.ANSI_GRASSETTO + "LISTA APPUNTAMENTI \n" + CodiciAnsi.ANSI_RIPRISTINA_GRASSETTO);
         GestoreOutput.stampaMessaggio("NOME : " + infoUtenteBean.getNome() + "\n" + "COGNOME : " + infoUtenteBean.getCognome() + "\n");
         GestoreOutput.stampaMessaggio("Non hai ancora uno psicologo");
         boolean esci = false;
@@ -67,10 +63,9 @@ public class ControllerGraficoListaAppuntamentiPazienteCLI extends AbsGestoreInp
         }
     }
 
-
     @Override
     public int mostraMenu() {
-        GestoreOutput.stampaMessaggio(CodiciAnsi.ANSI_GRASSETTO +"LISTA APPUNTAMENTI \n"+ CodiciAnsi.ANSI_RIPRISTINA_GRASSETTO);
+        GestoreOutput.stampaMessaggio(CodiciAnsi.ANSI_GRASSETTO + "LISTA APPUNTAMENTI \n" + CodiciAnsi.ANSI_RIPRISTINA_GRASSETTO);
         GestoreOutput.stampaMessaggio("NOME : " + infoUtenteBean.getNome() + "\n" + "COGNOME : " + infoUtenteBean.getCognome() + "\n");
         GestoreOutput.stampaMessaggio("1) In Programma");
         GestoreOutput.stampaMessaggio("2) Passati");
@@ -84,7 +79,7 @@ public class ControllerGraficoListaAppuntamentiPazienteCLI extends AbsGestoreInp
             try {
                 List<AppuntamentiBean> appuntamenti = appuntamentiController.getAppuntamentiPaziente(tipologiaAppuntamenti);
                 if (appuntamenti.isEmpty()) {
-                    GestoreOutput.stampaMessaggio("Non ci sono appuntamenti");
+                    GestoreOutput.stampaMessaggio("Non ci sono appuntamenti\n\n");
                 } else {
                     stampaAppuntamenti(appuntamenti, tipologiaAppuntamenti);
                 }
@@ -105,7 +100,6 @@ public class ControllerGraficoListaAppuntamentiPazienteCLI extends AbsGestoreInp
             GestoreOutput.separatore();
         }
     }
-
 
     private void modificaStatoNotifica() {
         try {
