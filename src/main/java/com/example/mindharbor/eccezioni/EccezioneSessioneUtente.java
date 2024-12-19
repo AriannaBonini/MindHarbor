@@ -2,16 +2,16 @@ package com.example.mindharbor.eccezioni;
 
 import java.io.Serial;
 
-public class SessionUserException extends Exception{
+public class EccezioneSessioneUtente extends Exception{
 
     @Serial
     private static final long serialVersionUID = 3L;
 
-    public SessionUserException(){
+    public EccezioneSessioneUtente(){
         super("The user hasn't been defined yet");
     }
 
-    public SessionUserException(String messaggio) {
+    public EccezioneSessioneUtente(String messaggio) {
         super(messaggio);
     }
 }

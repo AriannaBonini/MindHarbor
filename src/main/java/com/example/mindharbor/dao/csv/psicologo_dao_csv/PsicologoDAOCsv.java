@@ -1,7 +1,7 @@
 package com.example.mindharbor.dao.csv.psicologo_dao_csv;
 
 import com.example.mindharbor.dao.PsicologoDAO;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.utilities.costanti.CostantiLetturaScrittura;
 import com.example.mindharbor.utilities.UtilitiesCSV;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PsicologoDAOCsv implements PsicologoDAO {
 
-    public Psicologo getInfoPsicologo(Psicologo psicologo) throws DAOException {
+    public Psicologo getInfoPsicologo(Psicologo psicologo) throws EccezioneDAO {
         // Leggi le righe dal file CSV usando il CSVReader
         try {
             List<String[]> righeCSV = UtilitiesCSV.leggiRigheDaCsv(ConstantsPsicologoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
@@ -24,8 +24,8 @@ public class PsicologoDAOCsv implements PsicologoDAO {
                     break; // Esci dal ciclo una volta trovato
                 }
             }
-        } catch (DAOException e) {
-            throw new DAOException("Errore nella lettura del file CSV: " + e.getMessage(), e);
+        } catch (EccezioneDAO e) {
+            throw new EccezioneDAO("Errore nella lettura del file CSV: " + e.getMessage(), e);
         }
 
         return psicologo; // Restituisce l'oggetto psicologo aggiornato

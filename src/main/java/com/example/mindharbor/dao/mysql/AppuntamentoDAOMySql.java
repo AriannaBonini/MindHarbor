@@ -2,7 +2,7 @@ package com.example.mindharbor.dao.mysql;
 
 import com.example.mindharbor.dao.AppuntamentoDAO;
 import com.example.mindharbor.dao.mysql.query_sql.QuerySQLAppuntamentoDAO;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.tipo_utente.UserType;
 import com.example.mindharbor.model.Appuntamento;
@@ -16,7 +16,7 @@ import java.util.List;
 public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements HelperDAO, AppuntamentoDAO {
 
     @Override
-    public List<Appuntamento>  trovaAppuntamentiPaziente(Utente paziente, String selectedTabName) throws DAOException {
+    public List<Appuntamento>  trovaAppuntamentiPaziente(Utente paziente, String selectedTabName) throws EccezioneDAO {
         List<Appuntamento> appuntamentoPazienteList = new ArrayList<>();
 
         String sql = QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI_PAZIENTE;
@@ -43,14 +43,14 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return appuntamentoPazienteList;
     }
 
     @Override
-    public List<Appuntamento> trovaAppuntamentiPsicologo(Utente psicologo, String selectedTabName) throws DAOException {
+    public List<Appuntamento> trovaAppuntamentiPsicologo(Utente psicologo, String selectedTabName) throws EccezioneDAO {
         List<Appuntamento> appuntamentoPsicologoList = new ArrayList<>();
 
         String sql = QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI_PSICOLOGO;
@@ -60,6 +60,7 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
         } else {
             sql += QuerySQLAppuntamentoDAO.TROVA_APPUNTAMENTI_PASSATI;
         }
+
 
         Connection conn = ConnectionFactory.getConnection();
 
@@ -81,14 +82,14 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return appuntamentoPsicologoList;
     }
 
     @Override
-    public void insertRichiestaAppuntamento(Appuntamento appuntamento) throws DAOException{
+    public void insertRichiestaAppuntamento(Appuntamento appuntamento) throws EccezioneDAO {
         Connection conn = ConnectionFactory.getConnection();
 
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.INSERISCI_RICHIESTA_APPUNTAMENTO)) {
@@ -101,12 +102,12 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
     @Override
-    public Integer getNumRicAppDaNotificare(Utente utente) throws DAOException {
+    public Integer getNumRicAppDaNotificare(Utente utente) throws EccezioneDAO {
         int count = 0;
         Connection conn = ConnectionFactory.getConnection();
 
@@ -117,14 +118,14 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
                 count = rs.getInt("Total");
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return count;
     }
 
     @Override
-    public List<Appuntamento> trovaRichiesteAppuntamento(Utente utente) throws DAOException {
+    public List<Appuntamento> trovaRichiesteAppuntamento(Utente utente) throws EccezioneDAO {
         List<Appuntamento> richiesteAppuntamento = new ArrayList<>();
 
         Connection conn = ConnectionFactory.getConnection();
@@ -146,13 +147,13 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
             richiesteAppuntamento=new UtenteDAOMySql().richiestaAppuntamentiInfoPaziente(richiesteAppuntamento);
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
         return richiesteAppuntamento;
     }
 
     @Override
-    public void updateStatoNotifica(Appuntamento richiestaAppuntamento) throws DAOException {
+    public void updateStatoNotifica(Appuntamento richiestaAppuntamento) throws EccezioneDAO {
 
         Connection conn = ConnectionFactory.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.UPDATE_STATO_NOTIFICA_PSICOLOGO)) {
@@ -161,12 +162,12 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
     @Override
-    public Appuntamento getInfoRichiesta(Appuntamento richiestaAppuntamento) throws DAOException {
+    public Appuntamento getInfoRichiesta(Appuntamento richiestaAppuntamento) throws EccezioneDAO {
         Appuntamento richiesta = null;
 
         Connection conn = ConnectionFactory.getConnection();
@@ -185,14 +186,14 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
             }
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return richiesta;
     }
 
     @Override
-    public void updateRichiesta(Appuntamento appuntamento) throws DAOException {
+    public void updateRichiesta(Appuntamento appuntamento) throws EccezioneDAO {
 
         Connection conn = ConnectionFactory.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.RICHIESTA_DI_APPUNTAMENTO_ACCETTATA)) {
@@ -201,15 +202,15 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
-    // Chiamata al metodo per aggiungere lo psicologo al paziente fuori dal blocco try-with-resources
+        // Chiamata al metodo per aggiungere lo psicologo al paziente fuori dal blocco try-with-resources
         new PazienteDAOMySql().aggiungiPsicologoAlPaziente(appuntamento);
     }
 
     @Override
-    public void eliminaRichiesteDiAppuntamentoPerAltriPsicologi(Appuntamento appuntamento) throws DAOException{
+    public void eliminaRichiesteDiAppuntamentoPerAltriPsicologi(Appuntamento appuntamento) throws EccezioneDAO {
         Connection conn = ConnectionFactory.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.ELIMINA_RICHIESTE_DI_APPUNTAMENTO)) {
 
@@ -218,13 +219,13 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
     }
 
     @Override
-    public void eliminaRichiesta(Appuntamento appuntamento) throws DAOException {
+    public void eliminaRichiesta(Appuntamento appuntamento) throws EccezioneDAO {
 
         Connection conn = ConnectionFactory.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.ELIMINA_RICHIESTA_DI_APPUNTAMENTO)) {
@@ -233,12 +234,12 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
     @Override
-    public boolean getDisp(Integer idAppuntamento, Utente utente) throws DAOException{
+    public boolean getDisp(Integer idAppuntamento, Utente utente) throws EccezioneDAO {
         boolean disponibile = false;
 
         Connection conn = ConnectionFactory.getConnection();
@@ -253,13 +254,13 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
         return disponibile;
     }
 
     @Override
-    public void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
+    public void aggiornaStatoNotificaPaziente(Utente utente) throws EccezioneDAO {
 
         Connection conn = ConnectionFactory.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLAppuntamentoDAO.UPDATE_STATO_NOTIFICA_PAZIENTE)) {
@@ -268,31 +269,12 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
-    @Override
-    public PreparedStatement createPreparedStatement(Connection conn, String sql, Utente utente) throws DAOException {
-        String sqlQuery = sql;
-        if (utente.getUserType().equals(UserType.PSICOLOGO)) {
-            sqlQuery += QuerySQLAppuntamentoDAO.CONFRONTO_USERNAME_PSICOLOGO;
-        } else {
-            sqlQuery += QuerySQLAppuntamentoDAO.CONFRONTO_USERNAME_PAZIENTE;
-        }
 
-        try {
-            PreparedStatement stmt = conn.prepareStatement(sqlQuery, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setString(1, utente.getUsername());
-            return stmt; // Restituisci il PreparedStatement preparato
-
-        } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
-        }
-    }
-
-    @Override
-    public PreparedStatement createPreparedStatement(Connection conn, Utente utente) throws DAOException{
+    public PreparedStatement createPreparedStatement(Connection conn, Utente utente) throws EccezioneDAO {
         String sql;
         if (utente.getUserType().equals(UserType.PSICOLOGO)) {
             sql = QuerySQLAppuntamentoDAO.NUMERO_RICHIESTE_APPUNTAMENTI_DA_NOTIFICARE_PSICOLOGO;
@@ -305,9 +287,7 @@ public class AppuntamentoDAOMySql extends QuerySQLAppuntamentoDAO implements Hel
             stmt.setString(1, utente.getUsername());
             return stmt;
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 }
-
-// Commento per commit

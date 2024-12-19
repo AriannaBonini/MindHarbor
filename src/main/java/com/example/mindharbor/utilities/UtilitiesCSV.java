@@ -1,6 +1,6 @@
 package com.example.mindharbor.utilities;
 
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.utilities.costanti.CostantiLetturaScrittura;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -27,14 +27,14 @@ public class UtilitiesCSV {
      * <p>
      * Questo metodo legge il contenuto di un file CSV situato nel percorso specificato
      * e restituisce una lista contenente tutte le righe del file come stringhe.
-     * Se si verifica un errore durante la lettura del file, viene lanciata un'eccezione {@link DAOException}.
+     * Se si verifica un errore durante la lettura del file, viene lanciata un'eccezione {@link EccezioneDAO}.
      * </p>
      *
      * @param filePath Il percorso del file CSV da cui leggere le righe.
      * @return Una lista di stringhe, dove ciascuna stringa rappresenta una riga del file CSV.
-     * @throws DAOException Se si verifica un errore durante la lettura del file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura del file CSV.
      */
-    public static List<String[]> leggiRigheDaCsv(String filePath, int x) throws DAOException {
+    public static List<String[]> leggiRigheDaCsv(String filePath, int x) throws EccezioneDAO {
         List<String[]> righe = new ArrayList<>();
         try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
             if(x==0) { //solo lettura
@@ -47,7 +47,7 @@ public class UtilitiesCSV {
                 righe.add(colonne);
             }
         } catch (IOException | CsvValidationException e) {
-            throw new DAOException("Errore nella lettura del file CSV: " + e.getMessage(), e);
+            throw new EccezioneDAO("Errore nella lettura del file CSV: " + e.getMessage(), e);
         }
         return righe;
     }
@@ -57,21 +57,21 @@ public class UtilitiesCSV {
      * <p>
      * Questo metodo sovrascrive il contenuto del file CSV situato nel percorso specificato
      * con le righe fornite nella lista. Se si verifica un errore durante la scrittura del file,
-     * viene lanciata un'eccezione {@link DAOException}.
+     * viene lanciata un'eccezione {@link EccezioneDAO}.
      * </p>
      *
      * @param filePath       Il percorso del file CSV in cui scrivere le righe aggiornate.
      * @param righeAggiornate Una lista di stringhe, dove ciascuna stringa rappresenta una riga da scrivere nel file CSV.
-     * @throws DAOException Se si verifica un errore durante la scrittura nel file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la scrittura nel file CSV.
      */
-    public static void scriviRigheAggiornate(String filePath, List<String[]> righeAggiornate) throws DAOException {
+    public static void scriviRigheAggiornate(String filePath, List<String[]> righeAggiornate) throws EccezioneDAO {
         try (CSVWriter writer = new CSVWriter(new FileWriter(filePath))) {
             // Scrivi ogni riga (che è una singola stringa) nel CSV
             for (String[] riga : righeAggiornate) {
                 writer.writeNext(riga);  // Scrivi la riga come un array di stringhe, dove ogni stringa è una colonna
             }
         } catch (IOException e) {
-            throw new DAOException("Errore nella scrittura nel file CSV: " + e.getMessage(), e);
+            throw new EccezioneDAO("Errore nella scrittura nel file CSV: " + e.getMessage(), e);
         }
     }
 
@@ -88,9 +88,9 @@ public class UtilitiesCSV {
      * @param indicePaziente L'indice della colonna che contiene lo username del paziente.
      * @param indiceNotifica L'indice della colonna che contiene lo stato della notifica.
      * @return Il numero di notifiche attive trovate per il paziente specificato.
-     * @throws DAOException Se si verifica un errore durante la lettura del file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura del file CSV.
      */
-    public static int contaNotifichePaziente(String filePath, String username, int indicePaziente, int indiceNotifica) throws DAOException {
+    public static int contaNotifichePaziente(String filePath, String username, int indicePaziente, int indiceNotifica) throws EccezioneDAO {
         int contatore = 0;
 
         // Ottieni le righe dal CSV

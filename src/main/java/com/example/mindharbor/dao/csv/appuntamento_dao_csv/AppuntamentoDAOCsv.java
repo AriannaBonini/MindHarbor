@@ -3,7 +3,7 @@ package com.example.mindharbor.dao.csv.appuntamento_dao_csv;
 import com.example.mindharbor.dao.AppuntamentoDAO;
 import com.example.mindharbor.dao.csv.paziente_dao_csv.PazienteDAOCsv;
 import com.example.mindharbor.dao.csv.utente_dao_csv.UtenteDAOCsv;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Utente;
@@ -31,10 +31,10 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * @param selectedTabName Una stringa che indica la scheda selezionata ("IN PROGRAMMA" per appuntamenti futuri,
      *                        "PASSATI" per appuntamenti già avvenuti).
      * @return Una lista di oggetti {@link Appuntamento} che rappresentano gli appuntamenti del paziente in base ai criteri di ricerca.
-     * @throws DAOException Se si verifica un errore durante la lettura del file CSV o l'elaborazione dei dati.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura del file CSV o l'elaborazione dei dati.
      */
     @Override
-    public List<Appuntamento> trovaAppuntamentiPaziente(Utente paziente, String selectedTabName) throws DAOException {
+    public List<Appuntamento> trovaAppuntamentiPaziente(Utente paziente, String selectedTabName) throws EccezioneDAO {
         List<Appuntamento> appuntamentoPsicologoList;
         LocalDate dataCorrente = LocalDate.now();
 
@@ -53,10 +53,10 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * @param selectedTabName Una stringa che indica la scheda selezionata ("IN PROGRAMMA" per appuntamenti futuri,
      *                        "PASSATI" per appuntamenti già avvenuti).
      * @return Una lista di oggetti {@link Appuntamento} che rappresentano gli appuntamenti dello psicologo in base ai criteri di ricerca.
-     * @throws DAOException Se si verifica un errore durante la lettura del file CSV o l'elaborazione dei dati.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura del file CSV o l'elaborazione dei dati.
      */
     @Override
-    public List<Appuntamento> trovaAppuntamentiPsicologo(Utente psicologo, String selectedTabName) throws DAOException {
+    public List<Appuntamento> trovaAppuntamentiPsicologo(Utente psicologo, String selectedTabName) throws EccezioneDAO {
         List<Appuntamento> appuntamentoPsicologoList;
         LocalDate dataCorrente = LocalDate.now();
 
@@ -78,9 +78,9 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * @param dataCorrente    La data corrente utilizzata per filtrare gli appuntamenti in base alla scheda selezionata.
      * @param tipo            Un booleano che determina se l'utente è uno psicologo (true) o un paziente (false).
      * @return Una lista di oggetti {@link Appuntamento} che rappresentano gli appuntamenti dell'utente in base ai criteri di ricerca.
-     * @throws DAOException   Se si verifica un errore specifico durante l'elaborazione dei dati dal file CSV.
+     * @throws EccezioneDAO   Se si verifica un errore specifico durante l'elaborazione dei dati dal file CSV.
      */
-    private List<Appuntamento> leggiAppuntamentiDaCsv(Utente utente, String tabSelezionato, LocalDate dataCorrente, boolean tipo) throws DAOException {
+    private List<Appuntamento> leggiAppuntamentiDaCsv(Utente utente, String tabSelezionato, LocalDate dataCorrente, boolean tipo) throws EccezioneDAO {
         UtenteDAOCsv utenteDAOCsv = new UtenteDAOCsv();
         List<Appuntamento> appuntamenti = new ArrayList<>();
 
@@ -157,9 +157,9 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * @param tipo        Un valore booleano che indica se l'utente è uno psicologo (`true`) o un paziente (`false`).
      * @param utenteDAOCsv Un'istanza di {@link UtenteDAOCsv} utilizzata per recuperare le informazioni aggiuntive sul paziente.
      * @return Un oggetto {@link Appuntamento} creato utilizzando i dati forniti.
-     * @throws DAOException Se si verifica un errore durante il recupero delle informazioni aggiuntive sul paziente.
+     * @throws EccezioneDAO Se si verifica un errore durante il recupero delle informazioni aggiuntive sul paziente.
      */
-    private Appuntamento creaAppuntamento(String[] colonne, boolean tipo, UtenteDAOCsv utenteDAOCsv) throws DAOException {
+    private Appuntamento creaAppuntamento(String[] colonne, boolean tipo, UtenteDAOCsv utenteDAOCsv) throws EccezioneDAO {
         String data = colonne[ConstantsAppuntamentoCsv.INDICE_DATA];
         String ora = colonne[ConstantsAppuntamentoCsv.INDICE_ORA];
         if (tipo) {
@@ -172,7 +172,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     }
 
     @Override
-    public void insertRichiestaAppuntamento(Appuntamento appuntamento) throws DAOException {
+    public void insertRichiestaAppuntamento(Appuntamento appuntamento) throws EccezioneDAO {
         // bisogna aggiungere i controlli se quella richiesta puo essere aggiunta.
 
         // Legge tutte le righe del CSV
@@ -205,9 +205,9 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * </p>
      *
      * @return Un intero che rappresenta il prossimo ID disponibile per un nuovo appuntamento.
-     * @throws DAOException Se si verifica un errore durante la lettura del file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura del file CSV.
      */
-    private Integer calcolaIDAppuntamento() throws DAOException {
+    private Integer calcolaIDAppuntamento() throws EccezioneDAO {
         int maxId = 0;
         try {
             List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
@@ -217,14 +217,14 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
                     maxId = id; // Aggiorna il massimo ID trovato
                 }
             }
-        } catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        } catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
         return maxId + 1;
     }
 
     @Override
-    public Integer getNumRicAppDaNotificare(Utente utente) throws DAOException {
+    public Integer getNumRicAppDaNotificare(Utente utente) throws EccezioneDAO {
         int count = 0;
         List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
         for (String[] colonne : righe) {
@@ -249,10 +249,10 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      *
      * @param utente Un oggetto {@link Utente} che rappresenta lo psicologo per il quale si desiderano trovare le richieste di appuntamento.
      * @return Una lista di oggetti {@link Appuntamento} che rappresentano le richieste di appuntamento trovate per lo psicologo specificato.
-     * @throws DAOException Se si verifica un errore durante la lettura del file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura del file CSV.
      */
     @Override
-    public List<Appuntamento> trovaRichiesteAppuntamento(Utente utente) throws DAOException {
+    public List<Appuntamento> trovaRichiesteAppuntamento(Utente utente) throws EccezioneDAO {
             List<Appuntamento> richiesteAppuntamento = new ArrayList<>();
 
             List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
@@ -283,10 +283,10 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * </p>
      *
      * @param richiestaAppuntamento Un oggetto {@link Appuntamento} che rappresenta l'appuntamento di cui si desidera aggiornare lo stato di notifica.
-     * @throws DAOException Se si verifica un errore durante la lettura o la scrittura del file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura o la scrittura del file CSV.
      */
     @Override
-    public void updateStatoNotifica(Appuntamento richiestaAppuntamento) throws DAOException {
+    public void updateStatoNotifica(Appuntamento richiestaAppuntamento) throws EccezioneDAO {
         List<String[]> risultati = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
         List<String[]> recordAggiornati = new ArrayList<>();
         boolean saltaIntestazione=true;
@@ -308,7 +308,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     }
 
     @Override
-    public Appuntamento getInfoRichiesta(Appuntamento richiestaAppuntamento) throws DAOException {
+    public Appuntamento getInfoRichiesta(Appuntamento richiestaAppuntamento) throws EccezioneDAO {
         Appuntamento richiesta = null;
 
         List<String[]> recordLetti = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
@@ -341,10 +341,10 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
      * </p>
      *
      * @param appuntamento L'oggetto {@link Appuntamento} che contiene le informazioni dell'appuntamento da aggiornare.
-     * @throws DAOException Se si verifica un errore durante la lettura o la scrittura del file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura o la scrittura del file CSV.
      */
     @Override
-    public void updateRichiesta(Appuntamento appuntamento) throws DAOException {
+    public void updateRichiesta(Appuntamento appuntamento) throws EccezioneDAO {
         List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
         List<String[]> righeAggiornate = new ArrayList<>();
         boolean saltaIntestazione=true;
@@ -376,7 +376,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     }
 
     @Override
-    public void eliminaRichiesteDiAppuntamentoPerAltriPsicologi(Appuntamento appuntamento) throws DAOException {
+    public void eliminaRichiesteDiAppuntamentoPerAltriPsicologi(Appuntamento appuntamento) throws EccezioneDAO {
         // Leggi tutte le righe del file CSV
         List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
 
@@ -391,7 +391,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     }
 
     @Override
-    public void eliminaRichiesta(Appuntamento appuntamento) throws DAOException {
+    public void eliminaRichiesta(Appuntamento appuntamento) throws EccezioneDAO {
         // Leggi tutte le righe del file CSV
         List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
         List<String[]> righeAggiornate = new ArrayList<>();
@@ -414,7 +414,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     }
 
     @Override
-    public boolean getDisp(Integer idAppuntamento, Utente utente) throws DAOException {
+    public boolean getDisp(Integer idAppuntamento, Utente utente) throws EccezioneDAO {
 
         // Leggi tutte le righe del file CSV
         List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
@@ -448,7 +448,7 @@ public class AppuntamentoDAOCsv implements AppuntamentoDAO {
     }
 
     @Override
-    public void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
+    public void aggiornaStatoNotificaPaziente(Utente utente) throws EccezioneDAO {
         // Leggi tutte le righe del file CSV
         List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsAppuntamentoCsv.FILE_PATH, CostantiLetturaScrittura.LETTURA_SCRITTURA);
 

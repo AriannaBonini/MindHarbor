@@ -1,24 +1,14 @@
 package com.example.mindharbor.utilities.cli_helper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class GestoreOutput {
 
-    private GestoreOutput(){
-        /*
-            costruttore privato per evitare istanze
-        */
-    }
-    private static final Logger logger = LoggerFactory.getLogger(GestoreOutput.class);
+    private GestoreOutput(){/*costruttore privato per evitare istanze*/}
 
-    public static void stampaMessaggio(String messaggio){
-        logger.info(messaggio);
-    }
+    public static void stampaMessaggio(String messaggio){System.out.println(messaggio);}
 
 
     public static void stampaLogoLogin(){
-        String asciiart_mind = """
+        String asciiartMind = """
                /$$                 /$$
               |__/                | $$
  /$$$$$$/$$$$  /$$ /$$$$$$$   /$$$$$$$
@@ -30,7 +20,7 @@ public class GestoreOutput {
 """;
 
 
-        String asciiart_harbor = """
+        String asciiartHarbor = """
      /$$                           /$$
     | $$                          | $$
     | $$$$$$$   /$$$$$$   /$$$$$$ | $$$$$$$   /$$$$$$   /$$$$$$
@@ -40,7 +30,7 @@ public class GestoreOutput {
     | $$  | $$|  $$$$$$$| $$      | $$$$$$$/|  $$$$$$/| $$
     |__/  |__/ \\_______/|__/      |_______/  \\______/ |__/
     """;
-        GestoreOutput.stampaMessaggio(AnsiCode.ANSI_GREEN + asciiart_mind + "\n" + AnsiCode.ANSI_BRIGHT_GREEN + asciiart_harbor + AnsiCode.ANSI_RESET);
+        GestoreOutput.stampaMessaggio(CodiciAnsi.ANSI_VERDE + asciiartMind + "\n" + CodiciAnsi.ANSI_VERDE_CHIARO + asciiartHarbor + CodiciAnsi.ANSI_RIPRISTINA);
     }
 
 
@@ -48,6 +38,13 @@ public class GestoreOutput {
         for (int i = 0; i < 100; i++){
             GestoreOutput.stampaMessaggio("\b");
         }
+    }
+
+
+    public static void separatore() {
+        stampaMessaggio("");
+        stampaMessaggio("-------------------------------------------------");
+        stampaMessaggio("");
     }
 }
 

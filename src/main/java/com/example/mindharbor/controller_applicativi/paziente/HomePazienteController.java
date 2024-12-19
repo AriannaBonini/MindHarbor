@@ -5,7 +5,7 @@ import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.dao.AppuntamentoDAO;
 import com.example.mindharbor.dao.TerapiaDAO;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.patterns.facade.DAOFactoryFacade;
 import com.example.mindharbor.sessione.SessionManager;
 import com.example.mindharbor.utilities.SetInfoUtente;
@@ -17,36 +17,36 @@ public class HomePazienteController {
 
     public InfoUtenteBean getInfoPaziente() {return new SetInfoUtente().getInfo();}
 
-    public PazienteBean cercaNuoviTestDaSvolgere() throws DAOException {
+    public PazienteBean cercaNuoviTestDaSvolgere() throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
         try {
             pazienteBean = new PazienteBean(testPsicologicoDAO.getNotificaPazientePerTestAssegnato(SessionManager.getInstance().getCurrentUser()));
 
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
         return pazienteBean;
     }
 
-    public PazienteBean cercaNuoveTerapie() throws DAOException {
+    public PazienteBean cercaNuoveTerapie() throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TerapiaDAO terapiaDAO= daoFactoryFacade.getTerapiaDAO();
         try {
             pazienteBean =new PazienteBean(terapiaDAO.getNuoveTerapie(SessionManager.getInstance().getCurrentUser()));
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
         return pazienteBean;
     }
 
-    public PazienteBean cercaNuoviAppuntamenti() throws DAOException {
+    public PazienteBean cercaNuoviAppuntamenti() throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
         try {
             pazienteBean =new PazienteBean(appuntamentoDAO.getNumRicAppDaNotificare(SessionManager.getInstance().getCurrentUser()));
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
         return pazienteBean;
     }

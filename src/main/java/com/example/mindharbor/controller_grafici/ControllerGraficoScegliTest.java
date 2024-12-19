@@ -4,7 +4,7 @@ import com.example.mindharbor.controller_applicativi.psicologo.PrescriviTerapia;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.beans.TestBean;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImmagineDecorator;
 import com.example.mindharbor.utilities.AlertMessage;
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
-public class ScegliTestGraphicController {
+public class ControllerGraficoScegliTest {
 
     @FXML
     private Label nomePaziente;
@@ -50,7 +50,7 @@ public class ScegliTestGraphicController {
     private CheckBox test4;
 
     private PazienteBean pazienteSelezionato;
-    private static final Logger logger = LoggerFactory.getLogger(ScegliTestGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoScegliTest.class);
     private List<TestBean> listaTestPsicologiciBean;
     private final PrescriviTerapia prescriviTerapiaController = PrescriviTerapiaSingleton.getInstance();
     private final  NavigatorSingleton navigator= NavigatorSingleton.getInstance();
@@ -141,7 +141,7 @@ public class ScegliTestGraphicController {
             }else {
                 controlloSuperato();
             }
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.error("Errore nell'assegnazione del test", e);
         }
 

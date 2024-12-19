@@ -3,7 +3,7 @@ package com.example.mindharbor.controller_grafici;
 import com.example.mindharbor.controller_applicativi.psicologo.HomePsicologoController;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 
-public class HomePsicologoGraphicController {
+public class ControllerGraficoHomePsicologo {
     @FXML
     private Label logout;
     @FXML
@@ -28,7 +28,7 @@ public class HomePsicologoGraphicController {
     private Label notificaTest;
     @FXML
     private Label notificaRichieste;
-    private static final Logger logger = LoggerFactory.getLogger(HomePsicologoGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoHomePsicologo.class);
     private final HomePsicologoController homePsicologoController = new HomePsicologoController();
     private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
     private PsicologoBean psicologoBean;
@@ -46,7 +46,7 @@ public class HomePsicologoGraphicController {
             if (psicologoBean.getNumNotifiche() > 0) {
                 notificaRichieste.setText(String.valueOf(psicologoBean.getNumNotifiche()));
             }
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.info("Errore nella ricerca dei test ", e);
         }
 
@@ -58,7 +58,7 @@ public class HomePsicologoGraphicController {
             if (psicologoBean.getNumNotifiche() > 0) {
                 notificaTest.setText(String.valueOf(psicologoBean.getNumNotifiche()));
             }
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.info("Errore nella ricerca dei test ", e);
         }
 

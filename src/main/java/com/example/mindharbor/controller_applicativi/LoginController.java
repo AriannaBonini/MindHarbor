@@ -7,14 +7,14 @@ import com.example.mindharbor.patterns.facade.DAOFactoryFacade;
 import com.example.mindharbor.sessione.SessionManager;
 import com.example.mindharbor.tipo_utente.UserType;
 import com.example.mindharbor.beans.CredenzialiLoginBean;
-import com.example.mindharbor.eccezioni.DAOException;
-import com.example.mindharbor.eccezioni.SessionUserException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
+import com.example.mindharbor.eccezioni.EccezioneSessioneUtente;
 import com.example.mindharbor.model.Utente;
 
 public class LoginController extends AbstractController {
 
 
-    public InfoUtenteBean login(CredenzialiLoginBean credenziali) throws DAOException, SessionUserException {
+    public InfoUtenteBean login(CredenzialiLoginBean credenziali) throws EccezioneDAO, EccezioneSessioneUtente {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         UtenteDAO utenteDAO= daoFactoryFacade.getUtenteDAO();
         PazienteDAO pazienteDAO= daoFactoryFacade.getPazienteDAO();
@@ -32,20 +32,20 @@ public class LoginController extends AbstractController {
                 }
             }
             return infoUtente;
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
     @Override
-    protected void storeSessionUtente(String username, String nome, String cognome, UserType userType,String usernamePsicologo) throws SessionUserException {
+    protected void storeSessionUtente(String username, String nome, String cognome, UserType userType,String usernamePsicologo) throws EccezioneSessioneUtente {
         SessionManager sessionManager = SessionManager.getInstance();
         Utente currentUser = new Utente(username, nome, cognome, userType);
         sessionManager.login(currentUser,usernamePsicologo);
     }
 
     @Override
-    protected void storeSessionUtente(String username, String nome, String cognome, UserType userType) throws SessionUserException {
+    protected void storeSessionUtente(String username, String nome, String cognome, UserType userType) throws EccezioneSessioneUtente {
         SessionManager sessionManager = SessionManager.getInstance();
         Utente currentUser = new Utente(username, nome, cognome, userType);
         sessionManager.login(currentUser,null); //sarebbe meglio cambiare nome al metodo in creaSessione

@@ -1,5 +1,6 @@
 package com.example.mindharbor;
 
+import com.example.mindharbor.controller_grafici_cli.ControllerGraficoLoginCLI;
 import com.example.mindharbor.patterns.facade.DAOFactoryFacade;
 import com.example.mindharbor.patterns.facade.TipoPersistenza;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -32,7 +33,8 @@ public class Main extends Application {
         if ("gui".equals(tipoInterfaccia)) {
             launch(args);
         } else {
-            //parte la CLI
+            ControllerGraficoLoginCLI controllerGraficoLoginCLI= new ControllerGraficoLoginCLI();
+            controllerGraficoLoginCLI.start();
         }
     }
 }

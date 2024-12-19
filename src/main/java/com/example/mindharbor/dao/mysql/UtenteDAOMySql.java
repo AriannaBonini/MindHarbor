@@ -6,7 +6,7 @@ import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.tipo_utente.UserType;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.sessione.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,7 +19,7 @@ import java.util.List;
 public class UtenteDAOMySql extends QuerySQLUtenteDAO implements UtenteDAO {
 
     @Override
-    public Utente trovaUtente(Utente credenzialiUtenteLogin) throws DAOException {
+    public Utente trovaUtente(Utente credenzialiUtenteLogin) throws EccezioneDAO {
         Utente utente=null;
         Connection conn = ConnectionFactory.getConnection();
 
@@ -34,7 +34,7 @@ public class UtenteDAOMySql extends QuerySQLUtenteDAO implements UtenteDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
         return utente;
     }
@@ -56,7 +56,7 @@ public class UtenteDAOMySql extends QuerySQLUtenteDAO implements UtenteDAO {
     }
 
     @Override
-    public Utente trovaNomeCognome(Utente utente) throws DAOException {
+    public Utente trovaNomeCognome(Utente utente) throws EccezioneDAO {
         Utente infoUtente = null;
 
         Connection conn = ConnectionFactory.getConnection();
@@ -70,14 +70,14 @@ public class UtenteDAOMySql extends QuerySQLUtenteDAO implements UtenteDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return infoUtente;
     }
 
     @Override
-    public List<Psicologo> listaUtentiDiTipoPsicologo(String usernamePsicologo) throws DAOException {
+    public List<Psicologo> listaUtentiDiTipoPsicologo(String usernamePsicologo) throws EccezioneDAO {
         //Questo metodo viene utilizzato nella prenotazione dell'appuntamento, quando il paziente deve visualizzare la lista degli psicologi, oppure, nel caso in cui
         //lui abbia già uno psicologo, solo quest'ultimo.
         //Il metodo ci ritorna il nome, il cognome, lo username e il genere dello psicologo o degli psicologi.
@@ -102,14 +102,14 @@ public class UtenteDAOMySql extends QuerySQLUtenteDAO implements UtenteDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return listaPsicologi;
     }
 
     @Override
-    public List<Appuntamento> richiestaAppuntamentiInfoPaziente(List<Appuntamento> richiesteAppuntamenti) throws DAOException {
+    public List<Appuntamento> richiestaAppuntamentiInfoPaziente(List<Appuntamento> richiesteAppuntamenti) throws EccezioneDAO {
         Connection conn = ConnectionFactory.getConnection();
         try {
             for (Appuntamento appuntamento : richiesteAppuntamenti) {
@@ -127,13 +127,13 @@ public class UtenteDAOMySql extends QuerySQLUtenteDAO implements UtenteDAO {
                 }
             }
         }catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
         return richiesteAppuntamenti;
     }
 
     @Override
-    public Utente trovaInfoUtente(Utente paziente) throws DAOException {
+    public Utente trovaInfoUtente(Utente paziente) throws EccezioneDAO {
         Utente infoUtente = null;
 
         Connection conn = ConnectionFactory.getConnection();
@@ -147,7 +147,7 @@ public class UtenteDAOMySql extends QuerySQLUtenteDAO implements UtenteDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return infoUtente;

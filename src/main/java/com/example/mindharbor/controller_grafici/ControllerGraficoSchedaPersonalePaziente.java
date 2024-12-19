@@ -4,7 +4,7 @@ import com.example.mindharbor.controller_applicativi.psicologo.PrescriviTerapia;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.utilities.costanti.Costanti;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImmagineDecorator;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 
-public class SchedaPersonalePazienteGraphicController {
+public class ControllerGraficoSchedaPersonalePaziente {
     @FXML
     private Label home;
     @FXML
@@ -45,7 +45,7 @@ public class SchedaPersonalePazienteGraphicController {
 
     private PazienteBean pazienteSelezionato;
     private final PrescriviTerapia prescriviTerapiaController = PrescriviTerapiaSingleton.getInstance();
-    private static final Logger logger = LoggerFactory.getLogger(SchedaPersonalePazienteGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoSchedaPersonalePaziente.class);
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
 
     public void initialize() {
@@ -70,7 +70,7 @@ public class SchedaPersonalePazienteGraphicController {
             if (prescriviTerapiaController.numeroTestSvoltiSenzaPrescrizione(pazienteSelezionato) > 0) {
                 prescriviTerapia.setDisable(false);
             }
-        }catch (DAOException e) {
+        }catch (EccezioneDAO e) {
             logger.info("Errore nella ricerca dei test svolti dal paziente senza prescrizione" , e);
         }
     }
@@ -88,7 +88,7 @@ public class SchedaPersonalePazienteGraphicController {
             if (prescriviTerapiaController.getNumeroTestOdiernoAssegnato(pazienteSelezionato)>0) {
                 scegliTest.setDisable(true);
             }
-        }catch (DAOException e) {
+        }catch (EccezioneDAO e) {
             logger.info("Errore durante il controllo della presenza di un test già assegnato al paziente nella giornata odierna" , e);
 
         }
@@ -100,7 +100,7 @@ public class SchedaPersonalePazienteGraphicController {
             pazienteSelezionato = prescriviTerapiaController.getSchedaPersonale(pazienteSelezionato);
             creaSchedaPersonale();
 
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.info("Non esistono informazioni relative al paziente", e);
         }
 

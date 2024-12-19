@@ -1,7 +1,7 @@
 package com.example.mindharbor.sessione;
 
 
-import com.example.mindharbor.eccezioni.SessionUserException;
+import com.example.mindharbor.eccezioni.EccezioneSessioneUtente;
 import com.example.mindharbor.model.Utente;
 import com.example.mindharbor.utilities.UtenteWrapper;
 import java.util.ArrayList;
@@ -35,11 +35,11 @@ public class SessionManager {
             return instance;
         }
 
-        public synchronized void login(Utente utente,String usernamePsicologo) throws SessionUserException{
+        public synchronized void login(Utente utente,String usernamePsicologo) throws EccezioneSessioneUtente {
             try {
                 for (UtenteWrapper wrapper : utenteLoggato) {
                     if (wrapper.utente().getUsername().equals(utente.getUsername())) {
-                        throw new SessionUserException("Utente già loggato");
+                        throw new EccezioneSessioneUtente("Utente già loggato");
                     }
                 }
                 utenteLoggato.add(new UtenteWrapper(utente, usernamePsicologo));

@@ -5,7 +5,7 @@ import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.dao.TerapiaDAO;
 import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.dao.UtenteDAO;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.mockapi.BoundaryMockAPI;
 import com.example.mindharbor.model.*;
 import com.example.mindharbor.patterns.facade.DAOFactoryFacade;
@@ -23,7 +23,7 @@ public class PrescriviTerapia {
 
     public InfoUtenteBean getInfoUtente() {return new SetInfoUtente().getInfo();}
 
-    public List<PazienteBean> getListaPazienti() throws DAOException {
+    public List<PazienteBean> getListaPazienti() throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade = DAOFactoryFacade.getInstance();
         PazienteDAO pazienteDAO = daoFactoryFacade.getPazienteDAO();
         try {
@@ -44,32 +44,32 @@ public class PrescriviTerapia {
             }
             return pazientiNumTestBeanList;
 
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
-    public Integer numeroTestSvoltiSenzaPrescrizione(PazienteBean pazienteSelezionato) throws DAOException {
+    public Integer numeroTestSvoltiSenzaPrescrizione(PazienteBean pazienteSelezionato) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
         try {
             return testPsicologicoDAO.getNumTestSvoltiSenzaPrescrizione(SessionManager.getInstance().getCurrentUser(), new Paziente(pazienteSelezionato.getUsername()));
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
-    public Integer getNumeroTestOdiernoAssegnato(PazienteBean pazienteSelezionato) throws DAOException{
+    public Integer getNumeroTestOdiernoAssegnato(PazienteBean pazienteSelezionato) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
         try {
             return testPsicologicoDAO.getNumTestAssegnato(new Paziente(pazienteSelezionato.getUsername()));
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
-    public PazienteBean getSchedaPersonale(PazienteBean pazienteSelezionato) throws DAOException {
+    public PazienteBean getSchedaPersonale(PazienteBean pazienteSelezionato) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         PazienteDAO pazienteDAO = daoFactoryFacade.getPazienteDAO();
         try {
@@ -77,15 +77,15 @@ public class PrescriviTerapia {
 
             pazienteSelezionato.setAnni(paziente.getAnni());
             pazienteSelezionato.setDiagnosi(paziente.getDiagnosi());
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
         return pazienteSelezionato;
     }
 
     public List<TestBean> getListaTest() {return BoundaryMockAPI.testPiscologici();}
 
-    public List<TestBean> getListaTestAssegnati() throws DAOException {
+    public List<TestBean> getListaTestAssegnati() throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
         List<TestBean> testBeanList = new ArrayList<>();
@@ -103,14 +103,14 @@ public class PrescriviTerapia {
 
                     testBeanList.add(testBean);
                 }
-            } catch (DAOException e) {
-                throw new DAOException(e.getMessage());
+            } catch (EccezioneDAO e) {
+                throw new EccezioneDAO(e.getMessage());
             }
         }
         return testBeanList;
     }
 
-    public boolean controlloNumeroTestSelezionati(Integer contatore, String nomeTest) throws DAOException{
+    public boolean controlloNumeroTestSelezionati(Integer contatore, String nomeTest) throws EccezioneDAO {
         if (contatore !=1) {
             return false;
         }else {
@@ -119,23 +119,23 @@ public class PrescriviTerapia {
                 //inoltre, elimina la bean pazienteSelezionato dal Navigator Singleton visto che da questo momento non servirà più.
                 notificaTest(nomeTest);
                 return true;
-            }catch (DAOException e) {
-                throw new DAOException(e.getMessage());
+            }catch (EccezioneDAO e) {
+                throw new EccezioneDAO(e.getMessage());
             }
         }
     }
 
-    private void notificaTest(String nomeTest) throws DAOException {
+    private void notificaTest(String nomeTest) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
         try {
             testPsicologicoDAO.assegnaTest(new TestPsicologico((new Psicologo(SessionManager.getInstance().getCurrentUser().getUsername())), new Paziente(getPazienteSelezionato().getUsername()), nomeTest));
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
-    public List<TestBean> getTestSvoltiSenzaPrescrizione(PazienteBean pazienteSelezionato) throws DAOException {
+    public List<TestBean> getTestSvoltiSenzaPrescrizione(PazienteBean pazienteSelezionato) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
 
@@ -153,13 +153,13 @@ public class PrescriviTerapia {
 
                 testSvoltiBean.add(testSvoltoBean);
             }
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
         return testSvoltiBean;
     }
 
-    public void aggiornaStatoNotificaTest(PazienteBean pazienteSelezionato) throws DAOException {
+    public void aggiornaStatoNotificaTest(PazienteBean pazienteSelezionato) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
         try {
@@ -168,23 +168,23 @@ public class PrescriviTerapia {
             }else {
                 testPsicologicoDAO.modificaStatoNotificaTest(SessionManager.getInstance().getCurrentUser(), new Paziente(pazienteSelezionato.getUsername()));
             }
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
-    public void aggiungiTerapia(TerapiaBean terapiaBean) throws DAOException {
+    public void aggiungiTerapia(TerapiaBean terapiaBean) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TerapiaDAO terapiaDAO= daoFactoryFacade.getTerapiaDAO();
         try {
             Terapia terapia = new Terapia(new TestPsicologico(terapiaBean.getDataTest(), null, new Psicologo(terapiaBean.getPsicologo()), new Paziente(terapiaBean.getPaziente()), "", null), terapiaBean.getTerapia(), terapiaBean.getDataTerapia());
             terapiaDAO.insertTerapia(terapia);
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
-    public InfoUtenteBean infoPsicologo() throws DAOException {
+    public InfoUtenteBean infoPsicologo() throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         UtenteDAO utenteDAO=daoFactoryFacade.getUtenteDAO();
 
@@ -194,14 +194,14 @@ public class PrescriviTerapia {
         try {
             Utente utente= utenteDAO.trovaNomeCognome(new Utente(SessionManager.getInstance().getUsernamePsicologo()));
             return new InfoUtenteBean(utente.getNome(),utente.getCognome());
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
     public DomandeTestBean cercaDomande(TestBean testSelezionato) {return BoundaryMockAPI.domandeTest(testSelezionato.getNomeTest());}
 
-    public RisultatiTestBean calcolaRisultato(DomandeTestBean punteggiBean, TestBean testSelezionato) throws DAOException {
+    public RisultatiTestBean calcolaRisultato(DomandeTestBean punteggiBean, TestBean testSelezionato) throws EccezioneDAO {
         RisultatiTestBean risultatoTest= new RisultatiTestBean();
         try {
             Integer risultato = 0;
@@ -213,13 +213,13 @@ public class PrescriviTerapia {
             Double progresso = calcolaProgresso(risultatoTest,testSelezionato.getData(),testSelezionato.getNomeTest());
 
             risultatoTest.setRisultatoTestPrecedente(progresso);
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
         return risultatoTest;
     }
 
-    public Double calcolaProgresso(RisultatiTestBean risultatoTest, Date dataTest, String nomeTest) throws DAOException {
+    public Double calcolaProgresso(RisultatiTestBean risultatoTest, Date dataTest, String nomeTest) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TestPsicologicoDAO testPsicologicoDAO= daoFactoryFacade.getTestPsicologicoDAO();
 
@@ -250,14 +250,14 @@ public class PrescriviTerapia {
                 progressi = Math.round(progressi * 100.0) / 100.0;
 
             }
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return progressi;
     }
 
-    public List<TerapiaBean> trovaTerapie() throws DAOException {
+    public List<TerapiaBean> trovaTerapie() throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         TerapiaDAO terapiaDAO= daoFactoryFacade.getTerapiaDAO();
 
@@ -275,8 +275,8 @@ public class PrescriviTerapia {
 
                 terapieBean.add(terapiaBean);
             }
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return terapieBean;

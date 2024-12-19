@@ -3,7 +3,7 @@ package com.example.mindharbor.controller_grafici;
 import com.example.mindharbor.controller_applicativi.paziente.PrenotaAppuntamento;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImmagineDecorator;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -27,7 +27,7 @@ import java.util.List;
 
 
 
-public class ListaRichiesteAppuntamentiGraphicController {
+public class ControllerGraficoListaRichiesteAppuntamenti {
     @FXML
     private ListView<Node> listViewPazienti;
     @FXML
@@ -39,7 +39,7 @@ public class ListaRichiesteAppuntamentiGraphicController {
 
     private final PrenotaAppuntamento prenotaAppuntamentoController = PrenotaAppuntamentoSingleton.getInstance();
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-    private static final Logger logger = LoggerFactory.getLogger(ListaRichiesteAppuntamentiGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoListaRichiesteAppuntamenti.class);
 
     public void initialize() {
         InfoUtenteBean infoUtenteBean = prenotaAppuntamentoController.getInfoUtente();
@@ -55,7 +55,7 @@ public class ListaRichiesteAppuntamentiGraphicController {
             }else {
                 creaVBoxListaRichieste(listaRichieste);
             }
-        }catch (DAOException e) {
+        }catch (EccezioneDAO e) {
             logger.info("Errore nella ricerca delle richieste di appuntamento", e);
         }
     }

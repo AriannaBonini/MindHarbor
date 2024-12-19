@@ -4,7 +4,7 @@ import com.example.mindharbor.controller_applicativi.paziente.PrenotaAppuntament
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.utilities.costanti.Costanti;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.patterns.decorator.DisponibilitaDecorator;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImmagineDecorator;
@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
-public class VerificaDispGraphicController {
+public class ControllerGraficoVerificaDisponibilita {
     @FXML
     private Label labelData;
     @FXML
@@ -56,7 +56,7 @@ public class VerificaDispGraphicController {
 
     private final PrenotaAppuntamento prenotaAppuntamentoController = PrenotaAppuntamentoSingleton.getInstance();
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-    private static final Logger logger = LoggerFactory.getLogger(VerificaDispGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoVerificaDisponibilita.class);
     private AppuntamentiBean richiestaAppuntamentoSelezionato;
 
     public void initialize() {
@@ -72,7 +72,7 @@ public class VerificaDispGraphicController {
     private void modificaStatoNotifica() {
         try {
             prenotaAppuntamentoController.modificaStatoNotifica(richiestaAppuntamentoSelezionato);
-        }catch (DAOException e) {
+        }catch (EccezioneDAO e) {
             logger.info("Errore nella modifica dello stato della notifica della richiesta ", e);
         }
     }
@@ -81,7 +81,7 @@ public class VerificaDispGraphicController {
         try {
             richiestaAppuntamentoSelezionato = prenotaAppuntamentoController.aggiungiInfoRichiestaAppuntamento(richiestaAppuntamentoSelezionato);
             popolaScheda();
-        }catch (DAOException e) {
+        }catch (EccezioneDAO e) {
             logger.info("Errore nella ricerca delle informazioni della richiesta ", e);
         }
     }
@@ -149,7 +149,7 @@ public class VerificaDispGraphicController {
                 accetta.setDisable(false);
             }
 
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.info("Errore nella ricerca delle disponibilità dello psicologo ", e);
         }
     }
@@ -165,7 +165,7 @@ public class VerificaDispGraphicController {
             alert.showAndWait();
 
             clickLabelTornaIndietro();
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.info(Costanti.ELIMINA_RICHIESTA, e);
         }
     }
@@ -179,7 +179,7 @@ public class VerificaDispGraphicController {
             new Timeline(new KeyFrame(Duration.seconds(3), event -> alert.close()));
             alert.showAndWait();
             clickLabelTornaIndietro();
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.info(Costanti.ELIMINA_RICHIESTA, e);
         }
     }

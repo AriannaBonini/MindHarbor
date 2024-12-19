@@ -4,7 +4,7 @@ import com.example.mindharbor.controller_applicativi.paziente.PrenotaAppuntament
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.patterns.decorator.GenereDecorator;
 import com.example.mindharbor.patterns.decorator.ImmagineDecorator;
 import com.example.mindharbor.utilities.AlertMessage;
@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
-public class RichiediPrenotazioneGraphicController {
+public class ControllerGraficoRichiediPrenotazione {
 
     @FXML
     private ImageView immaginePsicologo;
@@ -42,7 +42,7 @@ public class RichiediPrenotazioneGraphicController {
     private Label home;
 
     NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-    private static final Logger logger = LoggerFactory.getLogger(RichiediPrenotazioneGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoRichiediPrenotazione.class);
     private final PrenotaAppuntamento prenotaAppuntamentoController = PrenotaAppuntamentoSingleton.getInstance();
     private PsicologoBean psicologoSelezionato;
 
@@ -60,7 +60,7 @@ public class RichiediPrenotazioneGraphicController {
             psicologoSelezionato = prenotaAppuntamentoController.getInfoPsicologo(psicologoSelezionato);
             creaSchedaPsicologo();
 
-        }catch (DAOException e) {
+        }catch (EccezioneDAO e) {
             logger.info("Non esistono ulteriori informazioni relative allo psicologo " ,e);
         }
 
@@ -129,7 +129,7 @@ public class RichiediPrenotazioneGraphicController {
 
             navigator.gotoPage("/com/example/mindharbor/HomePaziente.fxml");
 
-        }catch (DAOException e) {
+        }catch (EccezioneDAO e) {
             logger.info("Errore nel salvataggio della richiesta di appuntamento", e);
 
         }catch (IOException e) {

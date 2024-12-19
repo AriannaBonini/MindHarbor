@@ -2,7 +2,7 @@ package com.example.mindharbor.dao.mysql;
 
 import com.example.mindharbor.dao.TerapiaDAO;
 import com.example.mindharbor.dao.mysql.query_sql.QuerySQLTerapiaDAO;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.model.*;
 import com.example.mindharbor.sessione.ConnectionFactory;
 import java.sql.Connection;
@@ -15,7 +15,7 @@ import java.util.List;
 public class TerapiaDAOMySql extends QuerySQLTerapiaDAO implements TerapiaDAO {
 
     @Override
-    public void insertTerapia(Terapia terapia) throws DAOException {
+    public void insertTerapia(Terapia terapia) throws EccezioneDAO {
         Connection conn = ConnectionFactory.getConnection();
 
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTerapiaDAO.INSERISCI_TERAPIA)) {
@@ -28,13 +28,13 @@ public class TerapiaDAOMySql extends QuerySQLTerapiaDAO implements TerapiaDAO {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
     }
 
     @Override
-    public List<Terapia> getTerapie(Utente utente) throws  DAOException{
+    public List<Terapia> getTerapie(Utente utente) throws EccezioneDAO {
         List<Terapia> terapie = new ArrayList<>();
 
         Connection conn = ConnectionFactory.getConnection();
@@ -53,7 +53,7 @@ public class TerapiaDAOMySql extends QuerySQLTerapiaDAO implements TerapiaDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         aggiornaStatoNotificaPaziente(utente);
@@ -62,7 +62,7 @@ public class TerapiaDAOMySql extends QuerySQLTerapiaDAO implements TerapiaDAO {
 
     }
 
-    private void aggiornaStatoNotificaPaziente(Utente utente) throws DAOException {
+    private void aggiornaStatoNotificaPaziente(Utente utente) throws EccezioneDAO {
 
         Connection conn = ConnectionFactory.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTerapiaDAO.AGGIORNA_NOTIFICA_PAZIENTE)) {
@@ -71,12 +71,12 @@ public class TerapiaDAOMySql extends QuerySQLTerapiaDAO implements TerapiaDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
     @Override
-    public Integer getNuoveTerapie(Utente paziente) throws DAOException{
+    public Integer getNuoveTerapie(Utente paziente) throws EccezioneDAO {
         int count = 0;
 
         Connection conn = ConnectionFactory.getConnection();
@@ -90,7 +90,7 @@ public class TerapiaDAOMySql extends QuerySQLTerapiaDAO implements TerapiaDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
         return count;
     }

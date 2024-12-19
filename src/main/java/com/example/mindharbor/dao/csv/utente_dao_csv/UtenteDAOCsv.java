@@ -1,7 +1,7 @@
 package com.example.mindharbor.dao.csv.utente_dao_csv;
 
 import com.example.mindharbor.dao.UtenteDAO;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.model.Utente;
@@ -22,7 +22,7 @@ import java.util.Objects;
  * </p>
  * <p>
  * Il percorso del file CSV è definito dalla costante `FILE_PATH`. Gli errori nella lettura del file sono gestiti tramite
- * l'eccezione personalizzata {@link DAOException}.
+ * l'eccezione personalizzata {@link EccezioneDAO}.
  * </p>
  */
 public class UtenteDAOCsv implements UtenteDAO {
@@ -40,18 +40,18 @@ public class UtenteDAOCsv implements UtenteDAO {
      *
      * @param credenzialiUtenteLogin Un oggetto {@link Utente} contenente l'username e la password dell'utente che sta cercando di accedere.
      * @return Un oggetto {@link Utente} con le informazioni dell'utente se le credenziali corrispondono; `null` se non viene trovata alcuna corrispondenza.
-     * @throws DAOException Se si verifica un errore durante la lettura del file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura del file CSV.
      */
     @Override
-    public Utente trovaUtente(Utente credenzialiUtenteLogin) throws DAOException {
+    public Utente trovaUtente(Utente credenzialiUtenteLogin) throws EccezioneDAO {
         Utente utente = null;
         List<String[]> righe;
 
         try {
             // Leggi tutte le righe del CSV utilizzando CSVReader
             righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
-        } catch (DAOException e) {
-            throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
+        } catch (EccezioneDAO e) {
+            throw new EccezioneDAO(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
 
         // Itera attraverso le righe del file CSV
@@ -82,18 +82,18 @@ public class UtenteDAOCsv implements UtenteDAO {
      *
      * @param utente Un oggetto {@link Utente} contenente l'username dell'utente di cui si vogliono recuperare nome e cognome.
      * @return Un oggetto {@link Utente} contenente il nome e il cognome se l'utente è trovato; `null` se l'utente non è trovato.
-     * @throws DAOException Se si verifica un errore durante la lettura del file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura del file CSV.
      */
     @Override
-    public Utente trovaNomeCognome(Utente utente) throws DAOException {
+    public Utente trovaNomeCognome(Utente utente) throws EccezioneDAO {
         Utente infoUtente = null;
         List<String[]> righe;
 
         // Leggi le righe dal CSV utilizzando il metodo che usa CSVReader
         try {
             righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA); // Chiamata al metodo che usa CSVReader
-        } catch (DAOException e) {
-            throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
+        } catch (EccezioneDAO e) {
+            throw new EccezioneDAO(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
 
         // Cerca l'utente nella lista delle righe lette
@@ -124,18 +124,18 @@ public class UtenteDAOCsv implements UtenteDAO {
      *                          tutti gli psicologi.
      * @return Una lista di oggetti {@link Psicologo} che rappresentano gli psicologi trovati nel file CSV. Se viene specificato
      *         uno username, la lista conterrà al massimo un elemento.
-     * @throws DAOException Se si verifica un errore durante la lettura del file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura del file CSV.
      */
     @Override
-    public List<Psicologo> listaUtentiDiTipoPsicologo(String usernamePsicologo) throws DAOException {
+    public List<Psicologo> listaUtentiDiTipoPsicologo(String usernamePsicologo) throws EccezioneDAO {
         List<Psicologo> listaPsicologi = new ArrayList<>();
         List<String[]> righe;
 
         try {
             // Leggi le righe dal CSV usando CSVReader
             righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);  // Metodo che usa CSVReader
-        } catch (DAOException e) {
-            throw new DAOException(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
+        } catch (EccezioneDAO e) {
+            throw new EccezioneDAO(ConstantsUtenteCsv.ERRORE_LETTURA + " " + e.getMessage());
         }
 
         // Itera attraverso le righe lette
@@ -167,10 +167,10 @@ public class UtenteDAOCsv implements UtenteDAO {
      * @param richiesteAppuntamenti Una lista di oggetti {@link Appuntamento} contenente appuntamenti
      *                              per cui si desidera aggiornare le informazioni dei pazienti.
      * @return La lista di appuntamenti con le informazioni dei pazienti aggiornate.
-     * @throws DAOException Se si verifica un errore durante la lettura del file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura del file CSV.
      */
     @Override
-    public List<Appuntamento> richiestaAppuntamentiInfoPaziente(List<Appuntamento> richiesteAppuntamenti) throws DAOException {
+    public List<Appuntamento> richiestaAppuntamentiInfoPaziente(List<Appuntamento> richiesteAppuntamenti) throws EccezioneDAO {
         try {
             // Leggi le righe dal CSV usando CSVReader
             List<String[]> righe = UtilitiesCSV.leggiRigheDaCsv(ConstantsUtenteCsv.FILE_PATH, CostantiLetturaScrittura.SOLO_LETTURA);
@@ -192,8 +192,8 @@ public class UtenteDAOCsv implements UtenteDAO {
                     }
                 }
             }
-        } catch (DAOException e) {
-            throw new DAOException("Errore nella lettura del file CSV: " + e.getMessage(), e);
+        } catch (EccezioneDAO e) {
+            throw new EccezioneDAO("Errore nella lettura del file CSV: " + e.getMessage(), e);
         }
         return richiesteAppuntamenti;
     }
@@ -207,10 +207,10 @@ public class UtenteDAOCsv implements UtenteDAO {
      *
      * @param paziente Un oggetto {@link Utente} contenente lo username del paziente di cui si vogliono ottenere le informazioni.
      * @return Un oggetto {@link Utente} con nome, cognome e genere del paziente. Restituisce null se non viene trovato nessun paziente con lo username specificato.
-     * @throws DAOException Se si verifica un errore durante la lettura del file CSV.
+     * @throws EccezioneDAO Se si verifica un errore durante la lettura del file CSV.
      */
     @Override
-    public Utente trovaInfoUtente(Utente paziente) throws DAOException {
+    public Utente trovaInfoUtente(Utente paziente) throws EccezioneDAO {
         Utente infoUtente = null;
 
         try {
@@ -226,8 +226,8 @@ public class UtenteDAOCsv implements UtenteDAO {
                     break; // Esci dal ciclo una volta trovata l'informazione
                 }
             }
-        } catch (DAOException e) {
-            throw new DAOException("Errore nella lettura del file CSV: " + e.getMessage(), e);
+        } catch (EccezioneDAO e) {
+            throw new EccezioneDAO("Errore nella lettura del file CSV: " + e.getMessage(), e);
         }
 
         return infoUtente;

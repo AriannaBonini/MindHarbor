@@ -20,7 +20,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 
-public class SelezionaDataEOraGraphicController {
+public class ControllerGraficoSelezionaDataEOra {
     @FXML
     private Label labelNomePaziente;
     @FXML
@@ -34,7 +34,7 @@ public class SelezionaDataEOraGraphicController {
     @FXML
     private DatePicker data;
 
-    private static final Logger logger = LoggerFactory.getLogger(SelezionaDataEOraGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoSelezionaDataEOra.class);
     private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
     private final PrenotaAppuntamento prenotaAppuntamentoController = PrenotaAppuntamentoSingleton.getInstance();
     private AppuntamentiBean appuntamento;

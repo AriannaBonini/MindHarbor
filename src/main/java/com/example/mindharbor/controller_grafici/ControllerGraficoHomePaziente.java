@@ -3,7 +3,7 @@ package com.example.mindharbor.controller_grafici;
 import com.example.mindharbor.controller_applicativi.paziente.HomePazienteController;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
-public class HomePazienteGraphicController {
+public class ControllerGraficoHomePaziente {
     @FXML
     private Label listaAppuntamenti;
     @FXML
@@ -32,7 +32,7 @@ public class HomePazienteGraphicController {
     @FXML
     private Label notificaAppuntamenti;
     private final HomePazienteController homePazienteController = new HomePazienteController();
-    private static final Logger logger = LoggerFactory.getLogger(HomePazienteGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoHomePaziente.class);
     private final NavigatorSingleton navigator=NavigatorSingleton.getInstance();
     private PazienteBean pazienteBean;
 
@@ -55,7 +55,7 @@ public class HomePazienteGraphicController {
                 notificaAppuntamenti.setText(String.valueOf(pazienteBean.getNumNotifiche()));
             }
 
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.info("Errore nella ricerca dei nuovi appuntamenti ", e);
         }
     }
@@ -67,7 +67,7 @@ public class HomePazienteGraphicController {
                 notificaTerapie.setVisible(true);
                 notificaTerapie.setText(String.valueOf(pazienteBean.getNumNotifiche()));
             }
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.info("Errore nella ricerca delle nuove terapie assegnate al paziente ", e);
         }
     }
@@ -79,7 +79,7 @@ public class HomePazienteGraphicController {
                 notificaTest.setVisible(true);
                 notificaTest.setText(String.valueOf(pazienteBean.getNumNotifiche()));
             }
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.info("Errore nella ricerca dei nuovi test assegnati al paziente ", e);
         }
     }

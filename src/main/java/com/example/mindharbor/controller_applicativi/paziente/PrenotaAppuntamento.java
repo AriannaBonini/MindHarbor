@@ -9,7 +9,7 @@ import com.example.mindharbor.dao.AppuntamentoDAO;
 import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.dao.PsicologoDAO;
 import com.example.mindharbor.dao.UtenteDAO;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.mockapi.BoundaryMockAPICalendario;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
@@ -44,7 +44,7 @@ public class PrenotaAppuntamento {
     );
 
 
-    public boolean controllaInformazioniPaziente(PazienteBean pazienteBean) throws DAOException {
+    public boolean controllaInformazioniPaziente(PazienteBean pazienteBean) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         PazienteDAO pazienteDAO= daoFactoryFacade.getPazienteDAO();
         try {
@@ -53,8 +53,8 @@ public class PrenotaAppuntamento {
             }
             return pazienteDAO.checkAnniPaziente(new Paziente(SessionManager.getInstance().getCurrentUser().getUsername(),"","", UserType.PAZIENTE, pazienteBean.getAnni()));
 
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class PrenotaAppuntamento {
         return false;
     }
 
-    public List<PsicologoBean> getListaPsicologi() throws DAOException {
+    public List<PsicologoBean> getListaPsicologi() throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         UtenteDAO utenteDAO= daoFactoryFacade.getUtenteDAO();
 
@@ -87,8 +87,8 @@ public class PrenotaAppuntamento {
 
             return listaPsicologiBean;
 
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
@@ -97,7 +97,7 @@ public class PrenotaAppuntamento {
         eliminaPsicologoSelezionato();
     }
 
-    public void salvaRichiestaAppuntamento(AppuntamentiBean appuntamentiBean) throws DAOException {
+    public void salvaRichiestaAppuntamento(AppuntamentiBean appuntamentiBean) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
 
@@ -112,13 +112,13 @@ public class PrenotaAppuntamento {
             appuntamentoDAO.insertRichiestaAppuntamento(appuntamento);
             eliminaAppuntamentoSelezionato();
 
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
 
     }
 
-    public PsicologoBean getInfoPsicologo(PsicologoBean psicologoSelezionato) throws DAOException {
+    public PsicologoBean getInfoPsicologo(PsicologoBean psicologoSelezionato) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         PsicologoDAO psicologoDAO= daoFactoryFacade.getPsicologoDAO();
         try {
@@ -127,13 +127,13 @@ public class PrenotaAppuntamento {
             psicologoSelezionato.setCostoOrario(psicologo.getCostoOrario());
             psicologoSelezionato.setNomeStudio(psicologo.getNomeStudio());
 
-        }catch (DAOException e){
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e){
+            throw new EccezioneDAO(e.getMessage());
         }
         return psicologoSelezionato;
     }
 
-    public List<AppuntamentiBean> getListaRichieste() throws DAOException {
+    public List<AppuntamentiBean> getListaRichieste() throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
         List<AppuntamentiBean> listaRichiesteBean=new ArrayList<>();
@@ -150,13 +150,13 @@ public class PrenotaAppuntamento {
 
                 listaRichiesteBean.add(ricBean);
             }
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
         return listaRichiesteBean;
     }
 
-    public AppuntamentiBean aggiungiInfoRichiestaAppuntamento(AppuntamentiBean richiestaAppuntamento) throws DAOException {
+    public AppuntamentiBean aggiungiInfoRichiestaAppuntamento(AppuntamentiBean richiestaAppuntamento) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
         Appuntamento richiesta;
@@ -167,22 +167,22 @@ public class PrenotaAppuntamento {
             richiestaAppuntamento.setData(richiesta.getData());
 
             return richiestaAppuntamento;
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
-    public void modificaStatoNotifica(AppuntamentiBean richiestaAppuntamento) throws DAOException {
+    public void modificaStatoNotifica(AppuntamentiBean richiestaAppuntamento) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
         try {
             appuntamentoDAO.updateStatoNotifica(new Appuntamento(richiestaAppuntamento.getIdAppuntamento()));
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
-    public boolean verificaDisponibilita(Integer idAppuntamento) throws DAOException {
+    public boolean verificaDisponibilita(Integer idAppuntamento) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
         try {
@@ -191,12 +191,12 @@ public class PrenotaAppuntamento {
             }
             return BoundaryMockAPICalendario.calendario();
 
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
-    public void richiestaAccettata(AppuntamentiBean richiestaAppuntamento) throws DAOException {
+    public void richiestaAccettata(AppuntamentiBean richiestaAppuntamento) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
 
@@ -207,19 +207,19 @@ public class PrenotaAppuntamento {
             //eliminiamo tutte le altre richieste di appuntamento del paziente ad altri psicologi.
             appuntamentoDAO.eliminaRichiesteDiAppuntamentoPerAltriPsicologi(appuntamentoAccettato);
 
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
-    public void richiestaRifiutata(AppuntamentiBean richiestaAppuntamento) throws DAOException {
+    public void richiestaRifiutata(AppuntamentiBean richiestaAppuntamento) throws EccezioneDAO {
         DAOFactoryFacade daoFactoryFacade=DAOFactoryFacade.getInstance();
         AppuntamentoDAO appuntamentoDAO= daoFactoryFacade.getAppuntamentoDAO();
         try {
             appuntamentoDAO.eliminaRichiesta(new Appuntamento(richiestaAppuntamento.getIdAppuntamento()));
 
-        }catch (DAOException e) {
-            throw new DAOException(e.getMessage());
+        }catch (EccezioneDAO e) {
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 

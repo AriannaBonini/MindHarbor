@@ -3,7 +3,7 @@ package com.example.mindharbor.controller_grafici;
 import com.example.mindharbor.controller_applicativi.AppuntamentiController;
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
-public class AppuntamentiPazienteGraphicController {
+public class ControllerGraficoAppuntamentiPaziente {
     @FXML
     private Text listaVuotaInProgramma;
     @FXML
@@ -39,7 +39,7 @@ public class AppuntamentiPazienteGraphicController {
     private Label homeTab2;
 
     private final AppuntamentiController appuntamentiController = new AppuntamentiController();
-    private static final Logger logger = LoggerFactory.getLogger(AppuntamentiPazienteGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoAppuntamentiPaziente.class);
     private final InfoUtenteBean infoUtenteBean= appuntamentiController.getInfoUtente();
 
     public void initialize() {
@@ -62,7 +62,7 @@ public class AppuntamentiPazienteGraphicController {
     private void modificaStatoNotifica() {
         try {
             appuntamentiController.modificaStatoNotificaAppuntamenti();
-        } catch (DAOException e ) {
+        } catch (EccezioneDAO e ) {
             logger.info("Errore durante la modifica dello stato di notifica dei test psicologici", e);
         }
     }
@@ -82,7 +82,7 @@ public class AppuntamentiPazienteGraphicController {
                    } else {
                        creaVBoxAppuntamentiPaziente(appuntamenti, listView);
                    }
-               } catch (DAOException e) {
+               } catch (EccezioneDAO e) {
                    logger.info("Errore nella ricerca degli appuntamenti", e);
                }
            }

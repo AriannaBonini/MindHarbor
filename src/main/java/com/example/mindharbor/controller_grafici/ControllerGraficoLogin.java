@@ -3,8 +3,8 @@ package com.example.mindharbor.controller_grafici;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.tipo_utente.UserType;
 import com.example.mindharbor.beans.CredenzialiLoginBean;
-import com.example.mindharbor.eccezioni.DAOException;
-import com.example.mindharbor.eccezioni.SessionUserException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
+import com.example.mindharbor.eccezioni.EccezioneSessioneUtente;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import javafx.fxml.FXML;
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class LoginGraphicController {
+public class ControllerGraficoLogin {
     @FXML
     private Label msgLbl;
     @FXML
@@ -29,7 +29,7 @@ public class LoginGraphicController {
     private Button accediButton;
 
     private final LoginController loginController = new LoginController();
-    private static final Logger logger = LoggerFactory.getLogger(LoginGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoLogin.class);
     private final NavigatorSingleton navigator = NavigatorSingleton.getInstance();
 
 
@@ -60,10 +60,10 @@ public class LoginGraphicController {
                     homePsicologo();
                 }
             }
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.error("Errore durante la ricerca dell'utente {}", username, e);
             new LabelDuration().duration(msgLbl, "Credenziali errate");
-        } catch (SessionUserException e) {
+        } catch (EccezioneSessioneUtente e) {
             logger.info("{} già loggato", username, e);
             new LabelDuration().duration(msgLbl, "Utente già loggato");
         }

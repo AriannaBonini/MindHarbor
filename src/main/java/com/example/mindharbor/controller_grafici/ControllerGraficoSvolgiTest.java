@@ -6,7 +6,7 @@ import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.TestBean;
 import com.example.mindharbor.beans.RisultatiTestBean;
 import com.example.mindharbor.utilities.costanti.Costanti;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.PrescriviTerapiaSingleton;
@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SvolgiTestGraphicController {
+public class ControllerGraficoSvolgiTest {
     @FXML
     private Label domanda1;
     @FXML
@@ -91,7 +91,7 @@ public class SvolgiTestGraphicController {
     private  Label[] labels;
     private CheckBox[][] risposteTest;
 
-    private static final Logger logger = LoggerFactory.getLogger(SvolgiTestGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoSvolgiTest.class);
     private final  NavigatorSingleton navigator=NavigatorSingleton.getInstance();
     private TestBean testSelezionato;
 
@@ -198,7 +198,7 @@ public class SvolgiTestGraphicController {
                     notificaProgresso("Regresso: " + risultatoTest.getRisultatoTestPrecedente() + "%", "Mi dispiace!");
                 }
             }
-        }catch (DAOException e) {
+        }catch (EccezioneDAO e) {
             logger.info("Errore nel calcolo del risultato del test ", e);
         }
     }

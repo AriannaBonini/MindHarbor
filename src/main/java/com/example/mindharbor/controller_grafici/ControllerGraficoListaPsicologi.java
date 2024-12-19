@@ -3,7 +3,7 @@ package com.example.mindharbor.controller_grafici;
 import com.example.mindharbor.controller_applicativi.paziente.PrenotaAppuntamento;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PsicologoBean;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.utilities.ListaGraphicControllerHelper;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.PrenotaAppuntamentoSingleton;
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
-public class ListaPsicologiGraphicController {
+public class ControllerGraficoListaPsicologi {
 
     @FXML
     private ListView<Node> listViewPsicologo;
@@ -36,7 +36,7 @@ public class ListaPsicologiGraphicController {
     private Text listaVuota;
 
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-    private static final Logger logger = LoggerFactory.getLogger(ListaPsicologiGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoListaPsicologi.class);
     private final PrenotaAppuntamento prenotaAppuntamentoController = PrenotaAppuntamentoSingleton.getInstance();
 
     public void initialize() {
@@ -52,7 +52,7 @@ public class ListaPsicologiGraphicController {
             }else {
                 creaVBoxListaPsicologi(listaPsicologiBean);
             }
-        }catch (DAOException e) {
+        }catch (EccezioneDAO e) {
             logger.info("Errore nella ricerca dei psicologi", e);
         }
     }

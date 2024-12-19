@@ -5,7 +5,7 @@ import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
 import com.example.mindharbor.beans.TerapiaBean;
 import com.example.mindharbor.beans.TestBean;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.sessione.SessionManager;
 import com.example.mindharbor.utilities.AlertMessage;
 import com.example.mindharbor.utilities.NavigatorSingleton;
@@ -29,7 +29,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
-public class PrescriviTerapiaGraphicController {
+public class ControllerGraficoPrescriviTerapia {
     @FXML
     private Label campoNome;
     @FXML
@@ -52,7 +52,7 @@ public class PrescriviTerapiaGraphicController {
     private Button prescrivi;
 
 
-    private static final Logger logger = LoggerFactory.getLogger(PrescriviTerapiaGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoPrescriviTerapia.class);
     private final   NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private PazienteBean pazienteSelezionato;
     private TestBean testbean;
@@ -73,7 +73,7 @@ public class PrescriviTerapiaGraphicController {
         try {
             List<TestBean> testSvoltiBean = prescriviTerapiaController.getTestSvoltiSenzaPrescrizione(pazienteSelezionato);
             popolaAreaTest(testSvoltiBean);
-        } catch (DAOException e) {
+        } catch (EccezioneDAO e) {
             logger.info("Errore nella ricerca dei test svolti senza ancora prescrizioni ", e);
         }
     }
@@ -105,7 +105,7 @@ public class PrescriviTerapiaGraphicController {
     private void modificaStatoNotifica() {
         try {
             prescriviTerapiaController.aggiornaStatoNotificaTest(pazienteSelezionato);
-        } catch (DAOException e ) {
+        } catch (EccezioneDAO e ) {
             logger.info("Errore durante la modifica dello stato dei test psicologici", e);
         }
     }
@@ -172,7 +172,7 @@ public class PrescriviTerapiaGraphicController {
 
             clickLabelTornaIndietro();
 
-            } catch (DAOException e) {
+            } catch (EccezioneDAO e) {
             logger.info("Errore durante il salvataggio della terapia ", e );
                 Alert alert= new AlertMessage().errore("Una sola prescrizione per test");
                 alert.show();

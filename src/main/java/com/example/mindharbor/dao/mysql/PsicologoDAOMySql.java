@@ -2,7 +2,7 @@ package com.example.mindharbor.dao.mysql;
 
 import com.example.mindharbor.dao.PsicologoDAO;
 import com.example.mindharbor.dao.mysql.query_sql.QuerySQLPsicologoDAO;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.model.Psicologo;
 import com.example.mindharbor.sessione.ConnectionFactory;
 import java.sql.Connection;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class PsicologoDAOMySql extends QuerySQLPsicologoDAO implements PsicologoDAO {
 
     @Override
-    public Psicologo getInfoPsicologo(Psicologo psicologo) throws DAOException{
+    public Psicologo getInfoPsicologo(Psicologo psicologo) throws EccezioneDAO {
         Connection conn = ConnectionFactory.getConnection();
 
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLPsicologoDAO.INFO_PSICOLOGO, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
@@ -27,7 +27,7 @@ public class PsicologoDAOMySql extends QuerySQLPsicologoDAO implements Psicologo
                 }
             }
         } catch (SQLException e) {
-           throw new DAOException(e.getMessage());
+           throw new EccezioneDAO(e.getMessage());
         }
 
         return psicologo;

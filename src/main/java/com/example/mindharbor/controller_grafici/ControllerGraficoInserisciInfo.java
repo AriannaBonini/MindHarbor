@@ -4,7 +4,7 @@ import com.example.mindharbor.controller_applicativi.paziente.PrenotaAppuntament
 import com.example.mindharbor.beans.AppuntamentiBean;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.utilities.LabelDuration;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.PrenotaAppuntamentoSingleton;
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class InserisciInfoGraphicController {
+public class ControllerGraficoInserisciInfo {
     @FXML
     private TextField campoNome;
     @FXML
@@ -36,7 +36,7 @@ public class InserisciInfoGraphicController {
     @FXML
     private ImageView tornaIndietro;
 
-    private static final Logger logger = LoggerFactory.getLogger(InserisciInfoGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoInserisciInfo.class);
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
     private final PrenotaAppuntamento prenotaAppuntamentoController = PrenotaAppuntamentoSingleton.getInstance();
     private AppuntamentiBean appuntamentoBean;
@@ -71,7 +71,7 @@ public class InserisciInfoGraphicController {
                 }else {
                     new LabelDuration().duration(info,"Dati errati");
                 }
-            }catch (DAOException e) {
+            }catch (EccezioneDAO e) {
                 logger.info("Errore nel controllo dei dati del paziente");
             }
         }

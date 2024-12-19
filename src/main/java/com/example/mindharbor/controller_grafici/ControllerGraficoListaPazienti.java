@@ -3,7 +3,7 @@ package com.example.mindharbor.controller_grafici;
 import com.example.mindharbor.controller_applicativi.psicologo.PrescriviTerapia;
 import com.example.mindharbor.beans.InfoUtenteBean;
 import com.example.mindharbor.beans.PazienteBean;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.utilities.ListaGraphicControllerHelper;
 import com.example.mindharbor.utilities.NavigatorSingleton;
 import com.example.mindharbor.utilities.PrescriviTerapiaSingleton;
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
-public class ListaPazientiGraphicController {
+public class ControllerGraficoListaPazienti {
     @FXML
     private Label labelNomePsicologo;
     @FXML
@@ -33,7 +33,7 @@ public class ListaPazientiGraphicController {
     private ListView<Node> listViewPazienti;
     private final PrescriviTerapia prescriviTerapiaController = PrescriviTerapiaSingleton.getInstance();
     private final NavigatorSingleton navigator= NavigatorSingleton.getInstance();
-    private static final Logger logger = LoggerFactory.getLogger(ListaPazientiGraphicController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoListaPazienti.class);
 
     public void initialize() {
         InfoUtenteBean infoUtenteBean = prescriviTerapiaController.getInfoUtente();
@@ -45,7 +45,7 @@ public class ListaPazientiGraphicController {
         try {
             List<PazienteBean> listaPazienti = prescriviTerapiaController.getListaPazienti();
             creaVBoxListaPazienti(listaPazienti);
-        }catch (DAOException e) {
+        }catch (EccezioneDAO e) {
             logger.info("Non non ci sono pazienti", e);
             listaVuota.setText("Non esistono pazienti");
         }

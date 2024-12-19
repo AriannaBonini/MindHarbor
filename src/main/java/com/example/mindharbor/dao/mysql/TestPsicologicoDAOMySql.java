@@ -2,7 +2,7 @@ package com.example.mindharbor.dao.mysql;
 
 import com.example.mindharbor.dao.TestPsicologicoDAO;
 import com.example.mindharbor.dao.mysql.query_sql.QuerySQLTestPsicologicoDAO;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.TestPsicologico;
 import com.example.mindharbor.model.Utente;
@@ -16,7 +16,7 @@ import java.util.List;
 public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implements TestPsicologicoDAO {
 
     @Override
-    public void assegnaTest(TestPsicologico test) throws DAOException {
+    public void assegnaTest(TestPsicologico test) throws EccezioneDAO {
 
         Connection conn = ConnectionFactory.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTestPsicologicoDAO.ASSEGNA_TEST)) {
@@ -29,12 +29,12 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
     @Override
-    public Integer getNotificaPazientePerTestAssegnato(Utente paziente) throws DAOException {
+    public Integer getNotificaPazientePerTestAssegnato(Utente paziente) throws EccezioneDAO {
         //Questo metodo ci ritorna il numero di test da notificare al paziente sulla sua Home.
         int count = 0;
 
@@ -49,13 +49,13 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
         return count;
     }
 
     @Override
-    public void modificaStatoNotificaTest(Utente utente, Paziente pazienteSelezionato) throws DAOException {
+    public void modificaStatoNotificaTest(Utente utente, Paziente pazienteSelezionato) throws EccezioneDAO {
 
         Connection conn = ConnectionFactory.getConnection();
         try {
@@ -79,12 +79,12 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
     @Override
-    public List<TestPsicologico> trovaListaTest(Utente paziente) throws DAOException {
+    public List<TestPsicologico> trovaListaTest(Utente paziente) throws EccezioneDAO {
 
         List<TestPsicologico> testPsicologicoList = new ArrayList<>();
 
@@ -105,14 +105,14 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return testPsicologicoList;
     }
 
     @Override
-    public Integer trovaTestPassati(TestPsicologico testDaAggiungere) throws DAOException {
+    public Integer trovaTestPassati(TestPsicologico testDaAggiungere) throws EccezioneDAO {
         Integer testPassati = null;
 
         Connection conn = ConnectionFactory.getConnection();
@@ -127,7 +127,7 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         aggiornaTestAppenaSvolto(testDaAggiungere);
@@ -136,7 +136,7 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
 
     }
 
-    private void aggiornaTestAppenaSvolto(TestPsicologico testDaAggiungere) throws DAOException {
+    private void aggiornaTestAppenaSvolto(TestPsicologico testDaAggiungere) throws EccezioneDAO {
 
         Connection conn = ConnectionFactory.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLTestPsicologicoDAO.AGGIORNA_TEST_SVOLTO)) {
@@ -148,12 +148,12 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
     @Override
-    public Integer getNumTestSvoltiDaNotificare(Utente psicologo) throws DAOException {
+    public Integer getNumTestSvoltiDaNotificare(Utente psicologo) throws EccezioneDAO {
         int count = 0;
 
         Connection conn = ConnectionFactory.getConnection();
@@ -167,14 +167,14 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return count;
     }
 
     @Override
-    public Integer getNumTestSvoltiSenzaPrescrizione(Utente utentePsicologo, Paziente paziente) throws DAOException {
+    public Integer getNumTestSvoltiSenzaPrescrizione(Utente utentePsicologo, Paziente paziente) throws EccezioneDAO {
         int count = 0;
 
         Connection conn = ConnectionFactory.getConnection();
@@ -189,14 +189,14 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return count;
     }
 
     @Override
-    public List<TestPsicologico> listaTestSvoltiSenzaPrescrizione(String usernamePaziente, String usernamePsicologo) throws DAOException {
+    public List<TestPsicologico> listaTestSvoltiSenzaPrescrizione(String usernamePaziente, String usernamePsicologo) throws EccezioneDAO {
         List<TestPsicologico> testSvolti = new ArrayList<>();
 
         Connection conn = ConnectionFactory.getConnection();
@@ -216,14 +216,14 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return testSvolti;
     }
 
     @Override
-    public Paziente numTestSvoltiPerPaziente(Utente paziente) throws DAOException {
+    public Paziente numTestSvoltiPerPaziente(Utente paziente) throws EccezioneDAO {
         Paziente numeroTestSvoltiPaziente=null;
 
         Connection conn = ConnectionFactory.getConnection();
@@ -238,13 +238,13 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
 
             }
         }catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
         return numeroTestSvoltiPaziente;
     }
 
     @Override
-    public Integer getNumTestAssegnato(Paziente paziente) throws DAOException {
+    public Integer getNumTestAssegnato(Paziente paziente) throws EccezioneDAO {
         int contatore=0;
         Connection conn = ConnectionFactory.getConnection();
 
@@ -258,7 +258,7 @@ public class TestPsicologicoDAOMySql extends QuerySQLTestPsicologicoDAO implemen
                 }
             }
         }catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
         return contatore;
     }

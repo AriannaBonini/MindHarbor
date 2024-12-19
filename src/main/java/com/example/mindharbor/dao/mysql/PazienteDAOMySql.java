@@ -2,7 +2,7 @@ package com.example.mindharbor.dao.mysql;
 
 import com.example.mindharbor.dao.PazienteDAO;
 import com.example.mindharbor.dao.mysql.query_sql.QuerySQLPazienteDAO;
-import com.example.mindharbor.eccezioni.DAOException;
+import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.model.Appuntamento;
 import com.example.mindharbor.model.Paziente;
 import com.example.mindharbor.model.Utente;
@@ -17,7 +17,7 @@ import java.util.List;
 public class PazienteDAOMySql extends QuerySQLPazienteDAO implements PazienteDAO {
 
     @Override
-    public List<Paziente> trovaPazienti(Utente psicologo) throws DAOException {
+    public List<Paziente> trovaPazienti(Utente psicologo) throws EccezioneDAO {
         //Questo metodo viene utilizzato per prendere dalla persistenza lo username, il nome, il cognome e il genere del Paziente.
         //Viene utilizzato dallo psicologo per ottenere la lista dei suoi pazienti.
         List<Paziente> pazienteList = new ArrayList<>();
@@ -55,13 +55,13 @@ public class PazienteDAOMySql extends QuerySQLPazienteDAO implements PazienteDAO
             }
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
         return pazienteList;
     }
 
     @Override
-    public Paziente getInfoSchedaPersonale(Paziente pazienteSelezionato) throws DAOException{
+    public Paziente getInfoSchedaPersonale(Paziente pazienteSelezionato) throws EccezioneDAO {
         //questo metodo viene utilizzato per prendere dalla persistenza la diagnosi e l'età del paziente.
 
         Connection conn = ConnectionFactory.getConnection();
@@ -77,14 +77,14 @@ public class PazienteDAOMySql extends QuerySQLPazienteDAO implements PazienteDAO
             }
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return pazienteSelezionato;
     }
 
     @Override
-    public boolean checkAnniPaziente(Paziente paziente) throws DAOException {
+    public boolean checkAnniPaziente(Paziente paziente) throws EccezioneDAO {
         Connection conn = ConnectionFactory.getConnection();
 
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLPazienteDAO.CHECK_ANNI_PAZIENTE, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
@@ -96,12 +96,12 @@ public class PazienteDAOMySql extends QuerySQLPazienteDAO implements PazienteDAO
                 return rs.next();
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
     }
 
     @Override
-    public String getUsernamePsicologo(Utente paziente) throws DAOException{
+    public String getUsernamePsicologo(Utente paziente) throws EccezioneDAO {
         String usernamePsicologo = null;
         Connection conn = ConnectionFactory.getConnection();
 
@@ -115,14 +115,14 @@ public class PazienteDAOMySql extends QuerySQLPazienteDAO implements PazienteDAO
                 }
             }
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
 
         return usernamePsicologo;
     }
 
     @Override
-    public void aggiungiPsicologoAlPaziente(Appuntamento appuntamento) throws DAOException{
+    public void aggiungiPsicologoAlPaziente(Appuntamento appuntamento) throws EccezioneDAO {
 
         Connection conn = ConnectionFactory.getConnection();
         try (PreparedStatement stmt = conn.prepareStatement(QuerySQLPazienteDAO.AGGIUNGI_PSICOLOGO_AL_PAZIENTE)) {
@@ -133,7 +133,7 @@ public class PazienteDAOMySql extends QuerySQLPazienteDAO implements PazienteDAO
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            throw new DAOException(e.getMessage());
+            throw new EccezioneDAO(e.getMessage());
         }
     }
  }
