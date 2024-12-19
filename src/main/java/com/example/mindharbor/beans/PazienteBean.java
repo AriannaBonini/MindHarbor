@@ -55,9 +55,7 @@ public class PazienteBean {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    public String getCognome() {
-        return cognome;
-    }
+    public String getCognome() {return cognome;}
     public void setCognome(String cognome) {
         this.cognome = cognome;
     }
@@ -75,9 +73,7 @@ public class PazienteBean {
         return diagnosi;
     }
     public void setDiagnosi(String diagnosi){this.diagnosi=diagnosi;}
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() {return username;}
     public void setUsername(String username) {
         this.username = username;
     }

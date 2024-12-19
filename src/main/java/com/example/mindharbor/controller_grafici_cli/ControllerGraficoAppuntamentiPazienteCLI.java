@@ -11,9 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.List;
 
-public class ControllerGraficoListaAppuntamentiPazienteCLI extends AbsGestoreInput {
+public class ControllerGraficoAppuntamentiPazienteCLI extends AbsGestoreInput {
 
-    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoListaAppuntamentiPazienteCLI.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoAppuntamentiPazienteCLI.class);
     private final AppuntamentiController appuntamentiController = new AppuntamentiController();
     private final InfoUtenteBean infoUtenteBean = appuntamentiController.getInfoUtente();
 

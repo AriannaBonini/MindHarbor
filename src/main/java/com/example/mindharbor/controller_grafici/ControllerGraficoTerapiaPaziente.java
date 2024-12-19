@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
-public class ControllerGraficoPrescrizioniPaziente {
+public class ControllerGraficoTerapiaPaziente {
     @FXML
     public Label listaVuota;
     @FXML
@@ -35,7 +35,7 @@ public class ControllerGraficoPrescrizioniPaziente {
     @FXML
     public ListView<Node> listViewTerapia;
 
-    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoPrescrizioniPaziente.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerGraficoTerapiaPaziente.class);
     private final PrescriviTerapia prescriviTerapiaController = PrescriviTerapiaSingleton.getInstance();
 
     public void initialize() {

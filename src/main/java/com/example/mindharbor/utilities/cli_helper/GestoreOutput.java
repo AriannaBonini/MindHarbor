@@ -43,5 +43,12 @@ public class GestoreOutput {
         stampaMessaggio("-------------------------------------------------");
         stampaMessaggio("");
     }
+
+    public static String stampaMessaggioConNotifica(String messaggio, boolean notifica) {
+        if(notifica) {
+            messaggio=CodiciAnsi.ANSI_VERDE_CHIARO + messaggio + CodiciAnsi.ANSI_RIPRISTINA;
+        }
+        return messaggio;
+    }
 }
 
