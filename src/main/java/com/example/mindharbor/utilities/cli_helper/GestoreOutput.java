@@ -6,7 +6,6 @@ public class GestoreOutput {
 
     public static void stampaMessaggio(String messaggio){System.out.println(messaggio);}
 
-
     public static void stampaLogoLogin(){
         String asciiartMind = """
                /$$                 /$$
@@ -33,13 +32,11 @@ public class GestoreOutput {
         GestoreOutput.stampaMessaggio(CodiciAnsi.ANSI_VERDE + asciiartMind + "\n" + CodiciAnsi.ANSI_VERDE_CHIARO + asciiartHarbor + CodiciAnsi.ANSI_RIPRISTINA);
     }
 
-
     public static void pulisciPagina(){
         for (int i = 0; i < 100; i++){
             GestoreOutput.stampaMessaggio("\b");
         }
     }
-
 
     public static void separatore() {
         stampaMessaggio("");

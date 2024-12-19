@@ -24,8 +24,7 @@ public class ControllerGraficoLoginCLI extends AbsGestoreInput {
     public void start() {
         GestoreOutput.pulisciPagina();
         GestoreOutput.stampaLogoLogin();
-
-        boolean esci=false;
+        boolean esci = false;
         while(!esci) {
             int opzione;
             try {
@@ -45,7 +44,7 @@ public class ControllerGraficoLoginCLI extends AbsGestoreInput {
 
     @Override
     public int mostraMenu() {
-        GestoreOutput.stampaMessaggio(CodiciAnsi.ANSI_GRASSETTO +"*** Benvenuto! ***\n"+ CodiciAnsi.ANSI_RIPRISTINA_GRASSETTO);
+        GestoreOutput.stampaMessaggio(CodiciAnsi.ANSI_GRASSETTO + "*** BENVENUTO! ***\n" + CodiciAnsi.ANSI_RIPRISTINA_GRASSETTO);
         GestoreOutput.stampaMessaggio("1) Login");
         GestoreOutput.stampaMessaggio("2) Esci");
 
@@ -60,19 +59,17 @@ public class ControllerGraficoLoginCLI extends AbsGestoreInput {
             String username = reader.readLine();
             GestoreOutput.stampaMessaggio("password: ");
             String password = reader.readLine();
-            CredenzialiLoginBean credenzialiLoginBean=new CredenzialiLoginBean(username,password);
-            InfoUtenteBean infoUtenteBean= loginController.login(credenzialiLoginBean);
+            CredenzialiLoginBean credenzialiLoginBean = new CredenzialiLoginBean(username,password);
+            InfoUtenteBean infoUtenteBean = loginController.login(credenzialiLoginBean);
 
-            if(infoUtenteBean==null) {
+            if(infoUtenteBean == null) {
                 GestoreOutput.stampaMessaggio("Credenziali Errate");
                 login();
-            } else {
-            if (infoUtenteBean.getUserType().equals(UserType.PSICOLOGO)) {
+            } else if (infoUtenteBean.getUserType().equals(UserType.PSICOLOGO)) {
                 new ControllerGraficoHomePsicologoCLI().start();
             } else {
                 new ControllerGraficoHomePazienteCLI().start();
             }
-        }
         }
         catch (EccezioneDAO | IOException e) {
             logger.error(e.getMessage());
