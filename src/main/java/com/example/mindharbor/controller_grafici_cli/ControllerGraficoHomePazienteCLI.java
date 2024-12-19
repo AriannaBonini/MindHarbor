@@ -15,25 +15,25 @@ public class ControllerGraficoHomePazienteCLI extends AbsGestoreInput{
     public void start() {
         GestoreOutput.pulisciPagina();
 
-        boolean esci=false;
-        while(!esci) {
-            int opzione;
-            try {
-                opzione = mostraMenu();
-                switch(opzione) {
-                    case 1 -> System.out.println("Prenota Appuntamento");
-                    case 2 -> listaAppuntamenti();
-                    case 3 ->System.out.println("Terapia");
-                    case 4 ->System.out.println("Test");
-                    case 5 -> esci=true;
-                    default -> throw new EccezioneFormatoNonValido("Scelta non valida");
+            boolean esci = false;
+            while (!esci) {
+                int opzione;
+                try {
+                    opzione = mostraMenu();
+                    switch (opzione) {
+                        case 1 -> System.out.println("Prenota Appuntamento");
+                        case 2 -> listaAppuntamenti();
+                        case 3 -> System.out.println("Terapia");
+                        case 4 -> System.out.println("Test");
+                        case 5 -> esci = true;
+                        default -> throw new EccezioneFormatoNonValido("Scelta non valida");
+                    }
+                } catch (EccezioneFormatoNonValido e) {
+                    logger.info("Scelta non valida ", e);
                 }
-            } catch (EccezioneFormatoNonValido e) {
-                logger.info("Scelta non valida ", e);
             }
-        }
-        homePazienteController.logout();
-        new ControllerGraficoLoginCLI().start();
+            homePazienteController.logout();
+            new ControllerGraficoLoginCLI().start();
     }
 
     @Override

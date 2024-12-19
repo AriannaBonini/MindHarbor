@@ -7,8 +7,6 @@ import com.example.mindharbor.eccezioni.EccezioneDAO;
 import com.example.mindharbor.eccezioni.EccezioneFormatoNonValido;
 import com.example.mindharbor.utilities.cli_helper.CodiciAnsi;
 import com.example.mindharbor.utilities.cli_helper.GestoreOutput;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
