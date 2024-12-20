@@ -1,25 +1,23 @@
 package com.example.mindharbor.utilities;
 
-import com.example.mindharbor.Main;
-import com.example.mindharbor.graphic_controllers.AppuntamentiPsicologoGraphicController;
+import com.example.mindharbor.beans.AppuntamentiBean;
+import com.example.mindharbor.beans.PazienteBean;
+import com.example.mindharbor.beans.PsicologoBean;
+import com.example.mindharbor.beans.TestBean;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
-import java.util.Objects;
+
 
 public class NavigatorSingleton {
     private static NavigatorSingleton instance = null;
-
     protected Stage stg;
-
-    public Stage getStg() {
-        return this.stg;
-    }
+    private AppuntamentiBean appBean;
+    private PazienteBean pazienteBean;
+    private TestBean testBean;
+    private PsicologoBean psicologoBean;
 
     protected NavigatorSingleton(Stage stg) {
         this.stg = stg;
@@ -40,10 +38,30 @@ public class NavigatorSingleton {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
         Parent root = loader.load();
 
+
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
         stage.setTitle("Mind Harbor");
         stage.setResizable(false);
         stage.show();
     }
+
+    public void setAppuntamentoBean(AppuntamentiBean app) {this.appBean =app;}
+    public AppuntamentiBean getAppuntamentoBean() {return appBean;}
+    public void eliminaAppuntamentoBean() {this.appBean =null;}
+
+
+    public PazienteBean getPazienteBean() {return pazienteBean;}
+    public void setPazienteBean(PazienteBean pazienteBean) {this.pazienteBean = pazienteBean;}
+    //questo metodo viene utilizzato per caricare l'istanza di PazientiBean contenente il paziente selezionato dallo psicologo nella Lista dei suoi pazienti.
+    public void eliminaPazienteBean() {this.pazienteBean=null;}
+
+
+    public TestBean getTestBean() {return testBean;}
+    public void setTestBean(TestBean testBean) {this.testBean=testBean;}
+    public void eliminaTestBean(){this.testBean=null;}
+
+    public PsicologoBean getPsicologoBean() {return psicologoBean;}
+    public void setPsicologoBean(PsicologoBean psicologoBean) {this.psicologoBean=psicologoBean;}
+    public void eliminaPsicologoBean(){this.psicologoBean=null;}
 }

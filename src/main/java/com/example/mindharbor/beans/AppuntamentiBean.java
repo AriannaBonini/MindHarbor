@@ -1,77 +1,69 @@
 package com.example.mindharbor.beans;
 
 public class AppuntamentiBean {
-        private String Data;
-        private String Ora;
-        private String usernamePaziente;
-        private String usernamePsicologo;
-        private String nomePsicologo;
-        private String cognomePsicologo;
-        private String nomePaziente;
-        private String cognomePaziente;
-        private String IdAppuntamento;
+        private String data;
+        private String ora;
+        private PazienteBean paziente;
+        private PsicologoBean psicologo;
+        private Integer idAppuntamento;
+        private Integer notificaRichiesta;
+
 
     public AppuntamentiBean() {
     }
 
+    public AppuntamentiBean(String data, String ora, PazienteBean paziente, PsicologoBean psicologo, Integer idAppuntamento, Integer notificaRichiesta) {
+        this.data=data;
+        this.ora=ora;
+        this.paziente=paziente;
+        this.psicologo=psicologo;
+        this.idAppuntamento=idAppuntamento;
+        this.notificaRichiesta=notificaRichiesta;
+    }
 
-    public AppuntamentiBean(String Data,String Ora,String nomePsicologo,String cognomePsicologo,String nomePaziente,String cognomePaziente,String usernamePaziente,String usernamePsicologo, String IdAppuntamento) {
-            this.Data = Data;
-            this.Ora= Ora;
-            this.usernamePsicologo = usernamePsicologo;
-            this.usernamePaziente= usernamePaziente;
-            this.nomePaziente = nomePaziente;
-            this.cognomePaziente = cognomePaziente;
-            this.nomePsicologo = nomePsicologo;
-            this.cognomePsicologo = cognomePsicologo;
-            this.IdAppuntamento=IdAppuntamento;
-        }
+    public AppuntamentiBean(String data, String ora, PazienteBean paziente) {
+        this.data=data;
+        this.ora=ora;
+        this.paziente=paziente;
+    }
 
-        public String getData() {
-            return Data;
-        }
+    public AppuntamentiBean(String data, String ora, PsicologoBean psicologo) {
+        this.data=data;
+        this.ora=ora;
+        this.psicologo=psicologo;
+    }
 
-        public void setData(String Data) {
-            this.Data = Data;
-        }
+    public AppuntamentiBean(PazienteBean paziente, Integer idAppuntamento, Integer notificaRichiesta) {
+        this.paziente=paziente;
+        this.idAppuntamento=idAppuntamento;
+        this.notificaRichiesta=notificaRichiesta;
+    }
 
-        public String getOra() {
-            return Ora;
-        }
+    public String getData() {return data;}
+    public void setData(String data) {
+        this.data = data;
+    }
+    public String getOra() {
+        return ora;
+    }
+    public void setOra(String ora) {
+        this.ora = ora;
+    }
+    public Integer getNotificaRichiesta() {return notificaRichiesta;}
+    public PazienteBean getPaziente() {
+        return paziente;
+    }
+    public void setPaziente(PazienteBean paziente) {
+        this.paziente = paziente;
+    }
+    public PsicologoBean getPsicologo() {
+        return psicologo;
+    }
+    public void setPsicologo(PsicologoBean psicologo) {
+        this.psicologo = psicologo;
+    }
+    public Integer getIdAppuntamento() {
+        return idAppuntamento;
+    }
 
-        public void setOra(String Ora) {
-            this.Ora = Ora;
-        }
-
-        public String getusernamePaziente() {
-            return usernamePaziente;
-        }
-
-        public void setusernamePaziente(String usernamePaziente) {
-            this.usernamePaziente = usernamePaziente;
-        }
-
-        public String getusernamePsicologo() {
-            return usernamePsicologo;
-        }
-
-        public void setusernamePsicologo(String usernamePsicologo) {
-            this.usernamePsicologo= usernamePsicologo;
-        }
-
-        public String getNomePsicologo() {return nomePsicologo;}
-
-        public void setNomePsicologo(String nomePsicologo) {this.nomePsicologo = nomePsicologo;}
-
-        public String getCognomePsicologo() {return cognomePsicologo;}
-
-        public void setCognomePsicologo(String cognomePsicologo) {this.cognomePsicologo = cognomePsicologo;}
-
-        public String getNomePaziente() {return nomePaziente;}
-
-        public void setNomePaziente(String nomePaziente) {this.nomePaziente = nomePaziente;}
-
-        public String getCognomePaziente() {return cognomePaziente;}
-
-        public void setCognomePaziente(String cognomePaziente) { this.cognomePaziente = cognomePaziente;}
 }
